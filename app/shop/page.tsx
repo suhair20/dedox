@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { products, Product } from "@/lib/data";
 import ProductCard from "@/components/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
-import { Filter, X, ChevronDown, LayoutGrid, List } from "lucide-react";
+import { Filter, X,LayoutGrid, List } from "lucide-react";
 
 export default function ShopPage() {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
