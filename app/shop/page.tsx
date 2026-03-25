@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { products, Product } from "@/lib/data";
+import { products } from "@/lib/data";
 import ProductCard from "@/components/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { Filter, X,LayoutGrid, List } from "lucide-react";
