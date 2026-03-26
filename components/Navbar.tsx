@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function Navbar() {
   const { getCartCount } = useCart();
   const [isShopOpen, setIsShopOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const categories = [
     { name: "Men", href: "/category/men" },
@@ -19,36 +20,45 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300">
-      <div className="container mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Mobile Menu */}
-        <div className="flex items-center lg:hidden">
-          <button className="text-gray-600 hover:text-[#0f3d3e] transition-colors">
-            <Menu className="h-6 w-6" />
-          </button>
-        </div>
+      <div className="container mx-auto flex h-18 items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Left Section: Mobile Menu & Nav Links */}
+        <div className="flex flex-1 items-center justify-start">
+          <div className="lg:hidden">
+            <button 
+              className="text-gray-600 hover:text-[#0f3d3e] transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
 
-        {/* Logo */}
-        <div className="flex-1 flex justify-center lg:flex-none lg:justify-start">
-          <Link href="/" className="text-3xl font-bold text-[#0f3d3e] tracking-tighter hover:opacity-90 transition-opacity font-serif">
-           Dedox           </Link>
-        </div>
-
-        {/* Desktop Nav Links */}
-        <nav className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-center lg:space-x-10">
-          <Link href="/" className="text-sm font-medium tracking-widest text-gray-800 hover:text-[#0f3d3e] transition-colors">Home</Link>
+          {/* Desktop Nav Links */}
+          <nav className="hidden lg:flex items-center space-x-10 ml-6">
+            <Link href="/" className="group relative flex flex-col h-[22px] overflow-hidden font-inter text-[15px] font-medium text-gray-800">
+              <span className="transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] group-hover:-translate-y-full">Discover</span>
+              <span className="absolute top-0 left-0 h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] translate-y-full group-hover:translate-y-0 text-transparent bg-clip-text bg-gradient-to-tr from-[#145a5b] to-blue-950 font-semibold">Discover</span>
+            </Link>
           
           <div 
             className="relative group"
             onMouseEnter={() => setIsShopOpen(true)}
             onMouseLeave={() => setIsShopOpen(false)}
           >
-            <Link 
-              href="/shop" 
-              className="flex items-center space-x-1 text-sm   tracking-widest text-gray-800 hover:text-[#0f3d3e] transition-colors py-8"
-            >
-              <span>Shop</span>
-              <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${isShopOpen ? 'rotate-180' : ''}`} />
-            </Link>
+            <div className="py-6">
+              <Link 
+                href="/shop" 
+                className="group/link relative flex h-[22px] overflow-hidden items-center font-inter text-[15px] font-medium text-gray-800"
+              >
+                <span className="flex items-center space-x-1 transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] group-hover/link:-translate-y-full">
+                  <span>Collections</span>
+                  <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${isShopOpen ? 'rotate-180' : ''}`} />
+                </span>
+                <span className="absolute top-0 left-0 w-full h-full flex items-center space-x-1 transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] translate-y-full group-hover/link:translate-y-0 text-transparent bg-clip-text bg-gradient-to-tr from-[#145a5b] to-blue-950 font-semibold">
+                  <span>Collections</span>
+                  <ChevronDown className={`h-4 w-4 text-[#145a5b] transition-transform duration-300 ${isShopOpen ? 'rotate-180' : ''}`} />
+                </span>
+              </Link>
+            </div>
 
             <AnimatePresence>
               {isShopOpen && (
@@ -81,13 +91,27 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
 
-          <Link href="/about" className=" font-medium     text-gray-800 hover:text-[#0f3d3e] transition-colors">About Us</Link>
-          <Link href="/contact" className="text-sm font-medium text-gray-800 hover:text-[#0f3d3e] transition-colors">Contact</Link>
-          <Link href="/request-perfume" className="text-sm font-medium  text-gray-800 hover:text-[#0f3d3e] transition-colors">Request a Perfume</Link>
-        </nav>
+          <Link href="/about" className="group relative flex flex-col h-[22px] overflow-hidden font-inter text-[15px] font-medium text-gray-800">
+            <span className="transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] group-hover:-translate-y-full">Signature</span>
+            <span className="absolute top-0 left-0 h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] translate-y-full group-hover:translate-y-0 text-transparent bg-clip-text bg-gradient-to-tr from-[#145a5b] to-blue-950 font-semibold">Signature</span>
+          </Link>
+          <Link href="/contact" className="group relative flex flex-col h-[22px] overflow-hidden font-inter text-[15px] font-medium text-gray-800">
+            <span className="transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] group-hover:-translate-y-full">Contact</span>
+            <span className="absolute top-0 left-0 h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] translate-y-full group-hover:translate-y-0 text-transparent bg-clip-text bg-gradient-to-tr from-[#145a5b] to-blue-950 font-semibold">Contact</span>
+          </Link>
 
-        {/* Icons */}
-        <div className="flex items-center justify-end space-x-5 lg:space-x-7">
+          </nav>
+        </div>
+
+        {/* Center Section: Logo */}
+        <div className="flex flex-none justify-center">
+          <Link href="/" className="text-3xl lg:text-4xl font-bold bg-gradient-to-tr from-blue-950 via-black to-blue-950 bg-clip-text text-transparent hover:opacity-80 transition-opacity font-serif uppercase tracking-wide">
+            Dedox
+          </Link>
+        </div>
+
+        {/* Right Section: Icons */}
+        <div className="flex flex-1 items-center justify-end space-x-5 lg:space-x-7">
           <button className="text-gray-700 hover:text-[#0f3d3e] transition-colors scale-110">
             <Search className="h-5 w-5" />
           </button>
@@ -104,6 +128,37 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden border-t bg-white overflow-hidden shadow-inner"
+          >
+            <div className="flex flex-col px-6 py-4 space-y-6">
+              <Link href="/" className="text-gray-800 text-lg font-medium font-inter" onClick={() => setIsMobileMenuOpen(false)}>Discover</Link>
+              <div className="flex flex-col space-y-3">
+                <span className="text-gray-800 text-lg font-medium font-inter">Collections</span>
+                <div className="pl-4 flex flex-col space-y-3 border-l-2 border-gray-100 ml-2">
+                  {categories.map((cat) => (
+                    <Link key={cat.name} href={cat.href} className="text-gray-600 font-medium font-inter" onClick={() => setIsMobileMenuOpen(false)}>
+                      {cat.name}
+                    </Link>
+                  ))}
+                  <Link href="/shop" className="text-[#0f3d3e] font-bold font-inter pt-1" onClick={() => setIsMobileMenuOpen(false)}>
+                    View All Products
+                  </Link>
+                </div>
+              </div>
+              <Link href="/about" className="text-gray-800 text-lg font-medium font-inter" onClick={() => setIsMobileMenuOpen(false)}>Signature</Link>
+              <Link href="/contact" className="text-gray-800 text-lg font-medium font-inter" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

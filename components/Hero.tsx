@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <section className="relative h-[80vh] min-h-[500px] w-full bg-black overflow-hidden flex items-center justify-center">
+    <section className="relative h-[60vh] min-h-[500px] w-full bg-black overflow-hidden flex items-center justify-center">
       {/* Background Image overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
@@ -37,7 +37,7 @@ export default function Hero() {
             transition={{ delay: 0.6, duration: 0.8 }}
             className="pt-8"
           >
-            <button className="bg-white text-[#0f3d3e] py-4 px-10 font-bold uppercase tracking-wider hover:bg-[#0f3d3e] hover:text-white transition-all duration-300 shadow-xl text-sm md:text-base border border-transparent hover:border-white">
+            <button className="bg-white text-[#0f3d3e] py-4 px-10 rounded-lg font-bold uppercase tracking-wider hover:bg-[#0f3d3e] hover:text-white transition-all duration-300 shadow-xl text-sm md:text-base  hover:border-white">
               Shop Now
             </button>
           </motion.div>
