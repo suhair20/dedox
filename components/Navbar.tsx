@@ -20,7 +20,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300">
-      <div className="container mx-auto flex h-18 items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto flex h-12 sm:h-16 md:h-18 lg:h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left Section: Mobile Menu & Nav Links */}
         <div className="flex flex-1 items-center justify-start">
           <div className="lg:hidden">
@@ -105,7 +105,7 @@ export default function Navbar() {
 
         {/* Center Section: Logo */}
         <div className="flex flex-none justify-center">
-          <Link href="/" className="text-3xl lg:text-4xl font-bold bg-gradient-to-tr from-blue-950 via-black to-blue-950 bg-clip-text text-transparent hover:opacity-80 transition-opacity font-serif uppercase tracking-wide">
+          <Link href="/" className="text-2xl lg:text-4xl font-bold bg-gradient-to-tr from-blue-950 via-black to-blue-950 bg-clip-text text-transparent hover:opacity-80 transition-opacity font-serif uppercase tracking-wide">
             Dedox
           </Link>
         </div>
