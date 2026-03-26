@@ -105,7 +105,7 @@ export default function Navbar() {
 
         {/* Center Section: Logo */}
         <div className="flex flex-none justify-center">
-          <Link href="/" className="text-2xl lg:text-4xl font-bold bg-gradient-to-tr from-blue-950 via-black to-blue-950 bg-clip-text text-transparent hover:opacity-80 transition-opacity font-serif uppercase tracking-wide">
+          <Link href="/" className="text-2xl lg:text-4xl font-bold text-[#0f3d3e]  hover:opacity-80 transition-opacity font-serif uppercase tracking-wide">
             Dedox
           </Link>
         </div>
