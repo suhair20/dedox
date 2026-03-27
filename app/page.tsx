@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import NotesCarousel from "@/components/NotesCarousel";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import Categories from "@/components/Categories";
 import BestSelling from "@/components/BestSelling";
@@ -10,10 +11,11 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
       <Hero />
+      <NotesCarousel />
       <FeaturedProducts />
       <ShopByBrand />
+       <BestSelling />
       <Categories />
-      <BestSelling />
       <Features />
       <FloatingButtons />
     </div>

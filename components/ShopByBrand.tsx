@@ -34,7 +34,7 @@ export default function ShopByBrand() {
             <Link
               key={brand.name}
               href={`/shop?brand=${encodeURIComponent(brand.name)}`}
-              className=" h-28 md:h-32 w-28 md:w-32 bg-white border shadow-lg rounded-2xl 
+              className=" h-28 md:h-24 w-28 md:w-36 bg-white border shadow-lg rounded-2xl 
                                                           flex items-center justify-center text-center 
                          transition-all duration-300 hover:shadow-md hover:-translate-y-1 group"
             >

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, User, ShoppingBag, Menu, ChevronDown } from "lucide-react";
+import { Search, User, ShoppingBag, Menu, ChevronDown, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,7 +19,8 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300">
+    <>
+      <header className="sticky top-0 z-[100] w-full border-b bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300">
       <div className="container mx-auto flex h-12 sm:h-16 md:h-18 lg:h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left Section: Mobile Menu & Nav Links */}
         <div className="flex flex-1 items-center justify-start">
@@ -128,37 +129,69 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+    </header>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t bg-white overflow-hidden shadow-inner"
-          >
-            <div className="flex flex-col px-6 py-4 space-y-6">
-              <Link href="/" className="text-gray-800 text-lg font-medium font-inter" onClick={() => setIsMobileMenuOpen(false)}>Discover</Link>
-              <div className="flex flex-col space-y-3">
-                <span className="text-gray-800 text-lg font-medium font-inter">Collections</span>
-                <div className="pl-4 flex flex-col space-y-3 border-l-2 border-gray-100 ml-2">
-                  {categories.map((cat) => (
-                    <Link key={cat.name} href={cat.href} className="text-gray-600 font-medium font-inter" onClick={() => setIsMobileMenuOpen(false)}>
-                      {cat.name}
-                    </Link>
-                  ))}
-                  <Link href="/shop" className="text-[#0f3d3e] font-bold font-inter pt-1" onClick={() => setIsMobileMenuOpen(false)}>
-                    View All Products
-                  </Link>
-                </div>
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/60 z-[100] lg:hidden backdrop-blur-sm"
+            />
+
+            {/* Side Drawer */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 left-0 h-full w-[85vw] max-w-sm bg-white shadow-2xl z-[110] lg:hidden flex flex-col overflow-y-auto"
+            >
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                <Link href="/" className="text-3xl font-bold text-[#0f3d3e] font-serif uppercase tracking-widest" onClick={() => setIsMobileMenuOpen(false)}>
+                  Dedox
+                </Link>
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 -mr-2 text-gray-400 hover:text-[#0f3d3e] transition-colors"
+                >
+                  <X className="w-7 h-7" />
+                </button>
               </div>
-              <Link href="/about" className="text-gray-800 text-lg font-medium font-inter" onClick={() => setIsMobileMenuOpen(false)}>Signature</Link>
-              <Link href="/contact" className="text-gray-800 text-lg font-medium font-inter" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
-            </div>
-          </motion.div>
+
+              {/* Drawer Links */}
+              <div className="flex flex-col px-6 py-8 space-y-8 flex-grow">
+                <Link href="/" className="text-gray-900 text-xl font-medium font-inter tracking-wide" onClick={() => setIsMobileMenuOpen(false)}>Discover</Link>
+                
+                <div className="flex flex-col">
+                  <span className="text-gray-900 text-xl font-medium font-inter tracking-wide mb-6">Collections</span>
+                  <div className="pl-6 flex flex-col space-y-6 border-l-2 border-[#0f3d3e]/20 ml-2">
+                    {categories.map((cat) => (
+                      <Link key={cat.name} href={cat.href} className="text-gray-500 text-lg font-inter hover:text-[#0f3d3e] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                        {cat.name}
+                      </Link>
+                    ))}
+                    <div className="pt-4 mt-2 border-t border-gray-100 w-3/4">
+                      <Link href="/shop" className="text-[#0f3d3e] text-lg font-bold font-inter flex items-center group" onClick={() => setIsMobileMenuOpen(false)}>
+                        View All Products <span className="ml-2 group-hover:translate-x-1 transition-transform">&rarr;</span>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+
+                <Link href="/about" className="text-gray-900 text-xl font-medium font-inter tracking-wide" onClick={() => setIsMobileMenuOpen(false)}>Signature</Link>
+                <Link href="/contact" className="text-gray-900 text-xl font-medium font-inter tracking-wide" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
