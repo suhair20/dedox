@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4 md:gap-8">
           <div className="space-y-6">
-            <Logo  className="!items-start scale-90 -ml-4" />
+            <Logo className="!items-start scale-90 -ml-4" />
             <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
               Discover the essence of luxury with our exclusive fragrance collection crafted for elegance and style. 
             </p>
