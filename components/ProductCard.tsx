@@ -30,74 +30,77 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group relative bg-white transition-all duration-300 flex flex-col h-full">
+    <div className="group relative bg-white transition-all duration-500 flex flex-col h-full hover:shadow-[0_20px_50px_rgba(155,89,182,0.1)] rounded-2xl p-2 border border-transparent hover:border-white/50">
       <Link href={`/product/${product.id}`} className="flex flex-col flex-grow">
-        <div className="relative w-full aspect-[4/5] overflow-hidden bg-white mb-3">
+        <div className="relative w-full aspect-[4/5] overflow-hidden bg-[#fafafa] rounded-xl mb-4">
           <Image
             src={product.image}
             alt={product.name}
             fill
-            className="object-contain object-center transition-transform duration-700 group-hover:scale-105"
+            className="object-contain object-center transition-transform duration-1000 group-hover:scale-110"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 15vw"
             style={{ mixBlendMode: 'multiply' }}
           />
           {product.oldPrice && (
-            <div className="absolute top-0 right-0 bg-[#0f3d3e] text-white text-[9px] font-bold px-2 py-1 uppercase tracking-tighter">
+            <div className="absolute top-3 right-3 bg-[#9b59b6] text-white text-[8px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
               Sale
-            </div>
-          )}
-          {product.brand === "Xerjoff" && (
-            <div className="absolute top-2 left-2 bg-white/80 backdrop-blur-sm text-[8px] font-bold px-2 py-0.5 rounded-full border border-gray-100 opacity-0 group-hover:opacity-100 transition-opacity">
-              PREVIOUSLY VIEWED
             </div>
           )}
         </div>
         
-        <div className="flex flex-col flex-grow px-1">
-          <div className="flex justify-between items-start mb-0.5">
-            <p className="text-[9px] text-gray-400 uppercase tracking-[0.15em] font-medium truncate pr-2">{product.brand}</p>
+        <div className="flex flex-col flex-grow px-2 pb-2">
+          <div className="flex justify-between items-start mb-1.5">
+            <p className="text-[10px] text-[#2E073F] uppercase tracking-[0.2em] font-bold">{product.brand}</p>
             {!product.inStock && (
-              <span className="text-[8px] font-black text-red-500 uppercase tracking-tighter">Sold Out</span>
+              <span className="text-[9px] font-black text-red-500 uppercase tracking-widest">Out of Stock</span>
             )}
           </div>
-          <h3 className="text-xs font-bold text-gray-800 line-clamp-1 mb-1 group-hover:text-[#0f3d3e] transition-colors leading-tight">{product.name}</h3>
+          <h3 className="text-[13px] font-bold text-gray-900 line-clamp-2 mb-2 group-hover:text-[#2E073F] transition-colors leading-snug">
+            {product.name}
+          </h3>
           
-          <div className="flex items-center space-x-1.5 mt-auto">
-            <span className="text-xs font-bold text-[#0f3d3e]">Dhs. {product.price}.00</span>
+          <div className="flex items-center space-x-2 mt-auto">
+            <span className="text-sm font-bold text-gray-900">Dhs. {product.price}.00</span>
             {product.oldPrice && (
-              <span className="text-[10px] text-gray-300 line-through font-medium">Dhs. {product.oldPrice}.00</span>
+              <span className="text-[11px] text-gray-300 line-through font-medium">Dhs. {product.oldPrice}.00</span>
             )}
           </div>
         </div>
       </Link>
       
       {/* Mini Action Bar */}
-      <div className="mt-4 px-1 pb-2 flex flex-col  gap-1.5  duration-300">
-        <div className="px-10" >
-        <div className="flex items-center border rounded-lg  border-gray-300 h-8">
-          <button 
-            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="w-8 flex items-center justify-center text-gray-400 hover:text-black transition-colors"
-          >
-            <Minus className="h-3 w-3" />
-          </button>
-          <span className="flex-1 text-center text-[11px] font-bold text-gray-700">{quantity}</span>
-          <button 
-            onClick={() => setQuantity(quantity + 1)}
-            className="w-8 flex items-center justify-center text-gray-400 hover:text-black transition-colors"
-          >
-            <Plus className="h-3 w-3" />
-          </button>
-        </div>
+      <div className="mt-2 px-1 pb-2 flex flex-col gap-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+        <div className="px-6">
+          <div className="flex items-center border rounded-full border-gray-100 h-9 bg-gray-50/50 backdrop-blur-sm">
+            <button 
+              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              className="w-9 flex items-center justify-center text-gray-400 hover:text-black transition-colors"
+            >
+              <Minus className="h-3 w-3" />
+            </button>
+            <span className="flex-1 text-center text-[12px] font-bold text-gray-700">{quantity}</span>
+            <button 
+              onClick={() => setQuantity(quantity + 1)}
+              className="w-9 flex items-center justify-center text-gray-400 hover:text-black transition-colors"
+            >
+              <Plus className="h-3 w-3" />
+            </button>
+          </div>
         </div>
         
         <button 
           onClick={handleAddToCart}
           disabled={!product.inStock}
-          className={`bg-gradient-to-tr from-blue-950 via-black to-blue-950 text-white h-10 rounded-lg flex items-center justify-center gap-2 transition-all hover:bg-black ${!product.inStock ? 'opacity-30 cursor-not-allowed grayscale' : 'active:scale-95'}`}
+          className={`bg-[#2E073F] text-white h-11 rounded-full flex items-center justify-center gap-3 transition-all ${
+            !product.inStock 
+            ? 'opacity-30 cursor-not-allowed grayscale' 
+            : 'hover:bg-purple-900 active:scale-95 shadow-md'
+          }`}
         >
-          <ShoppingCart className="h-3.5 w-3.5" />
-          <span className="text-[10px] font-bold uppercase tracking-widest">{product.inStock ? 'Add to cart' : 'Sold Out'}</span>
+          <ShoppingCart className="h-4 w-4" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+            {product.inStock ? 'Add to cart' : 'Sold Out'}
+          </span>
         </button>
       </div>
     </div>

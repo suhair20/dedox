@@ -1,29 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground: #1a1a1a;
+  --iridescent-silver: #F0F2F4;
+  --pale-violet: #E8DAEF;
+  --glass-white: rgba(255, 255, 255, 0.3);
+  --glass-border: rgba(255, 255, 255, 0.4);
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', sans-serif;
+  scroll-behavior: smooth;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .font-serif-luxury {
+    font-family: 'Bodoni Moda', serif;
   }
+  
+  .glass-card {
+    background: var(--glass-white);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .iridescent-bg {
+    background: linear-gradient(
+      135deg,
+      #F0F2F4 0%,
+      #E8DAEF 30%,
+      #D6EAF8 60%,
+      #FDFEFE 100%
+    );
+    background-size: 200% 200%;
+    animation: iridescentShift 15s ease infinite;
+  }
+
+  @keyframes iridescentShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .animate-float-slow {
+    animation: floatSlow 6s ease-in-out infinite;
+  }
+
+  @keyframes floatSlow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }

@@ -24,12 +24,12 @@ const categories = [
 
 export default function Categories() {
   return (
-    <section className="py-10 bg-white">
+    <section className="py-10 pb-28 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-20">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl  font-inter font-bold text-black mb-4">Shop by Category</h2>
-          <p className="text-gray-500 max-w-2xl mx-auto text-sm">
-            Discover our curated collections designed for every style and occasion.
+        <div className="text-center mb-20">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif-luxury text-gray-900 mb-6">Shop by Category</h2>
+          <p className="text-gray-500 max-w-2xl mx-auto text-[11px] uppercase tracking-[0.4em] font-black">
+            Curated collections for the modern vessel.
           </p>
         </div>
         
@@ -53,13 +53,13 @@ export default function Categories() {
                   sizes="(max-width: 768px) 80vw, 33vw"
                 />
               </Link>
-              <h3 className="text-2xl font-bold text-black mb-3">{cat.name}</h3>
+              <h3 className="text-3xl font-serif-luxury text-gray-900 mb-3">{cat.name}</h3>
               <p className="text-gray-500 text-sm leading-relaxed mb-8 max-w-[280px]">
                 {cat.description}
               </p>
               <Link 
                 href={`/category/${cat.name.toLowerCase()}`}
-                className="inline-block bg-black text-white px-8 py-3 rounded-lg font-bold text-sm tracking-wide hover:bg-gray-800 transition-colors"
+                className="bg-[#2E073F] text-white px-10 py-3.5 rounded-full font-bold text-[11px] uppercase tracking-[0.2em] hover:bg-purple-900 transition-all shadow-lg"
               >
                 Shop {cat.name}
               </Link>

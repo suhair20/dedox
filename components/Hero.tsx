@@ -1,48 +1,92 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+
+const TOTAL_FRAMES = 240;
+const FRAME_RATE = 30;
 
 export default function Hero() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imagesRef = useRef<{ [key: number]: HTMLImageElement }>({});
+
+  const formatIndex = (index: number) => index.toString().padStart(3, "0");
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let frameId: number;
+    let startTime: number | null = null;
+
+    // 1. Pre-generate the image objects (starts downloading immediately)
+    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+      const img = new Image();
+      img.src = `/images/herosection/ezgif-frame-${formatIndex(i)}.png`;
+      imagesRef.current[i] = img;
+    }
+
+    const draw = (frame: number) => {
+      const img = imagesRef.current[frame];
+      if (!img || !img.complete) return; // Skip if not downloaded yet
+
+      // Sync canvas size to window
+      canvas.width = window.innerWidth * window.devicePixelRatio;
+      canvas.height = window.innerHeight * window.devicePixelRatio;
+
+      const canvasAspect = canvas.width / canvas.height;
+      const imgAspect = img.width / img.height;
+
+      let drawWidth, drawHeight, offsetX, offsetY;
+
+      if (canvasAspect > imgAspect) {
+        drawWidth = canvas.width;
+        drawHeight = drawWidth / imgAspect;
+        offsetX = 0;
+        offsetY = (canvas.height - drawHeight) / 2;
+      } else {
+        drawHeight = canvas.height;
+        drawWidth = drawHeight * imgAspect;
+        offsetX = (canvas.width - drawWidth) / 2;
+        offsetY = 0;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+    };
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const frame = (Math.floor((elapsed / 1000) * FRAME_RATE) % TOTAL_FRAMES) + 1;
+
+      draw(frame);
+      frameId = requestAnimationFrame(animate);
+    };
+
+    frameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameId);
+  }, []);
+
   return (
-    <section className="relative h-[60vh] min-h-[500px] w-full bg-black overflow-hidden flex items-center justify-center">
-      {/* Background Image overlay */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&q=80&w=2000')" }}
+    <section className="relative w-full h-[80vh] bg-black overflow-hidden">
+      {/* This <img> tag acts as a "placeholder" or "poster". 
+        It shows frame 001 instantly while the JS and Canvas warm up.
+      */}
+      <img
+        src="/images/herosection/ezgif-frame-001.png"
+        alt="Hero Background"
+        className="absolute inset-0 w-full h-full object-cover opacity-100"
       />
       
-      <div className="container relative z-10 mx-auto px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-3xl mx-auto space-y-6"
-        >
-          <motion.span 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="inline-block px-4 py-1.5 mb-2 border border-white/30 text-xs md:text-sm font-bold tracking-[0.2em] text-white uppercase backdrop-blur-sm"
-          >
-            Up to 40% OFF
-          </motion.span>
-          
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-tight drop-shadow-lg">
-            Exclusive Fragrance <br className="hidden md:block"/> Collection
-          </h1>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="pt-8"
-          >
-            <button className="bg-white text-[#0f3d3e] py-4 px-10 rounded-lg font-bold uppercase tracking-wider hover:bg-[#0f3d3e] hover:text-white transition-all duration-300 shadow-xl text-sm md:text-base  hover:border-white">
-              Shop Now
-            </button>
-          </motion.div>
-        </motion.div>
-      </div>
+      {/* The Canvas sits on top and starts drawing as soon as frames arrive */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full pointer-events-none"
+      />
+      
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/40 pointer-events-none" />
     </section>
   );
 }

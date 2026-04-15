@@ -9,12 +9,12 @@ import FloatingButtons from "@/components/FloatingButtons";
 
 export default function Home() {
   return (
-    <div className="flex flex-col w-full overflow-x-hidden">
+    <div className="flex flex-col w-full overflow-x-hidden bg-white">
       <Hero />
       <NotesCarousel />
       <FeaturedProducts />
       <ShopByBrand />
-       <BestSelling />
+      <BestSelling />
       <Categories />
       <Features />
       <FloatingButtons />

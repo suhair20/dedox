@@ -84,9 +84,9 @@ export default function NotesCarousel() {
     <section className="w-full py-16 md:py-24 bg-[#fafafa] overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Centered Header Area with Original Text & Font */}
-        <div className="flex flex-col items-center justify-center text-center mb-10 w-full max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-inter font-bold text-[#0f3d3e] mb-4">
+        {/* Centered Header Area */}
+        <div className="flex flex-col items-center justify-center text-center mb-16 w-full max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif-luxury text-gray-900 mb-6">
             Explore Our Fragrances
           </h2>
           <p className="text-gray-600 font-inter text-base md:text-lg mb-10">
@@ -99,10 +99,10 @@ export default function NotesCarousel() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`flex items-center whitespace-nowrap px-5 py-2.5 rounded-full font-inter text-sm md:text-base font-semibold transition-all duration-300 snap-center ${
+                className={`flex items-center whitespace-nowrap px-6 py-3 rounded-full font-inter text-sm md:text-base font-medium transition-all duration-300 snap-center ${
                   activeCategory === cat
-                    ? "bg-[#0f3d3e] text-white shadow-md"
-                    : "text-gray-600 hover:text-gray-900"
+                    ? "bg-[#2E073F] text-white shadow-xl scale-105"
+                    : "text-gray-500 hover:text-gray-900"
                 }`}
               >
                 {getCategoryIcon(cat)}
@@ -119,11 +119,11 @@ export default function NotesCarousel() {
           <button
             onClick={scrollPrev}
             disabled={!canScrollPrev}
-            className={`absolute left-2 sm:left-0 top-[100px] sm:top-36 md:top-1/2 -translate-y-1/2 sm:-translate-x-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-full bg-white shadow-[0_2px_15px_rgba(0,0,0,0.15)] transition-all duration-300 ${
-              !canScrollPrev ? "opacity-0 pointer-events-none" : "opacity-100 hover:scale-105 text-[#0b5c14]"
+            className={`absolute left-2 sm:left-0 top-[100px] sm:top-36 md:top-1/2 -translate-y-1/2 sm:-translate-x-1/2 z-10 w-12 h-12 flex items-center justify-center rounded-full glass-card transition-all duration-300 ${
+              !canScrollPrev ? "opacity-0 pointer-events-none" : "opacity-100 hover:scale-110 text-gray-900"
             }`}
           >
-            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-[#0b5c14]" />
+            <ArrowLeft className="w-5 h-5 text-gray-900" />
           </button>
 
           <div className="overflow-hidden py-4 -my-4" ref={emblaRef}>
@@ -149,7 +149,7 @@ export default function NotesCarousel() {
                       <h3 className="text-lg sm:text-xl font-bold font-inter text-gray-900 leading-tight">
                         {item.title}
                       </h3>
-                      <div className="text-[9px] sm:text-[11px] font-bold tracking-[0.1em] uppercase text-[#0b5c14] mt-3 pb-1">
+                      <div className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#2E073F] mt-4">
                         {item.desc} &rarr;
                       </div>
                     </div>
@@ -173,8 +173,8 @@ export default function NotesCarousel() {
         </div>
 
         {/* Explore Button */}
-        <div className="flex justify-center mt-12">
-          <button className="bg-[#0f3d3e] text-white px-8 py-3.5 rounded-full font-bold text-sm tracking-wider uppercase hover:bg-green-800 transition-colors shadow-lg">
+        <div className="flex justify-center mt-16">
+          <button className="bg-[#2E073F] text-white px-12 py-3.5 rounded-full font-bold text-sm tracking-wider uppercase hover:bg-purple-900 transition-colors shadow-lg">
             Explore All Notes
           </button>
         </div>

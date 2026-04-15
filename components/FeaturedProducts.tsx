@@ -40,12 +40,13 @@ export default function FeaturedProducts() {
   };
 
   return (
-    <section className="py-20 bg-white" id="featured">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center">
-        <h2 className="text-3xl md:text-3xl font-serif font-bold text-[#0f3d3e] mb-2">Featured</h2>
-        <p className="text-gray-400 text-xs md:text-sm mb-4">Explore our hand-picked collection</p>
-        <Link href="/shop" className="text-xs font-bold text-gray-900 border-b border-gray-900 pb-0.5 hover:text-[#0f3d3e] hover:border-[#0f3d3e] transition-colors">
-          View all
+    <section className="py-24 bg-white" id="featured">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
+        <h2 className="text-4xl md:text-5xl font-serif-luxury text-gray-900 mb-4">The Highlight</h2>
+        <p className="text-gray-400 text-[11px] uppercase tracking-[0.3em] font-black mb-8">Curated pieces from the void</p>
+        <Link href="/shop" className="group relative text-[10px] font-black uppercase tracking-widest text-[#2E073F] pb-1 overflow-hidden inline-block">
+          <span>View all collection</span>
+          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#2E073F] -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
         </Link>
       </div>
 
