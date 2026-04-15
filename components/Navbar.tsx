@@ -158,7 +158,7 @@ export default function Navbar() {
               {/* Drawer Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-100">
                 <div onClick={() => setIsMobileMenuOpen(false)}>
-                  <Logo showText={false} className="scale-75 -ml-8" />
+                  <Logo  className="scale-75 -ml-8" />
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
