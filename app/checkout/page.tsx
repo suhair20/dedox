@@ -27,7 +27,7 @@ const STEPS = [
 
 export default function CheckoutPage() {
   const { cart, getCartTotal } = useCart();
-  const { formatPrice, currency } = useLocation();
+  const { formatPrice} = useLocation();
   const [currentStep, setCurrentStep] = useState(0); // 0: Info, 1: Shipping, 2: Payment
   const [shippingMethod, setShippingMethod] = useState('standard');
   const [paymentMethod, setPaymentMethod] = useState('card');
