@@ -6,6 +6,7 @@ import { useCart } from "@/context/CartContext";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "./Logo";
+import CurrencySwitcher from "./CurrencySwitcher";
 
 export default function Navbar() {
   const { getCartCount } = useCart();
@@ -25,10 +26,10 @@ export default function Navbar() {
         <div className="absolute inset-0 iridescent-bg opacity-30 -z-10" />
         <div className="container mx-auto flex h-14 sm:h-20 md:h-22 lg:h-26 items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Left Section: Mobile Menu & Nav Links */}
-          <div className="flex flex-1 items-center justify-start">
+          <div className="flex items-center space-x-4 flex-1">
             <div className="lg:hidden">
               <button
-                className="text-gray-600 hover:text-[#0f3d3e] transition-colors"
+                className="text-gray-600 hover:text-[#2E073F] transition-colors"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 <Menu className="h-6 w-6" />
@@ -74,7 +75,7 @@ export default function Navbar() {
                         <Link
                           key={cat.name}
                           href={cat.href}
-                          className="block px-6 py-3 text-sm font-medium text-gray-600 hover:text-[#0f3d3e] hover:bg-gray-50 transition-all border-l-2 border-transparent hover:border-[#0f3d3e]"
+                          className="block px-6 py-3 text-sm font-medium text-gray-600 hover:text-[#2E073F] hover:bg-gray-50 transition-all border-l-2 border-transparent hover:border-[#2E073F]"
                         >
                           {cat.name} Collections
                         </Link>
@@ -82,7 +83,7 @@ export default function Navbar() {
                       <div className="mt-2 pt-2 border-t border-gray-50">
                         <Link
                           href="/shop"
-                          className="block px-6 py-3 text-xs font-bold uppercase tracking-tighter text-[#0f3d3e] hover:underline"
+                          className="block px-6 py-3 text-xs font-bold uppercase tracking-tighter text-[#2E073F] hover:underline"
                         >
                           View All Products
                         </Link>
@@ -109,21 +110,20 @@ export default function Navbar() {
           <Logo />
 
 
-
-
-
-
-
-          {/* Right Section: Icons */}
-          <div className="flex flex-1 items-center justify-end space-x-5 lg:space-x-7">
-            <button className="text-gray-700 hover:text-[#0f3d3e] transition-colors scale-110">
+          {/* Right Section: Icons & Switcher */}
+          <div className="flex flex-1 items-center justify-end space-x-3 sm:space-x-5 lg:space-x-7">
+            <div className="hidden sm:block">
+              <CurrencySwitcher />
+            </div>
+            
+            <button className="text-gray-700 hover:text-[#2E073F] transition-colors scale-110">
               <Search className="h-5 w-5" />
             </button>
-            <Link href="/login" className="hidden sm:block text-gray-700 hover:text-[#0f3d3e] transition-colors scale-110">
+            <Link href="/login" className="hidden sm:block text-gray-700 hover:text-[#2E073F] transition-colors scale-110">
               <User className="h-5 w-5" />
             </Link>
             <div className="relative">
-              <Link href="/cart" className="text-gray-700 hover:text-[#0f3d3e] transition-colors scale-110">
+              <Link href="/cart" className="text-gray-700 hover:text-[#2E073F] transition-colors scale-110">
                 <ShoppingBag className="h-5 w-5" />
               </Link>
               <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#2E073F] text-[10px] font-bold text-white shadow-lg border-2 border-white">

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Plus, Minus, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
+import { useLocation } from "@/context/LocationContext";
 
 interface ProductCardProps {
   product: {
@@ -22,6 +23,7 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+  const { formatPrice } = useLocation();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -30,7 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group relative bg-white transition-all duration-500 flex flex-col h-full hover:shadow-[0_20px_50px_rgba(155,89,182,0.1)] rounded-2xl p-2 border border-transparent hover:border-white/50">
+    <div className="group relative bg-white transition-all duration-500 flex flex-col h-full hover:shadow-[0_20px_50px_rgba(46,7,63,0.1)] rounded-2xl p-2 border border-transparent hover:border-white/50">
       <Link href={`/product/${product.id}`} className="flex flex-col flex-grow">
         <div className="relative w-full aspect-[4/5] overflow-hidden bg-[#fafafa] rounded-xl mb-4">
           <Image
@@ -42,8 +44,8 @@ export default function ProductCard({ product }: ProductCardProps) {
             style={{ mixBlendMode: 'multiply' }}
           />
           {product.oldPrice && (
-            <div className="absolute top-3 right-3 bg-[#9b59b6] text-white text-[8px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
-              Sale
+            <div className="absolute top-3 right-3 bg-[#2E073F] text-white text-[8px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+              Special Offer
             </div>
           )}
         </div>
@@ -59,10 +61,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             {product.name}
           </h3>
           
-          <div className="flex items-center space-x-2 mt-auto">
-            <span className="text-sm font-bold text-gray-900">Dhs. {product.price}.00</span>
+          <div className="flex flex-col mt-auto">
+            <span className="text-sm font-bold text-gray-900">{formatPrice(product.price)}</span>
             {product.oldPrice && (
-              <span className="text-[11px] text-gray-300 line-through font-medium">Dhs. {product.oldPrice}.00</span>
+              <span className="text-[11px] text-gray-300 line-through font-medium leading-none mt-1">{formatPrice(product.oldPrice)}</span>
             )}
           </div>
         </div>

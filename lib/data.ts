@@ -9,6 +9,12 @@ export interface Product {
   description: string;
   brand: string;
   inStock: boolean;
+  rating?: number;
+  reviewCount?: number;
+  subtitle?: string;
+  deliveryInfo?: string;
+  warrantyInfo?: string;
+  thumbnails?: string[];
 }
 
 // Updated working perfume bottle images
@@ -33,6 +39,12 @@ export const products: Product[] = [
     description: "A majestic blend of rare agarwood, amber, and warm spices.",
     brand: "Xerjoff",
     inStock: true,
+    rating: 4.8,
+    reviewCount: 124,
+    subtitle: "Majestic Oud & Amber Blend",
+    deliveryInfo: "Free Express Delivery",
+    warrantyInfo: "100% Authentic Product",
+    thumbnails: [IMG.c, IMG.a, IMG.b, IMG.d]
   },
   {
     id: "2",
@@ -45,6 +57,12 @@ export const products: Product[] = [
     description: "An enchanting nocturnal floral fragrance of velvet roses.",
     brand: "Amouage",
     inStock: true,
+    rating: 4.7,
+    reviewCount: 89,
+    subtitle: "Enchanting Velvet Roses",
+    deliveryInfo: "Delivery by tomorrow",
+    warrantyInfo: "Original Batch Guarantee",
+    thumbnails: [IMG.b, IMG.f, IMG.a, IMG.e]
   },
   {
     id: "3",
@@ -56,6 +74,12 @@ export const products: Product[] = [
     description: "The ultimate expression of ocean-fresh freshness.",
     brand: "Amouage",
     inStock: true,
+    rating: 4.9,
+    reviewCount: 205,
+    subtitle: "Deep Ocean Freshness",
+    deliveryInfo: "Ships in 24 Hours",
+    warrantyInfo: "Premium Quality Seal",
+    thumbnails: [IMG.e, IMG.c, IMG.f, IMG.d]
   },
   {
     id: "5",
@@ -67,6 +91,12 @@ export const products: Product[] = [
     description: "A smooth, creamy blend of Australian sandalwood.",
     brand: "Akro",
     inStock: true,
+    rating: 4.6,
+    reviewCount: 56,
+    subtitle: "Creamy Australian Sandalwood",
+    deliveryInfo: "Standard Shipping",
+    warrantyInfo: "Certified Original",
+    thumbnails: [IMG.d, IMG.b, IMG.a, IMG.f]
   },
   {
     id: "6",
@@ -79,6 +109,12 @@ export const products: Product[] = [
     description: "The refreshing spirit of the Mediterranean.",
     brand: "Alghabra",
     inStock: true,
+    rating: 4.5,
+    reviewCount: 42,
+    subtitle: "Mediterranean Spirit",
+    deliveryInfo: "Best value shipping",
+    warrantyInfo: "Authorized Dealer",
+    thumbnails: [IMG.f, IMG.e, IMG.b, IMG.a]
   },
   {
     id: "7",
@@ -90,6 +126,12 @@ export const products: Product[] = [
     description: "A delicate dance of soft petals with blooming peonies.",
     brand: "Affinessence",
     inStock: true,
+    rating: 4.8,
+    reviewCount: 112,
+    subtitle: "Delicate Peony Dance",
+    deliveryInfo: "Fragile Secure Packing",
+    warrantyInfo: "Batch Tested Authentic",
+    thumbnails: [IMG.a, IMG.f, IMG.e, IMG.b]
   },
   {
     id: "9",
@@ -101,6 +143,12 @@ export const products: Product[] = [
     description: "An ethereal, skin-like scent of white musk.",
     brand: "Amouage",
     inStock: true,
+    rating: 4.7,
+    reviewCount: 78,
+    subtitle: "Ethereal White Musk",
+    deliveryInfo: "Same day dispatch",
+    warrantyInfo: "Brand Warranty",
+    thumbnails: [IMG.b, IMG.c, IMG.d, IMG.e]
   },
   {
     id: "10",
@@ -113,6 +161,12 @@ export const products: Product[] = [
     description: "The intoxicating allure of night-blooming jasmine.",
     brand: "24",
     inStock: true,
+    rating: 4.9,
+    reviewCount: 167,
+    subtitle: "Nocturnal Jasmine Allure",
+    deliveryInfo: "Priority Shipping",
+    warrantyInfo: "Exclusive Batch",
+    thumbnails: [IMG.a, IMG.b, IMG.f, IMG.d]
   },
   {
     id: "11",
@@ -124,6 +178,12 @@ export const products: Product[] = [
     description: "A warm, radiant blend of Persian saffron and leather.",
     brand: "Xerjoff",
     inStock: true,
+    rating: 5.0,
+    reviewCount: 92,
+    subtitle: "Persian Saffron & Leather",
+    deliveryInfo: "Global Express",
+    warrantyInfo: "Royal Heritage Seal",
+    thumbnails: [IMG.c, IMG.a, IMG.f, IMG.e]
   },
   {
     id: "12",
@@ -135,6 +195,12 @@ export const products: Product[] = [
     description: "A dizzying rush of alpine air, mint and oakmoss.",
     brand: "Amouage",
     inStock: true,
+    rating: 4.6,
+    reviewCount: 134,
+    subtitle: "Alpine Fresh Rush",
+    deliveryInfo: "Standard Delivery",
+    warrantyInfo: "Authentic Original",
+    thumbnails: [IMG.e, IMG.c, IMG.b, IMG.d]
   },
   {
     id: "13",
@@ -147,6 +213,12 @@ export const products: Product[] = [
     description: "A sparkling blend of Turkish rose, lychee and white cedar.",
     brand: "Agatho",
     inStock: true,
+    rating: 4.8,
+    reviewCount: 156,
+    subtitle: "Sparkling Rose & Cedar",
+    deliveryInfo: "Safe Box Delivery",
+    warrantyInfo: "Geniune Fragrance",
+    thumbnails: [IMG.f, IMG.a, IMG.b, IMG.e]
   },
   {
     id: "15",
@@ -158,5 +230,11 @@ export const products: Product[] = [
     description: "A sun-drenched walk through an Italian citrus grove.",
     brand: "Alghabra",
     inStock: true,
+    rating: 4.4,
+    reviewCount: 68,
+    subtitle: "Italian Citrus Harvest",
+    deliveryInfo: "Fast Track",
+    warrantyInfo: "Verified Batch",
+    thumbnails: [IMG.d, IMG.e, IMG.c, IMG.f]
   },
 ];
