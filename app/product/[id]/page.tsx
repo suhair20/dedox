@@ -11,7 +11,7 @@ import {
   ShieldCheck, 
   Truck, 
   CheckCircle2,
-  Clock
+
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";

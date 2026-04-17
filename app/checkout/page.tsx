@@ -7,16 +7,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { 
   ArrowLeft, 
-  ShieldCheck, 
-  Truck, 
-  CreditCard, 
-  Wallet, 
+  ShieldCheck,  
+  CreditCard,  
   Smartphone, 
   Banknote, 
-  ChevronRight, 
   Check, 
-  Info,
-  Package,
   Lock,
   ArrowRight
 } from 'lucide-react';
@@ -38,7 +33,7 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isSummaryExpanded, setIsSummaryExpanded] = useState(false);
+
 
   // Derived calculations
   const subtotal = getCartTotal();

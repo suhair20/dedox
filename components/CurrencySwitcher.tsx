@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, SUPPORTED_CURRENCIES } from '@/context/LocationContext';
-import { ChevronDown, Globe } from 'lucide-react';
+import { ChevronDown} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CurrencySwitcher() {
