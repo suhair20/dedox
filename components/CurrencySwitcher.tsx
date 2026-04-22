@@ -27,7 +27,7 @@ export default function CurrencySwitcher() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center space-x-2 px-3 py-1.5 rounded-full border border-gray-100 bg-white/50 backdrop-blur-sm hover:border-[#2E073F]/30 transition-all shadow-sm"
       >
-        <span className="text-lg leading-none">{currency.flag}</span>
+        <span className="hidden sm:block text-lg leading-none">{currency.flag}</span>
         <span className="text-[10px] font-black uppercase tracking-widest text-gray-700">{currency.code}</span>
         <ChevronDown className={`h-3 w-3 text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>

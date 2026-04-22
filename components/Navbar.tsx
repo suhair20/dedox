@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Search, User, ShoppingBag, Menu, ChevronDown, X } from "lucide-react";
+import {
+  Search,
+  User,
+  ShoppingBag,
+  Menu,
+  ChevronDown,
+  X,
+} from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,6 +17,7 @@ import CurrencySwitcher from "./CurrencySwitcher";
 
 export default function Navbar() {
   const { getCartCount } = useCart();
+
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -22,111 +30,128 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-[100] w-full border-b border-white/20 glass-card transition-all duration-300">
-        <div className="absolute inset-0 iridescent-bg opacity-30 -z-10" />
-        <div className="container mx-auto flex h-14 sm:h-20 md:h-22 lg:h-26 items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* Left Section: Mobile Menu & Nav Links */}
-          <div className="flex items-center space-x-4 flex-1">
-            <div className="lg:hidden">
-              <button
-                className="text-gray-600 hover:text-[#2E073F] transition-colors"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                <Menu className="h-6 w-6" />
-              </button>
-            </div>
+      {/* HEADER */}
+      <header className="sticky top-0 z-[100] w-full border-b border-white/20 glass-card bg-white/90 backdrop-blur-md">
+        <div className="container mx-auto relative flex h-16 sm:h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
+          
+          {/* LEFT SIDE */}
+          <div className="flex flex-1 items-center">
+            {/* Mobile Menu */}
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden text-gray-700 hover:text-[#2E073F]"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
 
-            {/* Desktop Nav Links */}
-            <nav className="hidden lg:flex items-center space-x-12 ml-6">
-              <Link href="/" className="group relative flex flex-col h-[22px] overflow-hidden font-inter text-[12px] uppercase tracking-[0.25em] font-medium text-gray-900">
-                <span className="transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] group-hover:-translate-y-full">Discover</span>
-                <span className="absolute top-0 left-0 h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] translate-y-full group-hover:translate-y-0 text-[#2E073F] font-bold">Discover</span>
+            {/* Desktop Menu */}
+            <nav className="hidden lg:flex items-center space-x-10 ml-4">
+              <Link
+                href="/"
+                className="text-sm uppercase tracking-[0.25em] font-medium text-gray-800 hover:text-[#2E073F]"
+              >
+                Discover
               </Link>
 
+              {/* Collections */}
               <div
-                className="relative group"
+                className="relative"
                 onMouseEnter={() => setIsShopOpen(true)}
                 onMouseLeave={() => setIsShopOpen(false)}
               >
-                  <Link
-                    href="/shop"
-                    className="group/link relative flex h-[22px] overflow-hidden items-center font-inter text-[12px] uppercase tracking-[0.25em] font-medium text-gray-900"
-                  >
-                    <span className="flex items-center space-x-2 transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] group-hover/link:-translate-y-full">
-                      <span>Collections</span>
-                      <ChevronDown className={`h-3 w-3 transition-transform duration-300 ${isShopOpen ? 'rotate-180' : ''}`} />
-                    </span>
-                    <span className="absolute top-0 left-0 w-full h-full flex items-center space-x-2 transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] translate-y-full group-hover/link:translate-y-0 text-[#2E073F] font-bold">
-                      <span>Collections</span>
-                      <ChevronDown className={`h-3 w-3 text-[#2E073F] transition-transform duration-300 ${isShopOpen ? 'rotate-180' : ''}`} />
-                    </span>
-                  </Link>
+                <Link
+                  href="/shop"
+                  className="flex items-center gap-1 text-sm uppercase tracking-[0.25em] font-medium text-gray-800 hover:text-[#2E073F]"
+                >
+                  Collections
+                  <ChevronDown
+                    className={`h-4 w-4 transition ${
+                      isShopOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </Link>
 
                 <AnimatePresence>
                   {isShopOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 10 }}
+                      initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute left-0 mt-0 w-56 bg-white border border-gray-100 shadow-2xl py-4 z-50 rounded-sm"
+                      exit={{ opacity: 0, y: 8 }}
+                      className="absolute top-full left-0 mt-4 w-56 bg-white border shadow-xl rounded-md overflow-hidden"
                     >
                       {categories.map((cat) => (
                         <Link
                           key={cat.name}
                           href={cat.href}
-                          className="block px-6 py-3 text-sm font-medium text-gray-600 hover:text-[#2E073F] hover:bg-gray-50 transition-all border-l-2 border-transparent hover:border-[#2E073F]"
+                          className="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#2E073F]"
                         >
-                          {cat.name} Collections
+                          {cat.name}
                         </Link>
                       ))}
-                      <div className="mt-2 pt-2 border-t border-gray-50">
-                        <Link
-                          href="/shop"
-                          className="block px-6 py-3 text-xs font-bold uppercase tracking-tighter text-[#2E073F] hover:underline"
-                        >
-                          View All Products
-                        </Link>
-                      </div>
+
+                      <Link
+                        href="/shop"
+                        className="block px-5 py-3 text-xs font-bold uppercase text-[#2E073F] border-t"
+                      >
+                        View All Products
+                      </Link>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
 
-
-              <Link href="/about" className="group relative flex flex-col h-[22px] overflow-hidden font-inter text-[12px] uppercase tracking-[0.25em] font-medium text-gray-900">
-                <span className="transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] group-hover:-translate-y-full">Signature</span>
-                <span className="absolute top-0 left-0 h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] translate-y-full group-hover:translate-y-0 text-[#2E073F] font-bold">Signature</span>
-              </Link>
-              <Link href="/contact" className="group relative flex flex-col h-[22px] overflow-hidden font-inter text-[12px] uppercase tracking-[0.25em] font-medium text-gray-900">
-                <span className="transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] group-hover:-translate-y-full">Contact</span>
-                <span className="absolute top-0 left-0 h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.85,0,0.15,1)] translate-y-full group-hover:translate-y-0 text-[#2E073F] font-bold">Contact</span>
+              <Link
+                href="/about"
+                className="text-sm uppercase tracking-[0.25em] font-medium text-gray-800 hover:text-[#2E073F]"
+              >
+                Signature
               </Link>
 
+              <Link
+                href="/contact"
+                className="text-sm uppercase tracking-[0.25em] font-medium text-gray-800 hover:text-[#2E073F]"
+              >
+                Contact
+              </Link>
             </nav>
           </div>
 
+          {/* PERFECT CENTER LOGO */}
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <Logo />
+          </div>
 
-          <Logo />
-
-
-          {/* Right Section: Icons & Switcher */}
-          <div className="flex flex-1 items-center justify-end space-x-3 sm:space-x-5 lg:space-x-7">
-            <div className="hidden sm:block">
-              <CurrencySwitcher />
-            </div>
+          {/* RIGHT SIDE */}
+          <div className="flex flex-1 items-center justify-end gap-3 sm:gap-5">
             
-            <button className="text-gray-700 hover:text-[#2E073F] transition-colors scale-110">
+            {/* Desktop Search */}
+            <button className="hidden lg:block text-gray-700 hover:text-[#2E073F]">
               <Search className="h-5 w-5" />
             </button>
-            <Link href="/login" className="hidden sm:block text-gray-700 hover:text-[#2E073F] transition-colors scale-110">
+
+            {/* Desktop Login */}
+            <Link
+              href="/login"
+              className="hidden lg:block text-gray-700 hover:text-[#2E073F]"
+            >
               <User className="h-5 w-5" />
             </Link>
+
+            {/* Currency always visible */}
+            <div className="scale-90 sm:scale-100">
+              <CurrencySwitcher />
+            </div>
+
+            {/* Cart */}
             <div className="relative">
-              <Link href="/cart" className="text-gray-700 hover:text-[#2E073F] transition-colors scale-110">
+              <Link
+                href="/cart"
+                className="text-gray-700 hover:text-[#2E073F]"
+              >
                 <ShoppingBag className="h-5 w-5" />
               </Link>
-              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#2E073F] text-[10px] font-bold text-white shadow-lg border-2 border-white">
+
+              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#2E073F] text-[10px] text-white font-bold">
                 {getCartCount()}
               </span>
             </div>
@@ -134,7 +159,7 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
+      {/* MOBILE MENU DRAWER */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
@@ -144,52 +169,92 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 z-[100] lg:hidden backdrop-blur-sm"
+              className="fixed inset-0 bg-black/50 z-[100]"
             />
 
-            {/* Side Drawer */}
+            {/* Drawer */}
             <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 h-full w-[85vw] max-w-sm bg-white shadow-2xl z-[110] lg:hidden flex flex-col overflow-y-auto"
+              transition={{ type: "spring", stiffness: 220, damping: 25 }}
+              className="fixed top-0 left-0 w-[85vw] max-w-sm h-full bg-white z-[110] shadow-2xl overflow-y-auto"
             >
               {/* Drawer Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-100">
-                <div onClick={() => setIsMobileMenuOpen(false)}>
-                  <Logo  className="scale-75 -ml-8" />
-                </div>
+              <div className="flex items-center justify-between p-5 border-b">
+                <Logo />
+
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 -mr-2 text-gray-400 hover:text-[#2E073F] transition-colors"
+                  className="text-gray-700"
                 >
-                  <X className="w-7 h-7" />
+                  <X className="h-6 w-6" />
                 </button>
               </div>
 
-              {/* Drawer Links */}
-              <div className="flex flex-col px-6 py-8 space-y-8 flex-grow">
-                <Link href="/" className="text-gray-900 text-xl font-medium font-inter tracking-wide" onClick={() => setIsMobileMenuOpen(false)}>Discover</Link>
+              {/* Search */}
+              <div className="p-5 border-b">
+                <div className="flex items-center border rounded-lg px-3 py-2">
+                  <Search className="h-4 w-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    className="ml-2 w-full outline-none text-sm"
+                  />
+                </div>
+              </div>
 
-                <div className="flex flex-col">
-                  <span className="text-gray-900 text-xl font-medium font-inter tracking-wide mb-6">Collections</span>
-                  <div className="pl-6 flex flex-col space-y-6 border-l-2 border-[#2E073F]/20 ml-2">
+              {/* Links */}
+              <div className="flex flex-col p-6 space-y-7">
+                <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
+                  Discover
+                </Link>
+
+                <div>
+                  <p className="mb-4 font-medium">Collections</p>
+
+                  <div className="pl-4 border-l space-y-4">
                     {categories.map((cat) => (
-                      <Link key={cat.name} href={cat.href} className="text-gray-500 text-lg font-inter hover:text-[#2E073F] transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Link
+                        key={cat.name}
+                        href={cat.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="block text-gray-600"
+                      >
                         {cat.name}
                       </Link>
                     ))}
-                    <div className="pt-4 mt-2 border-t border-gray-100 w-3/4">
-                      <Link href="/shop" className="text-[#2E073F] text-lg font-bold font-inter flex items-center group" onClick={() => setIsMobileMenuOpen(false)}>
-                        View All Products <span className="ml-2 group-hover:translate-x-1 transition-transform">&rarr;</span>
-                      </Link>
-                    </div>
+
+                    <Link
+                      href="/shop"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block text-[#2E073F] font-semibold pt-2"
+                    >
+                      View All Products →
+                    </Link>
                   </div>
                 </div>
 
-                <Link href="/about" className="text-gray-900 text-xl font-medium font-inter tracking-wide" onClick={() => setIsMobileMenuOpen(false)}>Signature</Link>
-                <Link href="/contact" className="text-gray-900 text-xl font-medium font-inter tracking-wide" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+                <Link href="/about" onClick={() => setIsMobileMenuOpen(false)}>
+                  Signature
+                </Link>
+
+                <Link
+                  href="/contact"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Contact
+                </Link>
+
+                {/* Login inside mobile menu */}
+                <Link
+                  href="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2 text-[#2E073F] font-medium pt-4 border-t"
+                >
+                  <User className="h-5 w-5" />
+                  Login / Account
+                </Link>
               </div>
             </motion.div>
           </>
