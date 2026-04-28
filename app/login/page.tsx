@@ -2,7 +2,14 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Mail, ShieldCheck, ArrowRight, RefreshCw, CheckCircle2, AlertCircle } from "lucide-react";
+import {
+  Mail,
+  ShieldCheck,
+  ArrowRight,
+  RefreshCw,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 
@@ -15,6 +22,10 @@ export default function LoginPage() {
   const [success, setSuccess] = useState("");
   const [resendTimer, setResendTimer] = useState(0);
   const router = useRouter();
+
+  // ✅ Helper for safe error handling
+  const getErrorMessage = (err: unknown) =>
+    err instanceof Error ? err.message : "An unexpected error occurred";
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -39,7 +50,7 @@ export default function LoginPage() {
         body: JSON.stringify({ email }),
       });
 
-      const data = await res.json();
+      const data: { error?: string } = await res.json();
 
       if (res.ok) {
         setStep(2);
@@ -48,8 +59,8 @@ export default function LoginPage() {
       } else {
         setError(data.error || "Failed to send OTP");
       }
-    } catch (err) {
-      setError("An unexpected error occurred");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -67,7 +78,7 @@ export default function LoginPage() {
         body: JSON.stringify({ email, otp }),
       });
 
-      const data = await res.json();
+      const data: { error?: string } = await res.json();
 
       if (res.ok) {
         setSuccess("Login successful! Redirecting...");
@@ -77,8 +88,8 @@ export default function LoginPage() {
       } else {
         setError(data.error || "Invalid OTP");
       }
-    } catch (err) {
-      setError("An unexpected error occurred");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -86,8 +97,10 @@ export default function LoginPage() {
 
   const handleResendOtp = async () => {
     if (resendTimer > 0) return;
+
     setLoading(true);
     setError("");
+    setSuccess("");
 
     try {
       const res = await fetch("/api/resend-otp", {
@@ -96,7 +109,7 @@ export default function LoginPage() {
         body: JSON.stringify({ email }),
       });
 
-      const data = await res.json();
+      const data: { error?: string } = await res.json();
 
       if (res.ok) {
         setSuccess("A new OTP has been sent!");
@@ -104,8 +117,8 @@ export default function LoginPage() {
       } else {
         setError(data.error || "Failed to resend OTP");
       }
-    } catch (err) {
-      setError("An unexpected error occurred");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -120,7 +133,10 @@ export default function LoginPage() {
         className="max-w-md w-full"
       >
         <div className="text-center mb-12">
-          <Link href="/" className="text-3xl font-bold text-[#0f3d3e] tracking-tighter mb-4 block">
+          <Link
+            href="/"
+            className="text-3xl font-bold text-[#0f3d3e] tracking-tighter mb-4 block"
+          >
             Dedox Perfume
           </Link>
           <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
@@ -179,7 +195,9 @@ export default function LoginPage() {
                   <RefreshCw className="h-5 w-5 animate-spin" />
                 ) : (
                   <>
-                    <span className="font-bold uppercase tracking-widest text-sm">Send Secure Code</span>
+                    <span className="font-bold uppercase tracking-widest text-sm">
+                      Send Secure Code
+                    </span>
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </>
                 )}
@@ -206,7 +224,9 @@ export default function LoginPage() {
                     type="text"
                     maxLength={6}
                     value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                    onChange={(e) =>
+                      setOtp(e.target.value.replace(/\D/g, ""))
+                    }
                     className="block w-full pl-11 pr-4 py-4 border border-gray-200 bg-gray-50 text-center text-2xl font-bold tracking-[0.5em] focus:ring-2 focus:ring-[#0f3d3e] focus:border-transparent transition-all outline-none"
                     placeholder="000000"
                     required
@@ -239,7 +259,9 @@ export default function LoginPage() {
                     <RefreshCw className="h-5 w-5 animate-spin" />
                   ) : (
                     <>
-                      <span className="font-bold uppercase tracking-widest text-sm">Verify & Login</span>
+                      <span className="font-bold uppercase tracking-widest text-sm">
+                        Verify & Login
+                      </span>
                       <ShieldCheck className="h-4 w-4" />
                     </>
                   )}
@@ -252,17 +274,19 @@ export default function LoginPage() {
                     disabled={resendTimer > 0 || loading}
                     className="text-sm font-bold text-[#0f3d3e] hover:underline uppercase tracking-tight disabled:opacity-50"
                   >
-                    {resendTimer > 0 ? `Resend Code in ${resendTimer}s` : "Resend Code"}
+                    {resendTimer > 0
+                      ? `Resend Code in ${resendTimer}s`
+                      : "Resend Code"}
                   </button>
                 </div>
 
                 <div className="text-center pt-4">
-                   <button
+                  <button
                     type="button"
                     onClick={() => {
-                        setStep(1);
-                        setError("");
-                        setSuccess("");
+                      setStep(1);
+                      setError("");
+                      setSuccess("");
                     }}
                     className="text-xs text-gray-400 hover:text-gray-600 uppercase tracking-widest transition-colors font-bold"
                   >
@@ -276,7 +300,10 @@ export default function LoginPage() {
 
         <div className="mt-12 text-center text-sm text-gray-500 border-t border-gray-100 pt-8">
           Don&apos;t have an account?{" "}
-          <Link href="#" className="font-bold text-[#0f3d3e] hover:underline uppercase tracking-tight ml-1">
+          <Link
+            href="#"
+            className="font-bold text-[#0f3d3e] hover:underline uppercase tracking-tight ml-1"
+          >
             Sign Up
           </Link>
         </div>

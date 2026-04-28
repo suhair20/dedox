@@ -1,25 +1,38 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const SALT_ROUNDS = 10;
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
-export const hashOtp = async (otp: string) => {
+// ✅ Hash OTP
+export const hashOtp = async (otp: string): Promise<string> => {
   return await bcrypt.hash(otp, SALT_ROUNDS);
 };
 
-export const compareOtp = async (otp: string, hashedOtp: string) => {
+// ✅ Compare OTP
+export const compareOtp = async (
+  otp: string,
+  hashedOtp: string
+): Promise<boolean> => {
   return await bcrypt.compare(otp, hashedOtp);
 };
 
-export const generateToken = (payload: any) => {
+// ✅ Define proper payload type
+type TokenPayload = {
+  userId: string;
+  email: string;
+};
+
+// ✅ Generate JWT
+export const generateToken = (payload: TokenPayload): string => {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
 };
 
-export const verifyToken = (token: string) => {
+// ✅ Verify JWT
+export const verifyToken = (token: string): JwtPayload | null => {
   try {
-    return jwt.verify(token, JWT_SECRET);
-  } catch (error) {
-    return null;
+    return jwt.verify(token, JWT_SECRET) as JwtPayload;
+  } catch {
+    return null; // ✅ removed unused error
   }
 };

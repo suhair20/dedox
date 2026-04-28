@@ -4,21 +4,33 @@ import { hashOtp } from "@/lib/auth";
 import nodemailer from "nodemailer";
 import otpGenerator from "otp-generator";
 
+// ✅ Define User type (adjust fields if needed)
+type User = {
+  _id: string;
+  email: string;
+  lastOtpSent?: string;
+};
+
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json();
+    const body: { email?: string } = await request.json();
+    const { email } = body;
 
     if (!email) {
-      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Email is required" },
+        { status: 400 }
+      );
     }
 
-    // 1. Check if user exists and enforce rate limit
+    // 1. Check user + rate limit
     const query = `*[_type == "user" && email == $email][0]`;
-    const user = await client.fetch(query, { email });
+    const user: User | null = await client.fetch(query, { email });
 
     if (user && user.lastOtpSent) {
       const lastSent = new Date(user.lastOtpSent).getTime();
       const now = Date.now();
+
       if (now - lastSent < 60000) {
         return NextResponse.json(
           { error: "Please wait 60 seconds before resending" },
@@ -27,7 +39,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // 2. Generate and hash new OTP
+    // 2. Generate OTP
     const otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       specialChars: false,
@@ -38,7 +50,7 @@ export async function POST(request: Request) {
     const hashedOtp = await hashOtp(otp);
     const expiry = new Date(Date.now() + 5 * 60 * 1000);
 
-    // 3. Update User
+    // 3. Update user
     if (user) {
       await client
         .patch(user._id)
@@ -50,7 +62,10 @@ export async function POST(request: Request) {
         })
         .commit();
     } else {
-      return NextResponse.json({ error: "User process not started" }, { status: 400 });
+      return NextResponse.json(
+        { error: "User process not started" },
+        { status: 400 }
+      );
     }
 
     // 4. Send Email
@@ -79,8 +94,18 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ message: "OTP resent successfully" });
-  } catch (error: any) {
+
+  } catch (error: unknown) {
     console.error("RESEND_OTP_ERROR:", error);
-    return NextResponse.json({ error: "Failed to resend OTP" }, { status: 500 });
+
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to resend OTP",
+      },
+      { status: 500 }
+    );
   }
 }
