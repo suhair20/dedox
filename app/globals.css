@@ -24,6 +24,11 @@ body {
   .font-serif-luxury {
     font-family: 'Bodoni Moda', serif;
   }
+
+  .font-brand {
+    font-family: var(--font-montserrat), sans-serif;
+    font-weight: 700;
+  }
   
   .glass-card {
     background: var(--glass-white);

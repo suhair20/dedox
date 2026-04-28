@@ -48,9 +48,10 @@ export default function Navbar() {
             <nav className="hidden lg:flex items-center space-x-10 ml-4">
               <Link
                 href="/"
-                className="text-sm uppercase tracking-[0.25em] font-medium text-gray-800 hover:text-[#2E073F]"
+                className="font-serif-luxury text-[13px] uppercase tracking-[0.3em] font-medium text-gray-900 hover:text-[#2E073F] transition-colors relative group"
               >
                 Discover
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#2E073F] transition-all duration-300 group-hover:w-full"></span>
               </Link>
 
               {/* Collections */}
@@ -61,14 +62,15 @@ export default function Navbar() {
               >
                 <Link
                   href="/shop"
-                  className="flex items-center gap-1 text-sm uppercase tracking-[0.25em] font-medium text-gray-800 hover:text-[#2E073F]"
+                  className="flex items-center gap-1 font-serif-luxury text-[13px] uppercase tracking-[0.3em] text-gray-900 hover:text-[#2E073F] transition-colors relative group"
                 >
-                  Collections
+                  Collection
                   <ChevronDown
-                    className={`h-4 w-4 transition ${
+                    className={`h-3 w-3 transition ${
                       isShopOpen ? "rotate-180" : ""
                     }`}
                   />
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#2E073F] transition-all duration-300 group-hover:w-full"></span>
                 </Link>
 
                 <AnimatePresence>
@@ -102,16 +104,18 @@ export default function Navbar() {
 
               <Link
                 href="/about"
-                className="text-sm uppercase tracking-[0.25em] font-medium text-gray-800 hover:text-[#2E073F]"
+                className="font-serif-luxury text-[13px] uppercase tracking-[0.3em] font-medium text-gray-900 hover:text-[#2E073F] transition-colors relative group"
               >
                 Signature
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#2E073F] transition-all duration-300 group-hover:w-full"></span>
               </Link>
 
               <Link
                 href="/contact"
-                className="text-sm uppercase tracking-[0.25em] font-medium text-gray-800 hover:text-[#2E073F]"
+                className="font-serif-luxury text-[13px] uppercase tracking-[0.3em] font-medium text-gray-900 hover:text-[#2E073F] transition-colors relative group"
               >
                 Contact
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#2E073F] transition-all duration-300 group-hover:w-full"></span>
               </Link>
             </nav>
           </div>
