@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 
 const TOTAL_FRAMES = 240;
 const FRAME_RATE = 30;
@@ -74,10 +75,12 @@ export default function Hero() {
       {/* This <img> tag acts as a "placeholder" or "poster". 
         It shows frame 001 instantly while the JS and Canvas warm up.
       */}
-      <img
+      <Image
         src="/images/herosection/ezgif-frame-001.png"
         alt="Hero Background"
-        className="absolute inset-0 w-full h-full object-cover opacity-100"
+        fill
+        priority
+        className="object-cover opacity-100"
       />
       
       {/* The Canvas sits on top and starts drawing as soon as frames arrive */}

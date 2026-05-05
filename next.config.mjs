@@ -9,10 +9,7 @@ const nextConfig = {
     ],
   },
 
-  // ✅ Add this to skip build errors
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+
 };
 
 export default nextConfig;
