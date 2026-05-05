@@ -23,7 +23,7 @@ export default function Hero() {
 
     // 1. Pre-generate the image objects (starts downloading immediately)
     for (let i = 1; i <= TOTAL_FRAMES; i++) {
-      const img = new Image();
+      const img = new window.Image();
       img.src = `/images/herosection/ezgif-frame-${formatIndex(i)}.png`;
       imagesRef.current[i] = img;
     }
