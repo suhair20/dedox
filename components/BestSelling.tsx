@@ -17,7 +17,7 @@ const PRICE_RANGES = [
 export default function BestSelling() {
   const [activeRange, setActiveRange] = useState(PRICE_RANGES[0]);
 
-const filteredItems = useMemo(() => {
+  const filteredItems = useMemo(() => {
     return products
       .filter((p) => p.price >= activeRange.min && p.price < activeRange.max)
       .slice(0, 10); // This ensures only 10 products show up
@@ -51,7 +51,7 @@ const filteredItems = useMemo(() => {
           </div>
         </div>
 
-        <motion.div 
+        <motion.div
           layout
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"
         >
