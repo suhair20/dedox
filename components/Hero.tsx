@@ -9,6 +9,7 @@ const MAX_DPR = 1.5;
 const PRELOAD_AHEAD = 10;
 const PRELOAD_BEHIND = 2;
 const MAX_CACHE_SIZE = 40;
+const MAX_FRAME_LOOKUP_DISTANCE = 16;
 
 export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -125,6 +126,20 @@ export default function Hero() {
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
   };
 
+  const findNearestLoadedFrame = (targetFrame: number) => {
+    if (imagesRef.current.has(targetFrame)) return targetFrame;
+
+    for (let distance = 1; distance <= MAX_FRAME_LOOKUP_DISTANCE; distance++) {
+      const ahead = wrapFrame(targetFrame + distance);
+      if (imagesRef.current.has(ahead)) return ahead;
+
+      const behind = wrapFrame(targetFrame - distance);
+      if (imagesRef.current.has(behind)) return behind;
+    }
+
+    return null;
+  };
+
   useEffect(() => {
     resizeCanvas();
     loadFrame(1, () => draw(1));
@@ -140,8 +155,18 @@ export default function Hero() {
       if (elapsed >= frameInterval) {
         const steps = Math.floor(elapsed / frameInterval);
         lastFrameTimeRef.current += steps * frameInterval;
-        currentFrameRef.current = wrapFrame(currentFrameRef.current + steps);
-        draw(currentFrameRef.current);
+
+        const desiredFrame = wrapFrame(currentFrameRef.current + steps);
+        const renderFrame = findNearestLoadedFrame(desiredFrame);
+
+        if (renderFrame !== null) {
+          currentFrameRef.current = renderFrame;
+          draw(renderFrame);
+        } else {
+          // Keep progress smooth under slow networks by requesting the target frame explicitly.
+          loadFrame(desiredFrame);
+        }
+
         preloadAround(currentFrameRef.current);
       }
 
