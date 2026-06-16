@@ -39,6 +39,39 @@ function generateOrderNumber() {
   return `DX-${Date.now().toString().slice(-8)}`;
 }
 
+type SanityReference = {
+  _type: "reference";
+  _ref: string;
+};
+
+type OrderLineItemDoc = {
+  _type: "orderLineItem";
+  product: SanityReference;
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+  brand?: string;
+  category?: string;
+};
+
+type OrderDocument = {
+  _type: "order";
+  orderNumber: string;
+  status: "pending";
+  items: OrderLineItemDoc[];
+  subtotal: number;
+  shippingCost: number;
+  tax: number;
+  total: number;
+  shippingMethod: CheckoutBody["shippingMethod"];
+  paymentMethod: CheckoutBody["paymentMethod"];
+  shippingAddress: ShippingAddressInput & { _type: "shippingAddress" };
+  currency: string;
+  user?: SanityReference;
+};
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as CheckoutBody;
@@ -75,9 +108,11 @@ export async function POST(request: Request) {
     const session = await getCurrentSession();
     const writeClient = getSanityWriteClient();
 
-    const orderDoc: Record<string, unknown> = {
+    const orderNumber = generateOrderNumber();
+
+    const orderDoc: OrderDocument = {
       _type: "order",
-      orderNumber: generateOrderNumber(),
+      orderNumber,
       status: "pending",
       items: items.map((item) => ({
         _type: "orderLineItem",
@@ -101,18 +136,17 @@ export async function POST(request: Request) {
         ...shippingAddress,
       },
       currency,
+      ...(session?.user?.id
+        ? { user: { _type: "reference", _ref: session.user.id } }
+        : {}),
     };
-
-    if (session?.user?.id) {
-      orderDoc.user = { _type: "reference", _ref: session.user.id };
-    }
 
     const createdOrder = await writeClient.create(orderDoc);
 
     return NextResponse.json({
       success: true,
       orderId: createdOrder._id,
-      orderNumber: orderDoc.orderNumber,
+      orderNumber,
     });
   } catch (error) {
     console.error("CREATE_ORDER_ERROR:", error);
