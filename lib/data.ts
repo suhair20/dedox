@@ -1,13 +1,16 @@
 export interface Product {
   id: string;
   name: string;
+  slug?: string;
   price: number;
   oldPrice?: number;
   image: string;
   category: string;
+  categorySlug?: string;
   isFeatured: boolean;
   description: string;
   brand: string;
+  brandSlug?: string;
   inStock: boolean;
   rating?: number;
   reviewCount?: number;
@@ -15,6 +18,14 @@ export interface Product {
   deliveryInfo?: string;
   warrantyInfo?: string;
   thumbnails?: string[];
+  tags?: string[];
+  notes?: string[];
+  accords?: string[];
+  occasions?: string[];
+  concentration?: string;
+  volumeMl?: number;
+  isGiftSet?: boolean;
+  sku?: string;
 }
 
 // Updated working perfume bottle images

@@ -1,6 +1,6 @@
 "use client";
 
-import { products } from "@/lib/data";
+import { useProducts } from "@/context/ProductsContext";
 import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -8,8 +8,11 @@ import { motion } from "framer-motion";
 
 export default function CategoryPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
+  const { products } = useProducts();
   const filteredProducts = products.filter(
-    (p) => p.category.toLowerCase() === slug.toLowerCase()
+    (p) =>
+      p.categorySlug?.toLowerCase() === slug.toLowerCase() ||
+      p.category.toLowerCase() === slug.toLowerCase()
   );
 
   const categoryName = slug.charAt(0).toUpperCase() + slug.slice(1);

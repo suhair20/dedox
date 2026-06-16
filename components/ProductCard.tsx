@@ -39,6 +39,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={product.image}
             alt={product.name}
             fill
+            unoptimized
             className="object-contain object-center transition-transform duration-1000 group-hover:scale-110"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 15vw"
             style={{ mixBlendMode: 'multiply' }}

@@ -1,51 +1,55 @@
 import { NextResponse } from "next/server";
-import { client } from "@/lib/sanity";
-import { compareOtp, generateToken } from "@/lib/auth";
-import { cookies } from "next/headers";
-
-// ✅ Define User type
-type User = {
-  _id: string;
-  email: string;
-  hashedOtp?: string;
-  otpExpiry?: string;
-  incorrectAttempts: number;
-};
+import {
+  finalizeOtpVerification,
+  getUserByIdentifier,
+  incrementIncorrectAttempts,
+} from "@/lib/auth-server";
+import {
+  compareOtp,
+  generateToken,
+  getAuthCookieOptions,
+  parseAuthIdentifier,
+} from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
-    const body: { email?: string; otp?: string } = await request.json();
-    const { email, otp } = body;
+    const body: {
+      identifier?: string;
+      email?: string;
+      phone?: string;
+      otp?: string;
+    } = await request.json();
+    const rawIdentifier = body.identifier || body.email || body.phone;
+    const identifier = parseAuthIdentifier(rawIdentifier);
+    const otp = body.otp?.trim();
 
-    if (!email || !otp) {
+    if (!identifier || !otp) {
       return NextResponse.json(
-        { error: "Email and OTP are required" },
+        { error: "A valid email or phone number and OTP are required." },
         { status: 400 }
       );
     }
 
-    // 1. Fetch user
-    const query = `*[_type == "user" && email == $email][0]`;
-    const user: User | null = await client.fetch(query, { email });
+    const user = await getUserByIdentifier(identifier);
 
-    if (!user || !user.hashedOtp) {
+    if (!user || !user.hashedOtp || !user.otpExpiry) {
       return NextResponse.json(
-        { error: "No active OTP found for this email" },
+        { error: "No active OTP found for this account." },
         { status: 400 }
       );
     }
 
-    // 2. Attempt limit
-    if (user.incorrectAttempts >= 5) {
+    const incorrectAttempts = user.incorrectAttempts ?? 0;
+
+    if (incorrectAttempts >= 5) {
       return NextResponse.json(
         { error: "Too many incorrect attempts. Please request a new OTP." },
         { status: 403 }
       );
     }
 
-    // 3. Expiry check
     const now = new Date();
-    const expiry = new Date(user.otpExpiry!);
+    const expiry = new Date(user.otpExpiry);
 
     if (now > expiry) {
       return NextResponse.json(
@@ -54,53 +58,37 @@ export async function POST(request: Request) {
       );
     }
 
-    // 4. Verify OTP
     const isValid = await compareOtp(otp, user.hashedOtp);
 
     if (!isValid) {
-      await client
-        .patch(user._id)
-        .inc({ incorrectAttempts: 1 })
-        .commit();
+      await incrementIncorrectAttempts(user._id);
+      const remainingAttempts = Math.max(0, 4 - incorrectAttempts);
 
       return NextResponse.json(
         {
-          error: `Invalid OTP. ${
-            4 - user.incorrectAttempts
-          } attempts remaining.`,
+          error:
+            remainingAttempts > 0
+              ? `Invalid OTP. ${remainingAttempts} attempts remaining.`
+              : "Invalid OTP. No attempts remaining, please request a new code.",
         },
         { status: 400 }
       );
     }
 
-    // 5. Generate JWT
     const token = generateToken({
       userId: user._id,
-      email: user.email,
+      channel: identifier.channel,
+      ...(user.email ? { email: user.email } : {}),
+      ...(user.phone ? { phone: user.phone } : {}),
     });
+    await finalizeOtpVerification(user);
 
-    cookies().set("auth_token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60,
-      path: "/",
-    });
-
-    // 6. Clear OTP + reset attempts
-    await client
-      .patch(user._id)
-      .set({
-        hashedOtp: null,
-        otpExpiry: null,
-        incorrectAttempts: 0,
-        isVerified: true,
-      })
-      .commit();
-
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: "Authenticated successfully",
     });
+    response.cookies.set("auth_token", token, getAuthCookieOptions());
+
+    return response;
 
   } catch (error: unknown) {
     console.error("VERIFY_OTP_ERROR:", error);

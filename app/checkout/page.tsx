@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useLocation } from '@/context/LocationContext';
+import { useProducts } from '@/context/ProductsContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
@@ -25,14 +26,29 @@ const STEPS = [
   { id: 'payment', label: 'Payment' }
 ];
 
+const emptyAddress = {
+  email: '',
+  phone: '',
+  firstName: '',
+  lastName: '',
+  country: 'United Arab Emirates',
+  city: '',
+  postalCode: '',
+  streetAddress: '',
+};
+
 export default function CheckoutPage() {
-  const { cart, getCartTotal } = useCart();
-  const { formatPrice} = useLocation();
-  const [currentStep, setCurrentStep] = useState(0); // 0: Info, 1: Shipping, 2: Payment
-  const [shippingMethod, setShippingMethod] = useState('standard');
-  const [paymentMethod, setPaymentMethod] = useState('card');
+  const { cart, getCartTotal, clearCart } = useCart();
+  const { products } = useProducts();
+  const { formatPrice } = useLocation();
+  const [currentStep, setCurrentStep] = useState(0);
+  const [shippingMethod, setShippingMethod] = useState<'standard' | 'express'>('standard');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'paypal' | 'cod'>('card');
+  const [shippingAddress, setShippingAddress] = useState(emptyAddress);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [orderNumber, setOrderNumber] = useState('');
+  const [checkoutError, setCheckoutError] = useState('');
 
 
   // Derived calculations
@@ -44,13 +60,60 @@ export default function CheckoutPage() {
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, STEPS.length - 1));
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 0));
 
-  const handleCompleteOrder = () => {
+  const handleCompleteOrder = async () => {
+    if (cart.length === 0) {
+      setCheckoutError('Your cart is empty.');
+      return;
+    }
+
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+    setCheckoutError('');
+
+    try {
+      const items = cart.map((item) => {
+        const product = products.find((entry) => entry.id === item.id);
+        return {
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          quantity: item.quantity,
+          brand: product?.brand,
+          category: product?.category,
+        };
+      });
+
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items,
+          subtotal,
+          shippingCost,
+          tax,
+          total: grandTotal,
+          shippingMethod,
+          paymentMethod,
+          shippingAddress,
+          currency: 'AED',
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to place order.');
+      }
+
+      setOrderNumber(data.orderNumber || '');
+      clearCart();
       setIsSuccess(true);
-    }, 2000);
+    } catch (error) {
+      setCheckoutError(
+        error instanceof Error ? error.message : 'Failed to place order.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isSuccess) {
@@ -71,7 +134,7 @@ export default function CheckoutPage() {
           <div className="bg-gray-50 p-6 rounded-3xl mb-10 text-left border border-gray-100">
             <div className="flex justify-between mb-2">
               <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Order Number</span>
-              <span className="text-xs font-black text-[#2E073F]">#DX-990812</span>
+              <span className="text-xs font-black text-[#2E073F]">#{orderNumber || 'DX-PENDING'}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Estimated Arrival</span>
@@ -146,11 +209,16 @@ export default function CheckoutPage() {
                       <input 
                         type="email" 
                         placeholder="Email Address"
+                        value={shippingAddress.email}
+                        onChange={(e) => setShippingAddress({ ...shippingAddress, email: e.target.value })}
+                        required
                         className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#2E073F] outline-none transition-all shadow-sm font-medium text-sm"
                       />
                       <input 
                         type="tel" 
                         placeholder="Phone Number"
+                        value={shippingAddress.phone}
+                        onChange={(e) => setShippingAddress({ ...shippingAddress, phone: e.target.value })}
                         className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#2E073F] outline-none transition-all shadow-sm font-medium text-sm"
                       />
                     </div>
@@ -165,16 +233,26 @@ export default function CheckoutPage() {
                       <input 
                         type="text" 
                         placeholder="First Name"
+                        value={shippingAddress.firstName}
+                        onChange={(e) => setShippingAddress({ ...shippingAddress, firstName: e.target.value })}
+                        required
                         className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#2E073F] outline-none transition-all shadow-sm font-medium text-sm"
                       />
                       <input 
                         type="text" 
                         placeholder="Last Name"
+                        value={shippingAddress.lastName}
+                        onChange={(e) => setShippingAddress({ ...shippingAddress, lastName: e.target.value })}
+                        required
                         className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#2E073F] outline-none transition-all shadow-sm font-medium text-sm"
                       />
                       <div className="md:col-span-2">
-                        <select className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#2E073F] outline-none transition-all shadow-sm font-medium text-sm text-gray-500 appearance-none">
-                          <option>Select Country</option>
+                        <select
+                          value={shippingAddress.country}
+                          onChange={(e) => setShippingAddress({ ...shippingAddress, country: e.target.value })}
+                          required
+                          className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#2E073F] outline-none transition-all shadow-sm font-medium text-sm text-gray-500 appearance-none"
+                        >
                           <option>United Arab Emirates</option>
                           <option>India</option>
                           <option>United States</option>
@@ -184,17 +262,25 @@ export default function CheckoutPage() {
                       <input 
                         type="text" 
                         placeholder="City"
+                        value={shippingAddress.city}
+                        onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
+                        required
                         className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#2E073F] outline-none transition-all shadow-sm font-medium text-sm"
                       />
                       <input 
                         type="text" 
                         placeholder="ZIP / Post Code"
+                        value={shippingAddress.postalCode}
+                        onChange={(e) => setShippingAddress({ ...shippingAddress, postalCode: e.target.value })}
                         className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#2E073F] outline-none transition-all shadow-sm font-medium text-sm"
                       />
                       <div className="md:col-span-2">
                         <textarea 
                           placeholder="Full Street Address"
                           rows={3}
+                          value={shippingAddress.streetAddress}
+                          onChange={(e) => setShippingAddress({ ...shippingAddress, streetAddress: e.target.value })}
+                          required
                           className="w-full px-6 py-5 bg-white border border-gray-100 rounded-2xl focus:border-[#2E073F] outline-none transition-all shadow-sm font-medium text-sm resize-none"
                         />
                       </div>
@@ -403,6 +489,12 @@ export default function CheckoutPage() {
                       )}
                     </AnimatePresence>
                   </section>
+
+                  {checkoutError && (
+                    <p className="rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+                      {checkoutError}
+                    </p>
+                  )}
 
                   <button 
                     onClick={handleCompleteOrder}

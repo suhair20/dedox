@@ -1,6 +1,6 @@
 "use client";
 
-import { products } from "@/lib/data";
+import { useProducts } from "@/context/ProductsContext";
 import Image from "next/image";
 import { 
   Plus, 
@@ -21,6 +21,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   const { id } = params;
+  const { products, loading } = useProducts();
   const product = products.find((p) => p.id === id);
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
@@ -35,6 +36,14 @@ export default function ProductPage({ params }: { params: { id: string } }) {
       setMainImage(product.image);
     }
   }, [product]);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-32 flex justify-center">
+        <div className="w-8 h-8 border-4 border-[#2E073F]/20 border-t-[#2E073F] rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -80,6 +89,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                     src={mainImage}
                     alt={product.name}
                     fill
+                    unoptimized
                     className="object-contain p-8 group-hover:scale-105 transition-transform duration-700"
                     priority
                   />
@@ -109,6 +119,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                     src={thumb}
                     alt={`${product.name} view ${idx + 1}`}
                     fill
+                    unoptimized
                     className="object-cover"
                   />
                 </button>

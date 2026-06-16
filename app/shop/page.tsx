@@ -1,36 +1,62 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { products } from "@/lib/data";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useProducts } from "@/context/ProductsContext";
 import ProductCard from "@/components/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
-import { Filter, X,LayoutGrid, List } from "lucide-react";
+import { Filter, X, LayoutGrid, List, Search } from "lucide-react";
+import { filterProducts } from "@/lib/productFilters";
 
-export default function ShopPage() {
+function ShopPageContent() {
+  const { products } = useProducts();
+  const searchParams = useSearchParams();
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [stockStatus, setStockStatus] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 2000 });
-  const [sortBy, setSortBy] = useState("featured");
+  const [sortBy, setSortBy] = useState<"featured" | "price-low" | "price-high" | "name">("featured");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
-  const allBrands = useMemo(() => Array.from(new Set(products.map(p => p.brand))).sort(), []);
+  const urlQuery = searchParams.get("q") || "";
+  const urlBrand = searchParams.get("brand") || "";
+
+  useEffect(() => {
+    setSearchQuery(urlQuery);
+  }, [urlQuery]);
+
+  useEffect(() => {
+    if (urlBrand) {
+      setSelectedBrands([urlBrand]);
+    }
+  }, [urlBrand]);
+
+  const allBrands = useMemo(
+    () => Array.from(new Set(products.map((p) => p.brand))).sort(),
+    [products]
+  );
 
   const filteredProducts = useMemo(() => {
-    return products.filter(product => {
-      const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
-      const stockMatch = stockStatus.length === 0 || 
-                         (stockStatus.includes("in-stock") && product.inStock) ||
-                         (stockStatus.includes("out-of-stock") && !product.inStock);
-      const priceMatch = product.price >= priceRange.min && product.price <= priceRange.max;
-      
-      return brandMatch && stockMatch && priceMatch;
-    }).sort((a, b) => {
-      if (sortBy === "price-low") return a.price - b.price;
-      if (sortBy === "price-high") return b.price - a.price;
-      if (sortBy === "name") return a.name.localeCompare(b.name);
-      return 0; // featured/default
+    const brandFilter =
+      selectedBrands.length === 1 ? selectedBrands[0] : undefined;
+
+    const base = filterProducts(products, {
+      query: searchQuery,
+      brand: brandFilter,
+      minPrice: priceRange.min,
+      maxPrice: priceRange.max,
+      inStockOnly: stockStatus.includes("in-stock") && stockStatus.length === 1,
+      outOfStockOnly:
+        stockStatus.includes("out-of-stock") && stockStatus.length === 1,
+      sortBy,
     });
-  }, [selectedBrands, stockStatus, priceRange, sortBy]);
+
+    if (selectedBrands.length > 1) {
+      return base.filter((product) => selectedBrands.includes(product.brand));
+    }
+
+    return base;
+  }, [selectedBrands, stockStatus, priceRange, sortBy, products, searchQuery]);
 
   const toggleBrand = (brand: string) => {
     setSelectedBrands(prev => 
@@ -50,6 +76,30 @@ export default function ShopPage() {
       
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-[#0f3d3e] font-serif-luxury">Shop Collection</h1>
+            <p className="mt-2 text-sm text-gray-500">
+              {filteredProducts.length} fragrance{filteredProducts.length === 1 ? "" : "s"} found
+            </p>
+          </div>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+            }}
+            className="relative w-full md:max-w-md"
+          >
+            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Search by name, brand, notes..."
+              className="w-full rounded-full border border-gray-200 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-[#0f3d3e]"
+            />
+          </form>
+        </div>
+
         <div className="flex flex-col lg:flex-row gap-12">
           
           {/* Sidebar Filters - Desktop */}
@@ -152,7 +202,7 @@ export default function ShopPage() {
                   <select 
                     className="bg-transparent text-sm font-bold text-gray-900 outline-none cursor-pointer border-none focus:ring-0"
                     value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
+                    onChange={(e) => setSortBy(e.target.value as "featured" | "price-low" | "price-high" | "name")}
                   >
                     <option value="featured">Featured</option>
                     <option value="price-low">Price: Low to High</option>
@@ -303,5 +353,19 @@ export default function ShopPage() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-white">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#0f3d3e]/20 border-t-[#0f3d3e]" />
+        </div>
+      }
+    >
+      <ShopPageContent />
+    </Suspense>
   );
 }

@@ -8,6 +8,8 @@ import { usePathname } from "next/navigation";
 
 import { CartProvider } from "@/context/CartContext";
 import { LocationProvider } from "@/context/LocationContext";
+import { ProductsProvider } from "@/context/ProductsContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "700", "800"], variable: "--font-montserrat" });
@@ -26,13 +28,17 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${outfit.className} ${outfit.variable} ${montserrat.variable} ${cinzel.variable} ${inter.variable} antialiased bg-white text-gray-900 min-h-screen flex flex-col`}>
         <LocationProvider>
-          <CartProvider>
-            {!isCheckout && <Navbar />}
-            <main className="flex-grow">
-              {children}
-            </main>
-            {!isCheckout && <Footer />}
-          </CartProvider>
+          <ProductsProvider>
+            <AuthProvider>
+              <CartProvider>
+                {!isCheckout && <Navbar />}
+                <main className="flex-grow">
+                  {children}
+                </main>
+                {!isCheckout && <Footer />}
+              </CartProvider>
+            </AuthProvider>
+          </ProductsProvider>
         </LocationProvider>
       </body>
     </html>

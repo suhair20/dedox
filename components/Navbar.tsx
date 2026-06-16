@@ -8,18 +8,32 @@ import {
   Menu,
   ChevronDown,
   X,
+  LogOut,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 import Logo from "./Logo";
 import CurrencySwitcher from "./CurrencySwitcher";
 
 export default function Navbar() {
   const { getCartCount } = useCart();
+  const { isAuthenticated, loading, logout } = useAuth();
+  const router = useRouter();
 
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const submitSearch = (event?: React.FormEvent) => {
+    event?.preventDefault();
+    const query = searchQuery.trim();
+    if (!query) return;
+    setIsMobileMenuOpen(false);
+    router.push(`/shop?q=${encodeURIComponent(query)}`);
+  };
 
   const categories = [
     { name: "Men", href: "/category/men" },
@@ -28,49 +42,50 @@ export default function Navbar() {
     { name: "Luxury", href: "/category/luxury" },
   ];
 
+  const accountHref = isAuthenticated ? "/account" : "/login";
+
+  const handleLogout = async () => {
+    await logout();
+    setIsMobileMenuOpen(false);
+    router.push("/");
+    router.refresh();
+  };
+
+  const navLinkClass =
+    "font-serif-luxury text-[11px] xl:text-[12px] uppercase tracking-[0.14em] xl:tracking-[0.18em] 2xl:tracking-[0.22em] font-medium text-gray-900 hover:text-[#2E073F] transition-colors relative group whitespace-nowrap";
+
   return (
     <>
-      {/* HEADER */}
       <header className="sticky top-0 z-[100] w-full border-b border-white/20 glass-card bg-white/90 backdrop-blur-md">
-        <div className="container mx-auto relative flex h-16 sm:h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
-          
-          {/* LEFT SIDE */}
-          <div className="flex flex-1 items-center">
-            {/* Mobile Menu */}
+        <div className="container mx-auto grid h-16 min-h-[4rem] grid-cols-[auto_1fr_auto] items-center gap-2 px-3 sm:h-[4.5rem] sm:gap-3 sm:px-4 md:px-6 xl:h-20 xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] xl:gap-6">
+          {/* Left */}
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <button
+              type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden text-gray-700 hover:text-[#2E073F]"
+              className="shrink-0 rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#2E073F] xl:hidden"
+              aria-label="Open menu"
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
 
-            {/* Desktop Menu */}
-            <nav className="hidden lg:flex items-center space-x-10 ml-4">
-              <Link
-                href="/"
-                className="font-serif-luxury text-[13px] uppercase tracking-[0.3em] font-medium text-gray-900 hover:text-[#2E073F] transition-colors relative group"
-              >
+            <nav className="hidden min-w-0 items-center gap-4 xl:flex xl:gap-5 2xl:gap-7">
+              <Link href="/" className={navLinkClass}>
                 Discover
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#2E073F] transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#2E073F] transition-all duration-300 group-hover:w-full" />
               </Link>
 
-              {/* Collections */}
               <div
                 className="relative"
                 onMouseEnter={() => setIsShopOpen(true)}
                 onMouseLeave={() => setIsShopOpen(false)}
               >
-                <Link
-                  href="/shop"
-                  className="flex items-center gap-1 font-serif-luxury text-[13px] uppercase tracking-[0.3em] text-gray-900 hover:text-[#2E073F] transition-colors relative group"
-                >
+                <Link href="/shop" className={`flex items-center gap-1 ${navLinkClass}`}>
                   Collection
                   <ChevronDown
-                    className={`h-3 w-3 transition ${
-                      isShopOpen ? "rotate-180" : ""
-                    }`}
+                    className={`h-3 w-3 transition ${isShopOpen ? "rotate-180" : ""}`}
                   />
-                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#2E073F] transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#2E073F] transition-all duration-300 group-hover:w-full" />
                 </Link>
 
                 <AnimatePresence>
@@ -79,7 +94,7 @@ export default function Navbar() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
-                      className="absolute top-full left-0 mt-4 w-56 bg-white border shadow-xl rounded-md overflow-hidden"
+                      className="absolute top-full left-0 z-50 mt-4 w-56 overflow-hidden rounded-md border bg-white shadow-xl"
                     >
                       {categories.map((cat) => (
                         <Link
@@ -90,10 +105,9 @@ export default function Navbar() {
                           {cat.name}
                         </Link>
                       ))}
-
                       <Link
                         href="/shop"
-                        className="block px-5 py-3 text-xs font-bold uppercase text-[#2E073F] border-t"
+                        className="block border-t px-5 py-3 text-xs font-bold uppercase text-[#2E073F]"
                       >
                         View All Products
                       </Link>
@@ -102,60 +116,65 @@ export default function Navbar() {
                 </AnimatePresence>
               </div>
 
-              <Link
-                href="/about"
-                className="font-serif-luxury text-[13px] uppercase tracking-[0.3em] font-medium text-gray-900 hover:text-[#2E073F] transition-colors relative group"
-              >
+              <Link href="/about" className={navLinkClass}>
                 Signature
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#2E073F] transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#2E073F] transition-all duration-300 group-hover:w-full" />
               </Link>
 
-              <Link
-                href="/contact"
-                className="font-serif-luxury text-[13px] uppercase tracking-[0.3em] font-medium text-gray-900 hover:text-[#2E073F] transition-colors relative group"
-              >
+              <Link href="/contact" className={navLinkClass}>
                 Contact
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#2E073F] transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#2E073F] transition-all duration-300 group-hover:w-full" />
               </Link>
             </nav>
           </div>
 
-          {/* PERFECT CENTER LOGO */}
-          <div className="absolute left-1/2 -translate-x-1/2">
-            <Logo />
+          {/* Center logo — grid column, not absolute */}
+          <div className="flex min-w-0 justify-center px-1 sm:px-2">
+            <Logo compact />
           </div>
 
-          {/* RIGHT SIDE */}
-          <div className="flex flex-1 items-center justify-end gap-3 sm:gap-5">
-            
-            {/* Desktop Search */}
-            <button className="hidden lg:block text-gray-700 hover:text-[#2E073F]">
+          {/* Right */}
+          <div className="flex min-w-0 items-center justify-end gap-1.5 sm:gap-2 md:gap-3">
+            <form onSubmit={submitSearch} className="hidden min-w-0 xl:block">
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search"
+                className="w-24 rounded-full border border-gray-200 px-3 py-1.5 text-xs outline-none transition focus:border-[#2E073F] xl:w-28 2xl:w-40"
+              />
+            </form>
+
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="shrink-0 rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#2E073F] xl:hidden"
+              aria-label="Search"
+            >
               <Search className="h-5 w-5" />
             </button>
 
-            {/* Desktop Login */}
             <Link
-              href="/login"
-              className="hidden lg:block text-gray-700 hover:text-[#2E073F]"
+              href={accountHref}
+              aria-label={loading ? "Account" : isAuthenticated ? "Account" : "Login"}
+              className="hidden shrink-0 rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#2E073F] lg:block"
             >
               <User className="h-5 w-5" />
             </Link>
 
-            {/* Currency always visible */}
-            <div className="scale-90 sm:scale-100">
+            <div className="shrink-0 scale-[0.88] sm:scale-95 xl:scale-100">
               <CurrencySwitcher />
             </div>
 
-            {/* Cart */}
-            <div className="relative">
+            <div className="relative shrink-0">
               <Link
                 href="/cart"
-                className="text-gray-700 hover:text-[#2E073F]"
+                aria-label="Cart"
+                className="block rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#2E073F]"
               >
                 <ShoppingBag className="h-5 w-5" />
               </Link>
-
-              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#2E073F] text-[10px] text-white font-bold">
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2E073F] text-[9px] font-bold text-white sm:h-5 sm:w-5 sm:text-[10px]">
                 {getCartCount()}
               </span>
             </div>
@@ -163,61 +182,57 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* MOBILE MENU DRAWER */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/50 z-[100]"
+              className="fixed inset-0 z-[100] bg-black/50"
             />
 
-            {/* Drawer */}
             <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 220, damping: 25 }}
-              className="fixed top-0 left-0 w-[85vw] max-w-sm h-full bg-white z-[110] shadow-2xl overflow-y-auto"
+              className="fixed top-0 left-0 z-[110] h-full w-[min(85vw,20rem)] overflow-y-auto bg-white shadow-2xl"
             >
-              {/* Drawer Header */}
-              <div className="flex items-center justify-between p-5 border-b">
-                <Logo />
-
+              <div className="flex items-center justify-between border-b p-4 sm:p-5">
+                <Logo compact />
                 <button
+                  type="button"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-gray-700"
+                  className="rounded-lg p-1.5 text-gray-700"
+                  aria-label="Close menu"
                 >
                   <X className="h-6 w-6" />
                 </button>
               </div>
 
-              {/* Search */}
-              <div className="p-5 border-b">
-                <div className="flex items-center border rounded-lg px-3 py-2">
-                  <Search className="h-4 w-4 text-gray-400" />
+              <form onSubmit={submitSearch} className="border-b p-4 sm:p-5">
+                <div className="flex items-center rounded-lg border px-3 py-2">
+                  <Search className="h-4 w-4 shrink-0 text-gray-400" />
                   <input
-                    type="text"
+                    type="search"
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
                     placeholder="Search products..."
-                    className="ml-2 w-full outline-none text-sm"
+                    className="ml-2 w-full min-w-0 text-sm outline-none"
                   />
                 </div>
-              </div>
+              </form>
 
-              {/* Links */}
-              <div className="flex flex-col p-6 space-y-7">
-                <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
+              <div className="flex flex-col space-y-6 p-5 sm:space-y-7 sm:p-6">
+                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="font-medium">
                   Discover
                 </Link>
 
                 <div>
                   <p className="mb-4 font-medium">Collections</p>
-
-                  <div className="pl-4 border-l space-y-4">
+                  <div className="space-y-4 border-l pl-4">
                     {categories.map((cat) => (
                       <Link
                         key={cat.name}
@@ -228,37 +243,43 @@ export default function Navbar() {
                         {cat.name}
                       </Link>
                     ))}
-
                     <Link
                       href="/shop"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block text-[#2E073F] font-semibold pt-2"
+                      className="block pt-2 font-semibold text-[#2E073F]"
                     >
                       View All Products →
                     </Link>
                   </div>
                 </div>
 
-                <Link href="/about" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="font-medium">
                   Signature
                 </Link>
 
-                <Link
-                  href="/contact"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
+                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="font-medium">
                   Contact
                 </Link>
 
-                {/* Login inside mobile menu */}
                 <Link
-                  href="/login"
+                  href={accountHref}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-2 text-[#2E073F] font-medium pt-4 border-t"
+                  className="flex items-center gap-2 border-t pt-4 font-medium text-[#2E073F]"
                 >
                   <User className="h-5 w-5" />
-                  Login / Account
+                  {isAuthenticated ? "My Account" : "Login / Account"}
                 </Link>
+
+                {isAuthenticated && (
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 font-medium text-gray-600"
+                  >
+                    <LogOut className="h-5 w-5" />
+                    Logout
+                  </button>
+                )}
               </div>
             </motion.div>
           </>

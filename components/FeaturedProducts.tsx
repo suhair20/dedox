@@ -1,11 +1,12 @@
 "use client";
 
-import { products } from "@/lib/data";
+import { useProducts } from "@/context/ProductsContext";
 import ProductCard from "./ProductCard";
 import Link from "next/link";
 import { useRef, useState } from "react";
 
 export default function FeaturedProducts() {
+  const { products } = useProducts();
   const featured = products.filter(p => p.isFeatured);
   // Duplicate for seamless infinite loop
   const displayProducts = [...featured, ...featured];

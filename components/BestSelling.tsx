@@ -1,6 +1,6 @@
 "use client";
 
-import { products } from "@/lib/data";
+import { useProducts } from "@/context/ProductsContext";
 import ProductCard from "./ProductCard";
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,13 +15,14 @@ const PRICE_RANGES = [
 ];
 
 export default function BestSelling() {
+  const { products } = useProducts();
   const [activeRange, setActiveRange] = useState(PRICE_RANGES[0]);
 
   const filteredItems = useMemo(() => {
     return products
       .filter((p) => p.price >= activeRange.min && p.price < activeRange.max)
       .slice(0, 10); // This ensures only 10 products show up
-  }, [activeRange]);
+  }, [activeRange, products]);
   return (
     <section className="py-24 bg-[#fafafa]" id="best-selling">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

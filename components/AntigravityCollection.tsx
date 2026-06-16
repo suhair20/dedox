@@ -3,9 +3,10 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { products } from "@/lib/data";
+import { useProducts } from "@/context/ProductsContext";
 
 export default function AntigravityCollection() {
+  const { products } = useProducts();
   const featuredProducts = products.filter(p => p.isFeatured).slice(0, 4);
 
   return (
@@ -90,6 +91,7 @@ export default function AntigravityCollection() {
                      src={product.image}
                      alt={product.name}
                      fill
+                     unoptimized
                      className="object-cover transition-transform duration-1000 group-hover:scale-110"
                    />
                    

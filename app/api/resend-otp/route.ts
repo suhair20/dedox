@@ -1,33 +1,42 @@
 import { NextResponse } from "next/server";
-import { client } from "@/lib/sanity";
-import { hashOtp } from "@/lib/auth";
-import nodemailer from "nodemailer";
+import { getUserByIdentifier, saveOtpForIdentifier } from "@/lib/auth-server";
+import {
+  formatContactLabel,
+  getOtpExpiryDate,
+  hashOtp,
+  parseAuthIdentifier,
+  type AuthUserRecord,
+} from "@/lib/auth";
+import { deliverOtpCode } from "@/lib/otp-delivery";
 import otpGenerator from "otp-generator";
-
-// ✅ Define User type (adjust fields if needed)
-type User = {
-  _id: string;
-  email: string;
-  lastOtpSent?: string;
-};
 
 export async function POST(request: Request) {
   try {
-    const body: { email?: string } = await request.json();
-    const { email } = body;
+    const body: { identifier?: string; email?: string; phone?: string } =
+      await request.json();
+    const rawIdentifier = body.identifier || body.email || body.phone;
+    const identifier = parseAuthIdentifier(rawIdentifier);
 
-    if (!email) {
+    if (!identifier) {
       return NextResponse.json(
-        { error: "Email is required" },
+        {
+          error:
+            "Enter a valid email address or an international phone number with country code.",
+        },
         { status: 400 }
       );
     }
 
-    // 1. Check user + rate limit
-    const query = `*[_type == "user" && email == $email][0]`;
-    const user: User | null = await client.fetch(query, { email });
+    const user: AuthUserRecord | null = await getUserByIdentifier(identifier);
 
-    if (user && user.lastOtpSent) {
+    if (!user) {
+      return NextResponse.json(
+        { error: "Start login or signup first before requesting a new code." },
+        { status: 400 }
+      );
+    }
+
+    if (user.lastOtpSent) {
       const lastSent = new Date(user.lastOtpSent).getTime();
       const now = Date.now();
 
@@ -39,7 +48,6 @@ export async function POST(request: Request) {
       }
     }
 
-    // 2. Generate OTP
     const otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       specialChars: false,
@@ -48,52 +56,23 @@ export async function POST(request: Request) {
     });
 
     const hashedOtp = await hashOtp(otp);
-    const expiry = new Date(Date.now() + 5 * 60 * 1000);
+    const expiry = getOtpExpiryDate();
 
-    // 3. Update user
-    if (user) {
-      await client
-        .patch(user._id)
-        .set({
-          hashedOtp,
-          otpExpiry: expiry.toISOString(),
-          lastOtpSent: new Date().toISOString(),
-          incorrectAttempts: 0,
-        })
-        .commit();
-    } else {
-      return NextResponse.json(
-        { error: "User process not started" },
-        { status: 400 }
-      );
-    }
-
-    // 4. Send Email
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
+    await saveOtpForIdentifier(
+      identifier,
+      {
+        hashedOtp,
+        otpExpiry: expiry.toISOString(),
+        lastOtpSent: new Date().toISOString(),
+        isVerified: user.isVerified,
       },
-    });
+      user
+    );
+    await deliverOtpCode(identifier, otp, true);
 
-    await transporter.sendMail({
-      from: `"Dedox Perfume" <${process.env.GMAIL_USER}>`,
-      to: email,
-      subject: "Your New Login OTP",
-      html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-          <h2 style="color: #0f3d3e; text-align: center;">Dedox Perfume</h2>
-          <p>You requested a new OTP. Your new code is:</p>
-          <div style="background: #f4f4f4; padding: 20px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #0f3d3e;">
-            ${otp}
-          </div>
-          <p>Valid for 5 minutes.</p>
-        </div>
-      `,
+    return NextResponse.json({
+      message: `OTP resent to your ${formatContactLabel(identifier)} successfully.`,
     });
-
-    return NextResponse.json({ message: "OTP resent successfully" });
 
   } catch (error: unknown) {
     console.error("RESEND_OTP_ERROR:", error);
