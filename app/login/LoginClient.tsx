@@ -151,7 +151,7 @@ export default function LoginClient({ redirectTo }: LoginClientProps) {
   return (
     <div className="min-h-screen bg-[#faf7fb] px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-[36px] border border-white/70 bg-[#2E073F] px-8 py-10 text-white shadow-[0_30px_80px_rgba(46,7,63,0.24)] sm:px-12 sm:py-14">
+        <div className="rounded-[36px] border border-white/70 bg-[#7a0c0c] px-8 py-10 text-white shadow-[0_30px_80px_rgba(122,12,12,0.24)] sm:px-12 sm:py-14">
           <p className="text-[11px] font-black uppercase tracking-[0.32em] text-white/60">
             Secure Customer Access
           </p>
@@ -195,7 +195,7 @@ export default function LoginClient({ redirectTo }: LoginClientProps) {
         >
           <Link
             href="/"
-            className="text-[11px] font-black uppercase tracking-[0.32em] text-[#2E073F]/70 transition-colors hover:text-[#2E073F]"
+            className="text-[11px] font-black uppercase tracking-[0.32em] text-[#7a0c0c]/70 transition-colors hover:text-[#7a0c0c]"
           >
             Dedox Perfume
           </Link>
@@ -242,7 +242,7 @@ export default function LoginClient({ redirectTo }: LoginClientProps) {
                       value={identifier}
                       onChange={(event) => setIdentifier(event.target.value)}
                       placeholder="name@example.com or +971501234567"
-                      className="h-16 w-full rounded-[22px] border border-gray-200 bg-[#fcfbfd] pl-14 pr-5 text-sm font-medium text-gray-900 outline-none transition focus:border-[#2E073F] focus:bg-white"
+                      className="h-16 w-full rounded-[22px] border border-gray-200 bg-[#fcfbfd] pl-14 pr-5 text-sm font-medium text-gray-900 outline-none transition focus:border-[#7a0c0c] focus:bg-white"
                       autoComplete="username"
                       disabled={loading}
                       required
@@ -264,7 +264,7 @@ export default function LoginClient({ redirectTo }: LoginClientProps) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex h-16 w-full items-center justify-center gap-3 rounded-[22px] bg-[#2E073F] px-6 text-[11px] font-black uppercase tracking-[0.28em] text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex h-16 w-full items-center justify-center gap-3 rounded-[22px] btn-primary px-6 text-[11px] font-black uppercase tracking-[0.28em] text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {loading ? (
                     <RefreshCw className="h-5 w-5 animate-spin" />
@@ -302,7 +302,7 @@ export default function LoginClient({ redirectTo }: LoginClientProps) {
                         setOtp(event.target.value.replace(/\D/g, ""))
                       }
                       placeholder="000000"
-                      className="h-16 w-full rounded-[22px] border border-gray-200 bg-[#fcfbfd] pl-14 pr-5 text-center text-2xl font-black tracking-[0.48em] text-gray-900 outline-none transition focus:border-[#2E073F] focus:bg-white"
+                      className="h-16 w-full rounded-[22px] border border-gray-200 bg-[#fcfbfd] pl-14 pr-5 text-center text-2xl font-black tracking-[0.48em] text-gray-900 outline-none transition focus:border-[#7a0c0c] focus:bg-white"
                       autoComplete="one-time-code"
                       disabled={loading}
                       required
@@ -332,7 +332,7 @@ export default function LoginClient({ redirectTo }: LoginClientProps) {
                   <button
                     type="submit"
                     disabled={loading || otp.length !== 6}
-                    className="flex h-16 w-full items-center justify-center gap-3 rounded-[22px] bg-[#2E073F] px-6 text-[11px] font-black uppercase tracking-[0.28em] text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="flex h-16 w-full items-center justify-center gap-3 rounded-[22px] btn-primary px-6 text-[11px] font-black uppercase tracking-[0.28em] text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {loading ? (
                       <RefreshCw className="h-5 w-5 animate-spin" />
@@ -348,7 +348,7 @@ export default function LoginClient({ redirectTo }: LoginClientProps) {
                     type="button"
                     onClick={handleResendOtp}
                     disabled={loading || resendTimer > 0}
-                    className="w-full text-center text-[11px] font-black uppercase tracking-[0.28em] text-[#2E073F] transition hover:text-black disabled:cursor-not-allowed disabled:text-gray-300"
+                    className="w-full text-center text-[11px] font-black uppercase tracking-[0.28em] text-[#7a0c0c] transition hover:text-black disabled:cursor-not-allowed disabled:text-gray-300"
                   >
                     {resendTimer > 0
                       ? `Resend OTP in ${resendTimer}s`
@@ -363,7 +363,7 @@ export default function LoginClient({ redirectTo }: LoginClientProps) {
                       setError("");
                       setSuccess("");
                     }}
-                    className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.28em] text-gray-400 transition hover:text-[#2E073F]"
+                    className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.28em] text-gray-400 transition hover:text-[#7a0c0c]"
                   >
                     <ChevronLeft className="h-4 w-4" />
                     Back to details

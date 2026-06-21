@@ -42,7 +42,7 @@ export default function BestSelling() {
                 onClick={() => setActiveRange(range)}
                 className={`whitespace-nowrap px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 ${
                   activeRange.label === range.label
-                    ? "bg-[#2E073F] text-white shadow-xl scale-105"
+                    ? "btn-primary text-white shadow-xl scale-105"
                     : "bg-white text-gray-400 hover:text-gray-900 shadow-sm"
                 }`}
               >

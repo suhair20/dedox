@@ -1,15 +1,21 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight, Layers, Droplets, Calendar, Clock } from "lucide-react";
+import NoteCardImage from "./NoteCardImage";
+
+const NOTE_SECTION_IMAGES = [
+  "/images/notesection/noteimage1.png",
+  "/images/notesection/noteimage2.png",
+  "/images/notesection/noteimage3.png",
+];
 
 const CATEGORY_DATA = {
   Notes: [
-    { title: "Oud", image: "https://images.unsplash.com/photo-1610461888750-10bfc601b874?q=80&w=600&auto=format&fit=crop", desc: "RICH & SMOKY" },
-    { title: "Jasmine", image: "https://images.unsplash.com/photo-1560963689-db8af2f6e522?q=80&w=600&auto=format&fit=crop", desc: "INTENSE & FLORAL" },
-    { title: "Grapefruit", image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=600&auto=format&fit=crop", desc: "BRIGHT & ZESTY" },
+    { title: "Oud", image: NOTE_SECTION_IMAGES[0], desc: "RICH & SMOKY" },
+    { title: "Jasmine", image: NOTE_SECTION_IMAGES[1], desc: "INTENSE & FLORAL" },
+    { title: "Grapefruit", image: NOTE_SECTION_IMAGES[2], desc: "BRIGHT & ZESTY" },
     { title: "Vanilla", image: "https://images.unsplash.com/photo-1615486511484-92e172054db9?q=80&w=600&auto=format&fit=crop", desc: "SWEET & COZY" },
     { title: "Rose", image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=600&auto=format&fit=crop", desc: "CLASSIC FLORAL" },
     { title: "Cedarwood", image: "https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?q=80&w=600&auto=format&fit=crop", desc: "EARTHY & WOODY" }
@@ -101,7 +107,7 @@ export default function NotesCarousel() {
                 onClick={() => setActiveCategory(cat)}
                 className={`flex items-center whitespace-nowrap px-6 py-3 rounded-full font-inter text-sm md:text-base font-medium transition-all duration-300 snap-center ${
                   activeCategory === cat
-                    ? "bg-[#2E073F] text-white shadow-xl scale-105"
+                    ? "btn-primary text-white shadow-xl scale-105"
                     : "text-gray-500 hover:text-gray-900"
                 }`}
               >
@@ -136,20 +142,13 @@ export default function NotesCarousel() {
                   {/* Clean White Card */}
                   <div className="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col h-full group">
                     <div className="relative h-48 sm:h-64 w-full overflow-hidden shrink-0 select-none">
-                      <Image
-                        src={item.image}
-                        alt={item.title}
-                        fill
-                        draggable={false}
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-                      />
+                      <NoteCardImage src={item.image} alt={item.title} />
                     </div>
                     <div className="p-4 sm:p-5 flex flex-col items-start bg-white flex-grow justify-between">
                       <h3 className="text-lg sm:text-xl font-bold font-inter text-gray-900 leading-tight">
                         {item.title}
                       </h3>
-                      <div className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#2E073F] mt-4">
+                      <div className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#7a0c0c] mt-4">
                         {item.desc} &rarr;
                       </div>
                     </div>
@@ -174,7 +173,7 @@ export default function NotesCarousel() {
 
         {/* Explore Button */}
         <div className="flex justify-center mt-16">
-          <button className="bg-[#2E073F] text-white px-12 py-3.5 rounded-full font-bold text-sm tracking-wider uppercase hover:bg-purple-900 transition-colors shadow-lg">
+          <button className="btn-primary px-12 py-3.5 rounded-full font-bold text-sm tracking-wider uppercase transition-colors shadow-lg">
             Explore All Notes
           </button>
         </div>

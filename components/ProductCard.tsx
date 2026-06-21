@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Minus, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLocation } from "@/context/LocationContext";
@@ -20,21 +20,40 @@ interface ProductCardProps {
   };
 }
 
+function discountPercent(price: number, oldPrice?: number) {
+  if (!oldPrice || oldPrice <= price) return null;
+  return Math.round((1 - price / oldPrice) * 100);
+}
+
 export default function ProductCard({ product }: ProductCardProps) {
-  const [quantity, setQuantity] = useState(1);
+  const [showCart, setShowCart] = useState(false);
   const { addToCart } = useCart();
   const { formatPrice } = useLocation();
+  const off = discountPercent(product.price, product.oldPrice);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product, quantity);
+    addToCart(product, 1);
   };
 
   return (
-    <div className="group relative bg-white transition-all duration-500 flex flex-col h-full hover:shadow-[0_20px_50px_rgba(46,7,63,0.1)] rounded-2xl p-2 border border-transparent hover:border-white/50">
-      <Link href={`/product/${product.id}`} className="flex flex-col flex-grow">
-        <div className="relative w-full aspect-[4/5] overflow-hidden bg-[#fafafa] rounded-xl mb-4">
+    <div
+      className="group relative flex h-full flex-col rounded-2xl border border-transparent bg-white p-2 transition-all duration-300 hover:border-white/50 hover:shadow-[0_20px_50px_rgba(122,12,12,0.1)]"
+      onMouseEnter={() => setShowCart(true)}
+      onMouseLeave={() => setShowCart(false)}
+      onTouchStart={() => setShowCart(true)}
+    >
+      <Link href={`/product/${product.id}`} className="flex flex-grow flex-col">
+        <div
+          className="relative mb-3 aspect-[4/5] w-full overflow-hidden rounded-xl bg-[#fafafa] sm:mb-4"
+          onClick={(e) => {
+            if (!showCart) {
+              e.preventDefault();
+              setShowCart(true);
+            }
+          }}
+        >
           <Image
             src={product.image}
             alt={product.name}
@@ -42,70 +61,61 @@ export default function ProductCard({ product }: ProductCardProps) {
             unoptimized
             className="object-contain object-center transition-transform duration-1000 group-hover:scale-110"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 15vw"
-            style={{ mixBlendMode: 'multiply' }}
+            style={{ mixBlendMode: "multiply" }}
           />
-          {product.oldPrice && (
-            <div className="absolute top-3 right-3 bg-[#2E073F] text-white text-[8px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
-              Special Offer
-            </div>
-          )}
+
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={!product.inStock}
+            aria-hidden={!showCart}
+            className={`absolute bottom-2 left-2 right-2 z-10 flex h-9 items-center justify-center gap-2 rounded-full transition-all duration-300 sm:h-10 sm:gap-3 ${
+              showCart
+                ? "translate-y-0 opacity-100"
+                : "pointer-events-none translate-y-2 opacity-0"
+            } ${
+              !product.inStock
+                ? "cursor-not-allowed grayscale"
+                : "btn-primary active:scale-95 shadow-md"
+            }`}
+          >
+            <ShoppingCart className="h-4 w-4" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+              {product.inStock ? "Add to cart" : "Sold Out"}
+            </span>
+          </button>
         </div>
-        
-        <div className="flex flex-col flex-grow px-2 pb-2">
-          <div className="flex justify-between items-start mb-1.5">
-            <p className="text-[10px] text-[#2E073F] uppercase tracking-[0.2em] font-bold">{product.brand}</p>
+
+        <div className="flex flex-grow flex-col px-1 pb-1 sm:px-2 sm:pb-2">
+          <div className="mb-1 flex items-start justify-between gap-2">
+            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#7a0c0c] sm:text-[10px] sm:tracking-[0.2em]">
+              {product.brand}
+            </p>
             {!product.inStock && (
-              <span className="text-[9px] font-black text-red-500 uppercase tracking-widest">Out of Stock</span>
+              <span className="text-[8px] font-black uppercase tracking-widest text-red-500 sm:text-[9px]">
+                Out of Stock
+              </span>
             )}
           </div>
-          <h3 className="text-[13px] font-bold text-gray-900 line-clamp-2 mb-2 group-hover:text-[#2E073F] transition-colors leading-snug">
+          <h3 className="mb-2 line-clamp-2 text-[12px] font-bold leading-snug text-gray-900 transition-colors group-hover:text-[#7a0c0c] sm:text-[13px]">
             {product.name}
           </h3>
-          
-          <div className="flex flex-col mt-auto">
+
+          <div className="mt-auto flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
             <span className="text-sm font-bold text-gray-900">{formatPrice(product.price)}</span>
-            {product.oldPrice && (
-              <span className="text-[11px] text-gray-300 line-through font-medium leading-none mt-1">{formatPrice(product.oldPrice)}</span>
+            {product.oldPrice && product.oldPrice > product.price && (
+              <>
+                <span className="text-[11px] font-medium text-gray-400 line-through">
+                  {formatPrice(product.oldPrice)}
+                </span>
+                {off !== null && (
+                  <span className="text-[11px] font-semibold text-emerald-600">{off}% off</span>
+                )}
+              </>
             )}
           </div>
         </div>
       </Link>
-      
-      {/* Mini Action Bar */}
-      <div className="mt-2 px-1 pb-2 flex flex-col gap-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-        <div className="px-6">
-          <div className="flex items-center border rounded-full border-gray-100 h-9 bg-gray-50/50 backdrop-blur-sm">
-            <button 
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="w-9 flex items-center justify-center text-gray-400 hover:text-black transition-colors"
-            >
-              <Minus className="h-3 w-3" />
-            </button>
-            <span className="flex-1 text-center text-[12px] font-bold text-gray-700">{quantity}</span>
-            <button 
-              onClick={() => setQuantity(quantity + 1)}
-              className="w-9 flex items-center justify-center text-gray-400 hover:text-black transition-colors"
-            >
-              <Plus className="h-3 w-3" />
-            </button>
-          </div>
-        </div>
-        
-        <button 
-          onClick={handleAddToCart}
-          disabled={!product.inStock}
-          className={`bg-[#2E073F] text-white h-11 rounded-full flex items-center justify-center gap-3 transition-all ${
-            !product.inStock 
-            ? 'opacity-30 cursor-not-allowed grayscale' 
-            : 'hover:bg-purple-900 active:scale-95 shadow-md'
-          }`}
-        >
-          <ShoppingCart className="h-4 w-4" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em]">
-            {product.inStock ? 'Add to cart' : 'Sold Out'}
-          </span>
-        </button>
-      </div>
     </div>
   );
 }

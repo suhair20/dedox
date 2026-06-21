@@ -9,7 +9,7 @@ export default async function AccountPage() {
   return (
     <div className="min-h-screen bg-[#faf7fb] px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl space-y-8">
-        <div className="rounded-[36px] bg-[#2E073F] px-8 py-10 text-white shadow-[0_30px_80px_rgba(46,7,63,0.24)] sm:px-12">
+        <div className="rounded-[36px] bg-[#7a0c0c] px-8 py-10 text-white shadow-[0_30px_80px_rgba(122,12,12,0.24)] sm:px-12">
           <p className="text-[11px] font-black uppercase tracking-[0.32em] text-white/60">
             Customer Account
           </p>
@@ -26,7 +26,7 @@ export default async function AccountPage() {
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <section className="rounded-[32px] border border-gray-100 bg-white p-8 shadow-[0_24px_70px_rgba(15,23,42,0.08)]">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#2E073F]/8 text-[#2E073F]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#7a0c0c]/8 text-[#7a0c0c]">
                 {user.channel === "email" ? (
                   <Mail className="h-5 w-5" />
                 ) : (
@@ -82,14 +82,14 @@ export default async function AccountPage() {
               <div className="mt-6 space-y-4">
                 <Link
                   href="/shop"
-                  className="flex items-center justify-center gap-3 rounded-[22px] bg-[#2E073F] px-6 py-4 text-[11px] font-black uppercase tracking-[0.28em] text-white transition hover:scale-[1.01]"
+                  className="flex items-center justify-center gap-3 rounded-[22px] btn-primary px-6 py-4 text-[11px] font-black uppercase tracking-[0.28em] text-white transition hover:scale-[1.01]"
                 >
                   <ShoppingBag className="h-4 w-4" />
                   Continue Shopping
                 </Link>
                 <Link
                   href="/checkout"
-                  className="flex items-center justify-center gap-3 rounded-[22px] border border-gray-200 px-6 py-4 text-[11px] font-black uppercase tracking-[0.28em] text-gray-900 transition hover:border-[#2E073F] hover:text-[#2E073F]"
+                  className="flex items-center justify-center gap-3 rounded-[22px] btn-primary px-6 py-4 text-[11px] font-black uppercase tracking-[0.28em] text-white transition hover:scale-[1.01]"
                 >
                   Checkout
                 </Link>

@@ -78,7 +78,7 @@ function ShopPageContent() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-[#0f3d3e] font-serif-luxury">Shop Collection</h1>
+            <h1 className="text-3xl font-bold text-[#7a0c0c] font-serif-luxury">Shop Collection</h1>
             <p className="mt-2 text-sm text-gray-500">
               {filteredProducts.length} fragrance{filteredProducts.length === 1 ? "" : "s"} found
             </p>
@@ -95,7 +95,7 @@ function ShopPageContent() {
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Search by name, brand, notes..."
-              className="w-full rounded-full border border-gray-200 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-[#0f3d3e]"
+              className="w-full rounded-full border border-gray-200 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-[#7a0c0c]"
             />
           </form>
         </div>
@@ -105,7 +105,7 @@ function ShopPageContent() {
           {/* Sidebar Filters - Desktop */}
           <aside className="hidden lg:block w-72 flex-shrink-0 space-y-12">
             <div>
-              <h3 className="text-lg font-bold text-[#0f3d3e] uppercase tracking-widest mb-6 border-b border-gray-100 pb-2 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-[#7a0c0c] uppercase tracking-widest mb-6 border-b border-gray-100 pb-2 flex items-center justify-between">
                 Filters
                 <Filter className="h-4 w-4 opacity-50" />
               </h3>
@@ -117,7 +117,7 @@ function ShopPageContent() {
                   <label className="flex items-center space-x-3 cursor-pointer group text-sm">
                     <input 
                       type="checkbox" 
-                      className="form-checkbox h-4 w-4 text-[#0f3d3e] border-gray-300 focus:ring-[#0f3d3e] rounded-sm"
+                      className="form-checkbox h-4 w-4 text-[#7a0c0c] border-gray-300 focus:ring-[#7a0c0c] rounded-sm"
                       checked={stockStatus.includes("in-stock")}
                       onChange={() => toggleStock("in-stock")}
                     />
@@ -126,7 +126,7 @@ function ShopPageContent() {
                   <label className="flex items-center space-x-3 cursor-pointer group text-sm">
                     <input 
                       type="checkbox" 
-                      className="form-checkbox h-4 w-4 text-[#0f3d3e] border-gray-300 focus:ring-[#0f3d3e] rounded-sm"
+                      className="form-checkbox h-4 w-4 text-[#7a0c0c] border-gray-300 focus:ring-[#7a0c0c] rounded-sm"
                       checked={stockStatus.includes("out-of-stock")}
                       onChange={() => toggleStock("out-of-stock")}
                     />
@@ -144,7 +144,7 @@ function ShopPageContent() {
                     <input 
                       type="number" 
                       placeholder="0"
-                      className="w-full pl-7 pr-3 py-2 text-sm border border-gray-200 focus:border-[#0f3d3e] outline-none transition-colors"
+                      className="w-full pl-7 pr-3 py-2 text-sm border border-gray-200 focus:border-[#7a0c0c] outline-none transition-colors"
                       value={priceRange.min}
                       onChange={(e) => setPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))}
                     />
@@ -155,7 +155,7 @@ function ShopPageContent() {
                     <input 
                       type="number" 
                       placeholder="2000"
-                      className="w-full pl-7 pr-3 py-2 text-sm border border-gray-200 focus:border-[#0f3d3e] outline-none transition-colors"
+                      className="w-full pl-7 pr-3 py-2 text-sm border border-gray-200 focus:border-[#7a0c0c] outline-none transition-colors"
                       value={priceRange.max}
                       onChange={(e) => setPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))}
                     />
@@ -171,7 +171,7 @@ function ShopPageContent() {
                     <label key={brand} className="flex items-center space-x-3 cursor-pointer group text-sm">
                       <input 
                         type="checkbox" 
-                        className="form-checkbox h-4 w-4 text-[#0f3d3e] border-gray-300 focus:ring-[#0f3d3e] rounded-sm"
+                        className="form-checkbox h-4 w-4 text-[#7a0c0c] border-gray-300 focus:ring-[#7a0c0c] rounded-sm"
                         checked={selectedBrands.includes(brand)}
                         onChange={() => toggleBrand(brand)}
                       />
@@ -193,7 +193,7 @@ function ShopPageContent() {
               
               <div className="flex items-center space-x-8 w-full sm:w-auto">
                 <div className="flex items-center space-x-2 border-r border-gray-200 pr-8 hidden md:flex">
-                  <button className="p-2 text-[#0f3d3e] bg-gray-50 rounded-sm"><LayoutGrid className="h-4 w-4" /></button>
+                  <button className="p-2 text-[#7a0c0c] bg-gray-50 rounded-sm"><LayoutGrid className="h-4 w-4" /></button>
                   <button className="p-2 text-gray-400 hover:text-black transition-colors"><List className="h-4 w-4" /></button>
                 </div>
                 
@@ -214,7 +214,7 @@ function ShopPageContent() {
                 {/* Mobile Filter Toggle */}
                 <button 
                   onClick={() => setIsMobileFilterOpen(true)}
-                  className="lg:hidden flex items-center space-x-2 bg-black text-white px-5 py-2.5 rounded-sm text-sm font-bold uppercase tracking-widest active:scale-95 transition-transform"
+                  className="lg:hidden flex items-center space-x-2 btn-primary px-5 py-2.5 rounded-sm text-sm font-bold uppercase tracking-widest active:scale-95 transition-transform"
                 >
                   <Filter className="h-4 w-4" />
                   <span>Filter</span>
@@ -257,7 +257,7 @@ function ShopPageContent() {
                       setStockStatus([]);
                       setPriceRange({ min: 0, max: 2000 });
                     }}
-                    className="text-[#0f3d3e] font-bold underline hover:no-underline underline-offset-4"
+                    className="text-[#7a0c0c] font-bold underline hover:no-underline underline-offset-4"
                   >
                     Clear all filters
                   </button>
@@ -288,7 +288,7 @@ function ShopPageContent() {
             >
               <div className="p-8">
                 <div className="flex items-center justify-between mb-10 border-b border-gray-100 pb-6">
-                  <h2 className="text-2xl font-serif font-bold text-[#0f3d3e]">Filters</h2>
+                  <h2 className="text-2xl font-serif font-bold text-[#7a0c0c]">Filters</h2>
                   <button onClick={() => setIsMobileFilterOpen(false)} className="p-2 border border-gray-100 rounded-full hover:bg-gray-50 transition-colors">
                     <X className="h-6 w-6 text-gray-500" />
                   </button>
@@ -303,7 +303,7 @@ function ShopPageContent() {
                       <label className="flex items-center space-x-4 cursor-pointer">
                         <input 
                           type="checkbox" 
-                          className="w-5 h-5 border-gray-300 text-[#0f3d3e] focus:ring-[#0f3d3e]"
+                          className="w-5 h-5 border-gray-300 text-[#7a0c0c] focus:ring-[#7a0c0c]"
                           checked={stockStatus.includes("in-stock")}
                           onChange={() => toggleStock("in-stock")}
                         />
@@ -312,7 +312,7 @@ function ShopPageContent() {
                       <label className="flex items-center space-x-4 cursor-pointer">
                         <input 
                           type="checkbox" 
-                          className="w-5 h-5 border-gray-300 text-[#0f3d3e] focus:ring-[#0f3d3e]"
+                          className="w-5 h-5 border-gray-300 text-[#7a0c0c] focus:ring-[#7a0c0c]"
                           checked={stockStatus.includes("out-of-stock")}
                           onChange={() => toggleStock("out-of-stock")}
                         />
@@ -329,7 +329,7 @@ function ShopPageContent() {
                         <label key={brand} className="flex items-center space-x-4 cursor-pointer">
                           <input 
                             type="checkbox" 
-                            className="w-5 h-5 border-gray-300 text-[#0f3d3e] focus:ring-[#0f3d3e]"
+                            className="w-5 h-5 border-gray-300 text-[#7a0c0c] focus:ring-[#7a0c0c]"
                             checked={selectedBrands.includes(brand)}
                             onChange={() => toggleBrand(brand)}
                           />
@@ -343,7 +343,7 @@ function ShopPageContent() {
               <div className="sticky bottom-0 left-0 w-full p-8 bg-white border-t border-gray-100 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
                 <button 
                   onClick={() => setIsMobileFilterOpen(false)}
-                  className="w-full bg-[#0f3d3e] text-white py-4 font-bold uppercase tracking-widest shadow-xl"
+                  className="w-full btn-primary py-4 font-bold uppercase tracking-widest shadow-xl"
                 >
                   Apply Filters
                 </button>
@@ -361,7 +361,7 @@ export default function ShopPage() {
     <Suspense
       fallback={
         <div className="flex min-h-screen items-center justify-center bg-white">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#0f3d3e]/20 border-t-[#0f3d3e]" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#7a0c0c]/20 border-t-[#7a0c0c]" />
         </div>
       }
     >

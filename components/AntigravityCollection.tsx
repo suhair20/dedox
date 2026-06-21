@@ -104,10 +104,10 @@ export default function AntigravityCollection() {
                 </div>
 
                 <div className="flex flex-col items-start px-2">
-                   <span className="text-[10px] uppercase tracking-widest text-[#9b59b6] font-bold mb-2">{product.brand}</span>
+                   <span className="text-[10px] uppercase tracking-widest text-[#981212] font-bold mb-2">{product.brand}</span>
                    <h3 className="text-2xl font-serif-luxury text-gray-900 mb-2 group-hover:tracking-wider transition-all duration-500">{product.name}</h3>
                    <p className="text-gray-400 text-xs mb-6 line-clamp-1">{product.description}</p>
-                   <button className="text-[10px] uppercase tracking-[0.2em] font-black group-hover:text-[#9b59b6] transition-colors">
+                   <button className="text-[10px] uppercase tracking-[0.2em] font-black group-hover:text-[#981212] transition-colors">
                       View Details &rarr;
                    </button>
                 </div>

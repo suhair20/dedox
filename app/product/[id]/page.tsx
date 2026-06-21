@@ -40,7 +40,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-32 flex justify-center">
-        <div className="w-8 h-8 border-4 border-[#2E073F]/20 border-t-[#2E073F] rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-[#7a0c0c]/20 border-t-[#7a0c0c] rounded-full animate-spin" />
       </div>
     );
   }
@@ -49,7 +49,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     return (
       <div className="container mx-auto px-4 py-32 text-center">
         <h1 className="text-2xl font-bold mb-4 font-serif-luxury">Product Not Found</h1>
-        <Link href="/" className="text-[#2E073F] hover:underline">Return to Home</Link>
+        <Link href="/" className="text-[#7a0c0c] hover:underline">Return to Home</Link>
       </div>
     );
   }
@@ -60,7 +60,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         
         {/* Navigation Breadcrumb */}
         <div className="mb-8">
-          <Link href="/" className="inline-flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-[#2E073F] transition-colors">
+          <Link href="/" className="inline-flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-[#7a0c0c] transition-colors">
             <ArrowLeft className="mr-2 h-3 w-3" />
             Back to Collection
           </Link>
@@ -97,7 +97,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               </AnimatePresence>
               
               {product.oldPrice && (
-                <div className="absolute top-6 left-6 bg-[#2E073F] text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg z-10 uppercase tracking-widest">
+                <div className="absolute top-6 left-6 bg-[#7a0c0c] text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg z-10 uppercase tracking-widest">
                   Special Offer
                 </div>
               )}
@@ -111,7 +111,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                   onClick={() => setMainImage(thumb)}
                   className={`relative w-24 h-24 rounded-2xl overflow-hidden border-2 transition-all duration-300 ${
                     mainImage === thumb 
-                    ? 'border-[#2E073F] scale-105 shadow-md' 
+                    ? 'border-[#7a0c0c] scale-105 shadow-md' 
                     : 'border-transparent hover:border-gray-200 opacity-60 hover:opacity-100'
                   }`}
                 >
@@ -137,7 +137,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             >
               {/* Product Category/Badge */}
               <div className="mb-2">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#2E073F]/70">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#7a0c0c]/70">
                   DE DOX CERTIFIED PRODUCT
                 </span>
               </div>
@@ -154,11 +154,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
               {/* Ratings */}
               <div className="flex items-center space-x-4 mb-6">
-                <div className="bg-[#2E073F] text-white px-2.5 py-1 rounded flex items-center space-x-1.5 shadow-sm">
+                <div className="bg-[#7a0c0c] text-white px-2.5 py-1 rounded flex items-center space-x-1.5 shadow-sm">
                   <span className="text-sm font-black">{product.rating || 4.8}</span>
                   <Star className="h-3.5 w-3.5 fill-white" />
                 </div>
-                <button className="text-[12px] font-bold text-[#2E073F] hover:underline decoration-2 underline-offset-4">
+                <button className="text-[12px] font-bold text-[#7a0c0c] hover:underline decoration-2 underline-offset-4">
                   {product.reviewCount || 24} Verified Reviews
                 </button>
               </div>
@@ -171,7 +171,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               {/* Pricing */}
               <div className="mb-10">
                 <div className="flex items-baseline space-x-4">
-                  <span className="text-5xl font-bold text-[#2E073F]">{formatPrice(product.price)}</span>
+                  <span className="text-5xl font-bold text-[#7a0c0c]">{formatPrice(product.price)}</span>
                   {product.oldPrice && (
                     <span className="text-xl text-gray-300 line-through font-medium leading-none">{formatPrice(product.oldPrice)}</span>
                   )}
@@ -182,12 +182,12 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               {/* Info Boxes */}
               <div className="grid grid-cols-2 gap-4 mb-8">
                 <div className="bg-white border border-gray-100 rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm">
-                  <Truck className="h-6 w-6 text-[#2E073F] mb-2 opacity-80" />
+                  <Truck className="h-6 w-6 text-[#7a0c0c] mb-2 opacity-80" />
                   <span className="text-[11px] font-black uppercase tracking-widest text-gray-900">Delivery</span>
                   <p className="text-[10px] text-gray-500 font-medium mt-1">{product.deliveryInfo || "Free to UAE"}</p>
                 </div>
                 <div className="bg-white border border-gray-100 rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm">
-                  <ShieldCheck className="h-6 w-6 text-[#2E073F] mb-2 opacity-80" />
+                  <ShieldCheck className="h-6 w-6 text-[#7a0c0c] mb-2 opacity-80" />
                   <span className="text-[11px] font-black uppercase tracking-widest text-gray-900">Warranty</span>
                   <p className="text-[10px] text-gray-500 font-medium mt-1">{product.warrantyInfo || "Original Batch"}</p>
                 </div>
@@ -217,10 +217,10 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 <button 
                   onClick={() => addToCart(product, quantity)}
                   disabled={!product.inStock}
-                  className={`w-full bg-[#2E073F] text-white h-16 rounded-2xl flex items-center justify-center gap-4 transition-all duration-300 shadow-[0_20px_40px_rgba(46,7,63,0.15)] ${
+                  className={`w-full btn-primary h-16 rounded-2xl flex items-center justify-center gap-4 transition-all duration-300 shadow-[0_20px_40px_rgba(122,12,12,0.15)] ${
                     !product.inStock 
                     ? 'opacity-50 cursor-not-allowed grayscale' 
-                    : 'hover:scale-[1.02] hover:bg-black active:scale-[0.98]'
+                    : 'hover:scale-[1.02] active:scale-[0.98]'
                   }`}
                 >
                   <ShoppingCart className="h-5 w-5" />
@@ -233,31 +233,31 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               {/* Dedox Assurance Checklist */}
               <div className="bg-white rounded-3xl p-8 border border-gray-50 shadow-sm space-y-6">
                 <div className="flex items-center space-x-3 mb-2">
-                  <div className="w-1.5 h-6 bg-[#2E073F] rounded-full" />
+                  <div className="w-1.5 h-6 bg-[#7a0c0c] rounded-full" />
                   <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">Dedox Assurance</h3>
                 </div>
                 
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3 group">
-                    <CheckCircle2 className="h-5 w-5 text-[#2E073F] mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="h-5 w-5 text-[#7a0c0c] mt-0.5 flex-shrink-0" />
                     <p className="text-[13px] font-medium text-gray-600 leading-tight">
                       Secure Checkout with Encrypted Payment Processing
                     </p>
                   </div>
                   <div className="flex items-start space-x-3 group">
-                    <CheckCircle2 className="h-5 w-5 text-[#2E073F] mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="h-5 w-5 text-[#7a0c0c] mt-0.5 flex-shrink-0" />
                     <p className="text-[13px] font-medium text-gray-600 leading-tight">
                       100% Original Batch Sourced Directly from Distributors
                     </p>
                   </div>
                   <div className="flex items-start space-x-3 group">
-                    <CheckCircle2 className="h-5 w-5 text-[#2E073F] mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="h-5 w-5 text-[#7a0c0c] mt-0.5 flex-shrink-0" />
                     <p className="text-[13px] font-medium text-gray-600 leading-tight">
                       Verified Authenticity Seal & Quality Checked Packaging
                     </p>
                   </div>
                   <div className="flex items-start space-x-3 group">
-                    <CheckCircle2 className="h-5 w-5 text-[#2E073F] mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="h-5 w-5 text-[#7a0c0c] mt-0.5 flex-shrink-0" />
                     <p className="text-[13px] font-medium text-gray-600 leading-tight">
                       No Hidden Charges or Import Duties at Checkout
                     </p>

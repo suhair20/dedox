@@ -59,7 +59,7 @@ export default function Categories() {
               </p>
               <Link 
                 href={`/category/${cat.name.toLowerCase()}`}
-                className="bg-[#2E073F] text-white px-10 py-3.5 rounded-full font-bold text-[11px] uppercase tracking-[0.2em] hover:bg-purple-900 transition-all shadow-lg"
+                className="btn-primary px-10 py-3.5 rounded-full font-bold text-[11px] uppercase tracking-[0.2em] transition-all shadow-lg"
               >
                 Shop {cat.name}
               </Link>

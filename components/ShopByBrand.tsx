@@ -64,7 +64,7 @@ export default function ShopByBrand() {
                            flex items-center justify-center text-center 
                            transition-all duration-500 hover:shadow-xl hover:-translate-y-2 group"
               >
-                <span className="text-[14px] font-bold tracking-[0.2em] uppercase text-gray-900 group-hover:text-[#2E073F] transition-colors">
+                <span className="text-[14px] font-bold tracking-[0.2em] uppercase text-gray-900 group-hover:text-[#7a0c0c] transition-colors">
                   {brand.logo}
                 </span>
               </Link>
@@ -74,7 +74,7 @@ export default function ShopByBrand() {
           <div className="flex flex-col items-center">
             <Link
               href="/shop"
-              className="bg-[#2E073F] text-white px-12 py-4 rounded-full font-bold text-[11px] uppercase tracking-[0.2em] transition-all hover:bg-purple-900 shadow-lg"
+              className="btn-primary px-12 py-4 rounded-full font-bold text-[11px] uppercase tracking-[0.2em] transition-all shadow-lg"
             >
               Explore All Brands
             </Link>

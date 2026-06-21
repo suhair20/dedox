@@ -17,7 +17,7 @@ function buildOtpMessage(otp: string, resend: boolean) {
       <p style="margin: 0 0 24px; color: #4b5563; font-size: 15px; line-height: 1.7;">
         ${intro}
       </p>
-      <div style="background: #2E073F; color: #ffffff; text-align: center; padding: 20px 24px; border-radius: 20px; font-size: 34px; font-weight: 800; letter-spacing: 0.5em;">
+      <div style="background: #7a0c0c; color: #ffffff; text-align: center; padding: 20px 24px; border-radius: 20px; font-size: 34px; font-weight: 800; letter-spacing: 0.5em;">
         ${otp}
       </div>
       <p style="margin: 24px 0 0; color: #6b7280; font-size: 13px; line-height: 1.7;">

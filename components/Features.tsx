@@ -25,7 +25,7 @@ export default function Features() {
               className="flex flex-col items-center text-center px-8 pt-8 md:pt-0 flex-shrink-0 w-[80vw] sm:w-[50vw] md:w-auto"
             >
               <div className="bg-[#FAF9F6] p-6 rounded-full mb-8 transition-transform duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-white">
-                <f.icon className="h-10 w-10 text-[#2E073F] opacity-90" />
+                <f.icon className="h-10 w-10 text-[#7a0c0c] opacity-90" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4 tracking-tight">{f.title}</h3>
               <p className="text-sm text-gray-500 max-w-[280px] leading-relaxed font-medium">{f.desc}</p>

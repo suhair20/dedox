@@ -52,7 +52,7 @@ export default function Navbar() {
   };
 
   const navLinkClass =
-    "font-serif-luxury text-[11px] xl:text-[12px] uppercase tracking-[0.14em] xl:tracking-[0.18em] 2xl:tracking-[0.22em] font-medium text-gray-900 hover:text-[#2E073F] transition-colors relative group whitespace-nowrap";
+    "font-serif-luxury text-[11px] xl:text-[12px] uppercase tracking-[0.14em] xl:tracking-[0.18em] 2xl:tracking-[0.22em] font-medium text-gray-900 hover:text-[#7a0c0c] transition-colors relative group whitespace-nowrap";
 
   return (
     <>
@@ -63,7 +63,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="shrink-0 rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#2E073F] xl:hidden"
+              className="shrink-0 rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#7a0c0c] xl:hidden"
               aria-label="Open menu"
             >
               <Menu className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -72,7 +72,7 @@ export default function Navbar() {
             <nav className="hidden min-w-0 items-center gap-4 xl:flex xl:gap-5 2xl:gap-7">
               <Link href="/" className={navLinkClass}>
                 Discover
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#2E073F] transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#7a0c0c] transition-all duration-300 group-hover:w-full" />
               </Link>
 
               <div
@@ -85,7 +85,7 @@ export default function Navbar() {
                   <ChevronDown
                     className={`h-3 w-3 transition ${isShopOpen ? "rotate-180" : ""}`}
                   />
-                  <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#2E073F] transition-all duration-300 group-hover:w-full" />
+                  <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#7a0c0c] transition-all duration-300 group-hover:w-full" />
                 </Link>
 
                 <AnimatePresence>
@@ -100,14 +100,14 @@ export default function Navbar() {
                         <Link
                           key={cat.name}
                           href={cat.href}
-                          className="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#2E073F]"
+                          className="block px-5 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#7a0c0c]"
                         >
                           {cat.name}
                         </Link>
                       ))}
                       <Link
                         href="/shop"
-                        className="block border-t px-5 py-3 text-xs font-bold uppercase text-[#2E073F]"
+                        className="block border-t px-5 py-3 text-xs font-bold uppercase text-[#7a0c0c]"
                       >
                         View All Products
                       </Link>
@@ -118,12 +118,12 @@ export default function Navbar() {
 
               <Link href="/about" className={navLinkClass}>
                 Signature
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#2E073F] transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#7a0c0c] transition-all duration-300 group-hover:w-full" />
               </Link>
 
               <Link href="/contact" className={navLinkClass}>
                 Contact
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#2E073F] transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#7a0c0c] transition-all duration-300 group-hover:w-full" />
               </Link>
             </nav>
           </div>
@@ -141,14 +141,14 @@ export default function Navbar() {
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
                 placeholder="Search"
-                className="w-24 rounded-full border border-gray-200 px-3 py-1.5 text-xs outline-none transition focus:border-[#2E073F] xl:w-28 2xl:w-40"
+                className="w-24 rounded-full border border-gray-200 px-3 py-1.5 text-xs outline-none transition focus:border-[#7a0c0c] xl:w-28 2xl:w-40"
               />
             </form>
 
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="shrink-0 rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#2E073F] xl:hidden"
+              className="shrink-0 rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#7a0c0c] xl:hidden"
               aria-label="Search"
             >
               <Search className="h-5 w-5" />
@@ -157,7 +157,7 @@ export default function Navbar() {
             <Link
               href={accountHref}
               aria-label={loading ? "Account" : isAuthenticated ? "Account" : "Login"}
-              className="hidden shrink-0 rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#2E073F] lg:block"
+              className="hidden shrink-0 rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#7a0c0c] lg:block"
             >
               <User className="h-5 w-5" />
             </Link>
@@ -170,11 +170,11 @@ export default function Navbar() {
               <Link
                 href="/cart"
                 aria-label="Cart"
-                className="block rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#2E073F]"
+                className="block rounded-lg p-1.5 text-[#7a0c0c] transition-colors hover:text-[#981212]"
               >
                 <ShoppingBag className="h-5 w-5" />
               </Link>
-              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2E073F] text-[9px] font-bold text-white sm:h-5 sm:w-5 sm:text-[10px]">
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#7a0c0c] text-[9px] font-bold text-white sm:h-5 sm:w-5 sm:text-[10px]">
                 {getCartCount()}
               </span>
             </div>
@@ -246,7 +246,7 @@ export default function Navbar() {
                     <Link
                       href="/shop"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block pt-2 font-semibold text-[#2E073F]"
+                      className="block pt-2 font-semibold text-[#7a0c0c]"
                     >
                       View All Products →
                     </Link>
@@ -264,7 +264,7 @@ export default function Navbar() {
                 <Link
                   href={accountHref}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-2 border-t pt-4 font-medium text-[#2E073F]"
+                  className="flex items-center gap-2 border-t pt-4 font-medium text-[#7a0c0c]"
                 >
                   <User className="h-5 w-5" />
                   {isAuthenticated ? "My Account" : "Login / Account"}

@@ -8,9 +8,13 @@
   --background: #ffffff;
   --foreground: #1a1a1a;
   --iridescent-silver: #F0F2F4;
-  --pale-violet: #E8DAEF;
+  --dedox-brand: #7a0c0c;
+  --pale-red: #F5E0E0;
   --glass-white: rgba(255, 255, 255, 0.3);
   --glass-border: rgba(255, 255, 255, 0.4);
+  --dedox-btn: #7a0c0c;
+  --dedox-btn-hover: #981212;
+  --dedox-btn-dark: #660000;
 }
 
 body {
@@ -41,7 +45,7 @@ body {
     background: linear-gradient(
       135deg,
       #F0F2F4 0%,
-      #E8DAEF 30%,
+      #F5E0E0 30%,
       #D6EAF8 60%,
       #FDFEFE 100%
     );
@@ -70,5 +74,15 @@ body {
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .btn-primary {
+    background-color: var(--dedox-btn);
+    color: #ffffff;
+    transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--dedox-btn-hover);
   }
 }

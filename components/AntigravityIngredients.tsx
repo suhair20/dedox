@@ -17,7 +17,7 @@ export default function AntigravityIngredients() {
       <motion.div 
         animate={{ y: [0, -30, 0], x: [0, 20, 0] }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 -right-24 w-[600px] h-[600px] bg-[#E8DAEF] blur-[120px] rounded-full opacity-40 pointer-events-none" 
+        className="absolute top-1/4 -right-24 w-[600px] h-[600px] bg-[#F5E0E0] blur-[120px] rounded-full opacity-40 pointer-events-none" 
       />
       <motion.div 
         animate={{ y: [0, 40, 0], x: [0, -30, 0] }}
@@ -55,7 +55,7 @@ export default function AntigravityIngredients() {
                className="absolute -right-8 top-1/2 -translate-y-1/2 z-30 hidden lg:block"
              >
                 <div className="glass-card p-8 rounded-3xl shadow-xl w-64 backdrop-blur-2xl">
-                   <p className="text-[10px] uppercase tracking-[0.3em] font-black text-[#9b59b6] mb-2">Molecular Design</p>
+                   <p className="text-[10px] uppercase tracking-[0.3em] font-black text-[#981212] mb-2">Molecular Design</p>
                    <h4 className="font-serif-luxury text-2xl text-gray-900 leading-tight">Synthetic Ethereality</h4>
                 </div>
              </motion.div>
@@ -90,7 +90,7 @@ export default function AntigravityIngredients() {
                    transition={{ delay: 0.2 + (idx * 0.1) }}
                    className="group cursor-default"
                  >
-                    <span className="text-[10px] uppercase tracking-widest text-[#9b59b6] font-bold mb-2 block">{item.type}</span>
+                    <span className="text-[10px] uppercase tracking-widest text-[#981212] font-bold mb-2 block">{item.type}</span>
                     <h3 className="text-3xl font-serif-luxury text-gray-900 mb-3 group-hover:translate-x-4 transition-transform duration-500">{item.name}</h3>
                     <p className="text-gray-500 max-w-sm text-sm leading-relaxed">{item.desc}</p>
                  </motion.div>
@@ -102,9 +102,8 @@ export default function AntigravityIngredients() {
                whileInView={{ opacity: 1 }}
                className="mt-16"
             >
-               <button className="group relative px-10 py-4 overflow-hidden border border-gray-900 rounded-full transition-all hover:border-transparent">
-                  <div className="absolute inset-0 bg-gray-900 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
-                  <span className="relative z-10 text-[11px] uppercase tracking-[0.3em] font-black group-hover:text-white transition-colors">Explore Science</span>
+               <button className="btn-primary px-10 py-4 rounded-full text-[11px] uppercase tracking-[0.3em] font-black">
+                  Explore Science
                </button>
             </motion.div>
           </div>

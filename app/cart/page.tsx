@@ -15,7 +15,7 @@ export default function CartPage() {
     <div className="bg-white min-h-screen py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-12 border-b border-gray-100 pb-8">
-          <h1 className="text-4xl font-bold text-[#2E073F] tracking-tight font-serif-luxury">Your Cart</h1>
+          <h1 className="text-4xl font-bold text-[#7a0c0c] tracking-tight font-serif-luxury">Your Cart</h1>
           <span className="text-sm font-bold text-gray-500 uppercase tracking-widest">{cart.length} Items</span>
         </div>
 
@@ -39,7 +39,7 @@ export default function CartPage() {
                       
                       <div className="flex-grow">
                         <div className="flex justify-between items-start mb-2">
-                          <h3 className="text-xl font-bold text-gray-900 hover:text-[#2E073F] transition-colors font-serif-luxury">
+                          <h3 className="text-xl font-bold text-gray-900 hover:text-[#7a0c0c] transition-colors font-serif-luxury">
                             <Link href={`/product/${item.id}`}>{item.name}</Link>
                           </h3>
                           <button 
@@ -50,7 +50,7 @@ export default function CartPage() {
                           </button>
                         </div>
                         
-                        <p className="text-lg font-bold text-[#2E073F] mb-6">{formatPrice(item.price)}</p>
+                        <p className="text-lg font-bold text-[#7a0c0c] mb-6">{formatPrice(item.price)}</p>
                         
                         <div className="flex items-center space-x-4">
                           <div className="flex items-center border border-gray-200 bg-gray-50 rounded-full h-10 px-1">
@@ -94,10 +94,10 @@ export default function CartPage() {
                 
                 <div className="flex justify-between text-2xl font-bold text-gray-900 border-t border-gray-200 pt-6 mb-10">
                   <span className="font-serif-luxury">Total</span>
-                  <span className="text-[#2E073F] tracking-tight">{formatPrice(getCartTotal())}</span>
+                  <span className="text-[#7a0c0c] tracking-tight">{formatPrice(getCartTotal())}</span>
                 </div>
                 
-                <Link href="/checkout" className="w-full bg-[#2E073F] text-white py-5 px-8 rounded-2xl flex items-center justify-center space-x-3 hover:bg-black transition-all duration-300 shadow-[0_20px_40_rgba(46,7,63,0.15)] group">
+                <Link href="/checkout" className="w-full btn-primary py-5 px-8 rounded-2xl flex items-center justify-center space-x-3 transition-all duration-300 shadow-[0_20px_40_rgba(122,12,12,0.15)] group">
                   <span className="font-bold uppercase tracking-widest text-sm">Proceed to Checkout</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
@@ -113,7 +113,7 @@ export default function CartPage() {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4 tracking-tight font-serif-luxury">Your cart is empty</h2>
             <p className="text-gray-500 mb-10 max-w-xs mx-auto text-sm">Looks like you haven&apos;t added any premium fragrances to your collection yet.</p>
-            <Link href="/" className="bg-[#2E073F] text-white px-12 py-4 rounded-full font-bold uppercase tracking-widest hover:bg-black transition-all shadow-lg inline-block text-sm">
+            <Link href="/" className="btn-primary px-12 py-4 rounded-full font-bold uppercase tracking-widest transition-all shadow-lg inline-block text-sm">
               Start Discovering
             </Link>
           </div>

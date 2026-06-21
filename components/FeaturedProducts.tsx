@@ -45,9 +45,9 @@ export default function FeaturedProducts() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
         <h2 className="text-4xl md:text-5xl font-serif-luxury text-gray-900 mb-4">The Highlight</h2>
         <p className="text-gray-400 text-[11px] uppercase tracking-[0.3em] font-black mb-8">Curated pieces from the void</p>
-        <Link href="/shop" className="group relative text-[10px] font-black uppercase tracking-widest text-[#2E073F] pb-1 overflow-hidden inline-block">
+        <Link href="/shop" className="group relative text-[10px] font-black uppercase tracking-widest text-[#7a0c0c] pb-1 overflow-hidden inline-block">
           <span>View all collection</span>
-          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#2E073F] -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#7a0c0c] -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
         </Link>
       </div>
 

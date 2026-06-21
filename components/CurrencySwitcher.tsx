@@ -25,7 +25,7 @@ export default function CurrencySwitcher() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-1.5 rounded-full border border-gray-100 bg-white/50 backdrop-blur-sm hover:border-[#2E073F]/30 transition-all shadow-sm"
+        className="flex items-center space-x-2 px-3 py-1.5 rounded-full border border-gray-100 bg-white/50 backdrop-blur-sm hover:border-[#7a0c0c]/30 transition-all shadow-sm"
       >
         <span className="hidden sm:block text-lg leading-none">{currency.flag}</span>
         <span className="text-[10px] font-black uppercase tracking-widest text-gray-700">{currency.code}</span>
@@ -42,7 +42,7 @@ export default function CurrencySwitcher() {
             className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-100 shadow-2xl rounded-2xl overflow-hidden z-[200]"
           >
             <div className="p-3 border-b border-gray-50 bg-gray-50/50">
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#2E073F]">Select Region</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#7a0c0c]">Select Region</span>
             </div>
             <div className="p-1">
               {Object.values(SUPPORTED_CURRENCIES).map((item) => (
@@ -54,7 +54,7 @@ export default function CurrencySwitcher() {
                   }}
                   className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all ${
                     currency.code === item.code 
-                    ? 'bg-[#2E073F] text-white' 
+                    ? 'btn-primary text-white' 
                     : 'text-gray-600 hover:bg-gray-50 hover:text-black'
                   }`}
                 >
