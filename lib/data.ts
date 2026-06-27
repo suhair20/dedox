@@ -7,10 +7,12 @@ export interface Product {
   image: string;
   category: string;
   categorySlug?: string;
+  categoryId?: string;
   isFeatured: boolean;
   description: string;
   brand: string;
   brandSlug?: string;
+  brandId?: string;
   inStock: boolean;
   rating?: number;
   reviewCount?: number;
@@ -19,10 +21,10 @@ export interface Product {
   warrantyInfo?: string;
   thumbnails?: string[];
   tags?: string[];
-  notes?: string[];
-  accords?: string[];
-  occasions?: string[];
-  concentration?: string;
+  notes?: import("@/lib/catalogTypes").CatalogAttribute[];
+  accords?: import("@/lib/catalogTypes").CatalogAttribute[];
+  occasions?: import("@/lib/catalogTypes").CatalogAttribute[];
+  concentration?: import("@/lib/catalogTypes").CatalogAttribute;
   volumeMl?: number;
   isGiftSet?: boolean;
   sku?: string;

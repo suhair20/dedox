@@ -4,6 +4,10 @@ export type ProductFilterOptions = {
   query?: string;
   brand?: string;
   category?: string;
+  note?: string;
+  accord?: string;
+  occasion?: string;
+  concentration?: string;
   inStockOnly?: boolean;
   outOfStockOnly?: boolean;
   minPrice?: number;
@@ -13,6 +17,21 @@ export type ProductFilterOptions = {
 
 function normalize(value: string) {
   return value.trim().toLowerCase();
+}
+
+function slugMatches(productSlug: string | undefined, filterSlug: string) {
+  if (!filterSlug) return true;
+  const value = normalize(filterSlug);
+  return normalize(productSlug || "") === value;
+}
+
+function arrayHasSlug(
+  items: Array<{ slug?: string }> | undefined,
+  filterSlug: string
+) {
+  if (!filterSlug) return true;
+  const value = normalize(filterSlug);
+  return (items || []).some((item) => normalize(item.slug || "") === value);
 }
 
 function matchesSearch(product: Product, query: string) {
@@ -27,10 +46,10 @@ function matchesSearch(product: Product, query: string) {
     product.subtitle || "",
     product.sku || "",
     ...(product.tags || []),
-    ...(product.notes || []),
-    ...(product.accords || []),
-    ...(product.occasions || []),
-    product.concentration || "",
+    ...(product.notes || []).map((item) => item.name),
+    ...(product.accords || []).map((item) => item.name),
+    ...(product.occasions || []).map((item) => item.name),
+    product.concentration?.name || "",
   ]
     .join(" ")
     .toLowerCase();
@@ -44,7 +63,7 @@ function matchesBrand(product: Product, brand: string) {
 
   return (
     normalize(product.brand) === value ||
-    normalize(product.brandSlug || "") === value ||
+    slugMatches(product.brandSlug, brand) ||
     normalize(product.brandSlug || "").replace(/-/g, " ") === value
   );
 }
@@ -55,7 +74,7 @@ function matchesCategory(product: Product, category: string) {
 
   return (
     normalize(product.category) === value ||
-    normalize(product.categorySlug || "") === value
+    slugMatches(product.categorySlug, category)
   );
 }
 
@@ -77,6 +96,10 @@ export function filterProducts(
       matchesSearch(product, options.query || "") &&
       matchesBrand(product, options.brand || "") &&
       matchesCategory(product, options.category || "") &&
+      arrayHasSlug(product.notes, options.note || "") &&
+      arrayHasSlug(product.accords, options.accord || "") &&
+      arrayHasSlug(product.occasions, options.occasion || "") &&
+      slugMatches(product.concentration?.slug, options.concentration || "") &&
       stockMatch &&
       priceMatch
     );

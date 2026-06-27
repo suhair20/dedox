@@ -7,6 +7,10 @@ export async function GET(request: Request) {
     const query = searchParams.get("q") || undefined;
     const brand = searchParams.get("brand") || undefined;
     const category = searchParams.get("category") || undefined;
+    const note = searchParams.get("note") || undefined;
+    const accord = searchParams.get("accord") || undefined;
+    const occasion = searchParams.get("occasion") || undefined;
+    const concentration = searchParams.get("concentration") || undefined;
     const inStockOnly = searchParams.get("inStock") === "true";
     const minPrice = searchParams.get("minPrice");
     const maxPrice = searchParams.get("maxPrice");
@@ -15,6 +19,10 @@ export async function GET(request: Request) {
       query,
       brand,
       category,
+      note,
+      accord,
+      occasion,
+      concentration,
       inStockOnly,
       minPrice: minPrice ? Number(minPrice) : undefined,
       maxPrice: maxPrice ? Number(maxPrice) : undefined,

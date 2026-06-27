@@ -18,6 +18,7 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useLocation } from "@/context/LocationContext";
 import { motion, AnimatePresence } from "framer-motion";
+import AttributeChipList from "@/components/catalog/AttributeChipList";
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -190,6 +191,44 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                   <ShieldCheck className="h-6 w-6 text-[#7a0c0c] mb-2 opacity-80" />
                   <span className="text-[11px] font-black uppercase tracking-widest text-gray-900">Warranty</span>
                   <p className="text-[10px] text-gray-500 font-medium mt-1">{product.warrantyInfo || "Original Batch"}</p>
+                </div>
+              </div>
+
+              {/* Fragrance profile */}
+              <div className="mb-12 space-y-6 rounded-3xl border border-gray-50 bg-white p-8 shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="h-6 w-1.5 rounded-full bg-[#7a0c0c]" />
+                  <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">
+                    Fragrance Profile
+                  </h3>
+                </div>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <AttributeChipList
+                    title="Brand"
+                    items={
+                      product.brandSlug
+                        ? [{ id: product.brandId || product.brand, name: product.brand, slug: product.brandSlug }]
+                        : [{ id: product.brand, name: product.brand, slug: product.brand.toLowerCase().replace(/\s+/g, "-") }]
+                    }
+                    shopParam="brand"
+                  />
+                  <AttributeChipList
+                    title="Category"
+                    items={
+                      product.categorySlug
+                        ? [{ id: product.categoryId || product.category, name: product.category, slug: product.categorySlug }]
+                        : [{ id: product.category, name: product.category, slug: product.category.toLowerCase() }]
+                    }
+                    shopParam="category"
+                  />
+                  <AttributeChipList title="Notes" items={product.notes} shopParam="note" />
+                  <AttributeChipList title="Accords" items={product.accords} shopParam="accord" />
+                  <AttributeChipList title="Occasions" items={product.occasions} shopParam="occasion" />
+                  <AttributeChipList
+                    title="Concentration"
+                    items={product.concentration ? [product.concentration] : []}
+                    shopParam="concentration"
+                  />
                 </div>
               </div>
 

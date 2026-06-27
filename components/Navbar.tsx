@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Logo from "./Logo";
@@ -35,12 +35,22 @@ export default function Navbar() {
     router.push(`/shop?q=${encodeURIComponent(query)}`);
   };
 
-  const categories = [
-    { name: "Men", href: "/category/men" },
-    { name: "Women", href: "/category/women" },
-    { name: "Unisex", href: "/category/unisex" },
-    { name: "Luxury", href: "/category/luxury" },
-  ];
+  const [categories, setCategories] = useState<Array<{ name: string; href: string }>>([]);
+
+  useEffect(() => {
+    fetch("/api/catalog")
+      .then((res) => res.json())
+      .then((data) => {
+        const items = Array.isArray(data?.categories) ? data.categories : [];
+        setCategories(
+          items.map((item: { name: string; slug: string }) => ({
+            name: item.name,
+            href: `/category/${item.slug}`,
+          }))
+        );
+      })
+      .catch(() => setCategories([]));
+  }, []);
 
   const accountHref = isAuthenticated ? "/account" : "/login";
 

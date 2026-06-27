@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, ShieldCheck, ShoppingBag, Smartphone } from "lucide-react";
+import { Mail, ShieldCheck, ShoppingBag, Smartphone, Package } from "lucide-react";
 import { requireAuthSession } from "@/lib/auth-server";
 import LogoutButton from "@/components/LogoutButton";
 
@@ -80,6 +80,13 @@ export default async function AccountPage() {
                 Quick actions
               </p>
               <div className="mt-6 space-y-4">
+                <Link
+                  href="/account/orders"
+                  className="flex items-center justify-center gap-3 rounded-[22px] border border-[#7a0c0c]/15 bg-[#7a0c0c]/8 px-6 py-4 text-[11px] font-black uppercase tracking-[0.28em] text-[#7a0c0c] transition hover:bg-[#7a0c0c]/12"
+                >
+                  <Package className="h-4 w-4" />
+                  My Orders
+                </Link>
                 <Link
                   href="/shop"
                   className="flex items-center justify-center gap-3 rounded-[22px] btn-primary px-6 py-4 text-[11px] font-black uppercase tracking-[0.28em] text-white transition hover:scale-[1.01]"
