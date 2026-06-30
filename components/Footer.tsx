@@ -49,7 +49,7 @@ export default function Footer() {
         </div>
         <div className="mt-12 border-t border-white/10 pt-8 flex flex-col items-center justify-between sm:flex-row gap-4">
           <p className="text-sm text-gray-300">
-            &copy; {new Date().getFullYear()} Dedox Perfume. All rights reserved.
+          &copy; {new Date().getFullYear()} dedoxperfume. All rights reserved.
           </p>
           <p className="text-xs text-gray-400">
             Designed for luxury

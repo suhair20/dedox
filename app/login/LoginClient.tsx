@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Logo from "@/components/Logo";
 import {
   AlertCircle,
   ArrowRight,
@@ -150,17 +150,7 @@ export default function LoginClient({ redirectTo }: LoginClientProps) {
     <div className="flex min-h-screen items-center justify-center bg-[#f3f4f6] px-4 py-10 sm:px-6">
       <div className="w-full max-w-[420px]">
         <div className="mb-8 text-left">
-          <Link href="/" className="inline-block">
-            <div className="relative h-10 w-36 sm:h-11 sm:w-40">
-              <Image
-                src="/dedox-perfume-logo.svg"
-                alt="Dedox Perfume"
-                fill
-                className="object-contain object-left"
-                priority
-              />
-            </div>
-          </Link>
+          <Logo compact />
           <h1 className="mt-6 text-2xl font-bold tracking-tight text-gray-900 sm:text-[1.65rem]">
             {step === 1 ? "Welcome back!" : "Almost there"}
           </h1>

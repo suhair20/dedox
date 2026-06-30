@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { Outfit, Cinzel_Decorative, Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
+import {
+  SITE_DESCRIPTION,
+  SITE_LOGO,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/site";
 
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 const montserrat = Montserrat({
@@ -17,34 +23,39 @@ const cinzel = Cinzel_Decorative({
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Dedox Perfume",
-    template: "%s | Dedox Perfume",
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "Shop premium luxury fragrances at Dedox Perfume. Authentic perfumes, fast UAE delivery, and curated collections for every occasion.",
-  applicationName: "Dedox Perfume",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
   openGraph: {
-    title: "Dedox Perfume",
-    siteName: "Dedox Perfume",
-    description:
-      "Shop premium luxury fragrances at Dedox Perfume. Authentic perfumes, fast UAE delivery, and curated collections.",
+    title: SITE_NAME,
+    siteName: SITE_NAME,
+    description: SITE_DESCRIPTION,
     type: "website",
     locale: "en_AE",
+    url: SITE_URL,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dedox Perfume",
-    description:
-      "Shop premium luxury fragrances at Dedox Perfume. Authentic perfumes and curated collections.",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
   },
   icons: {
-    icon: [
-      { url: "/dedox-perfume-logo.svg", type: "image/svg+xml" },
-    ],
-    shortcut: "/dedox-perfume-logo.svg",
-    apple: "/dedox-perfume-logo.svg",
+    icon: [{ url: SITE_LOGO, type: "image/svg+xml" }],
+    shortcut: SITE_LOGO,
+    apple: SITE_LOGO,
   },
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
 };
 
 export default function RootLayout({
@@ -54,6 +65,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
+      </head>
       <body
         className={`${outfit.className} ${outfit.variable} ${montserrat.variable} ${cinzel.variable} ${inter.variable} flex min-h-screen flex-col bg-white antialiased text-gray-900`}
       >

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { SITE_LOGO, SITE_NAME } from "@/lib/site";
 
 interface LogoProps {
   className?: string;
@@ -20,10 +21,10 @@ export default function Logo({ className = "", compact = false }: LogoProps) {
     >
       <div className={`relative ${sizeClass}`}>
         <Image
-          src="/dedox-perfume-logo.svg"
-          alt="Dedox Perfume"
+          src={SITE_LOGO}
+          alt={SITE_NAME}
           fill
-          className="object-contain transition-all duration-700 brightness-[1.1] contrast-[1.05] group-hover:scale-110 group-hover:brightness-[1.2]"
+          className="object-contain object-left transition-all duration-700 group-hover:scale-105"
           priority
         />
       </div>
