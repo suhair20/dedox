@@ -38,7 +38,7 @@ export default function NotesCarousel() {
   const [canScrollNext, setCanScrollNext] = useState(true);
 
   useEffect(() => {
-    fetch("/api/catalog/featured")
+    fetch("/api/catalog/featured", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         setCatalog({
@@ -119,7 +119,7 @@ export default function NotesCarousel() {
               {activeItems.length === 0 ? (
                 <div className="flex-[0_0_100%] pl-4">
                   <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-12 text-center text-gray-400">
-                    No featured {activeConfig.label.toLowerCase()} yet. Add them in Dedox Admin → Catalog.
+                    No featured {activeConfig.label.toLowerCase()} yet. In Admin → {activeConfig.label}, create items and tick &quot;Featured on homepage&quot;.
                   </div>
                 </div>
               ) : (
