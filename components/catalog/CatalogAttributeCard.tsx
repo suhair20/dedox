@@ -18,7 +18,7 @@ export default function CatalogAttributeCard({
   return (
     <Link href={href} className="group block h-full">
       <div className="flex h-full flex-col overflow-hidden rounded-[20px] border border-gray-100 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
-        <div className="relative h-48 w-full shrink-0 overflow-hidden sm:h-64">
+        <div className="relative h-56 w-full shrink-0 overflow-hidden sm:h-72 lg:h-80">
           {item.imageUrl ? (
             <Image
               src={item.imageUrl}
@@ -34,8 +34,8 @@ export default function CatalogAttributeCard({
             </div>
           )}
         </div>
-        <div className="flex flex-grow flex-col justify-between bg-white p-4 sm:p-5">
-          <h3 className="text-lg font-bold leading-tight text-gray-900 sm:text-xl">
+        <div className="flex min-h-[5.5rem] flex-grow flex-col justify-between bg-white p-5 sm:min-h-[6rem] sm:p-6">
+          <h3 className="text-lg font-bold leading-snug text-gray-900 sm:text-xl">
             {item.name}
           </h3>
           {subtitle && (

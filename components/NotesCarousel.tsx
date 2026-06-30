@@ -107,14 +107,14 @@ export default function NotesCarousel() {
           <button
             onClick={scrollPrev}
             disabled={!canScrollPrev}
-            className={`absolute left-2 top-[100px] z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full glass-card transition-all duration-300 sm:left-0 sm:top-1/2 sm:-translate-x-1/2 md:top-1/2 ${
+            className={`absolute left-2 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full glass-card transition-all duration-300 sm:left-0 sm:-translate-x-1/2 ${
               !canScrollPrev ? "pointer-events-none opacity-0" : "opacity-100 hover:scale-110"
             }`}
           >
             <ArrowLeft className="h-5 w-5 text-gray-900" />
           </button>
 
-          <div className="-my-4 overflow-hidden py-4" ref={emblaRef}>
+          <div className="-my-4 min-h-[320px] overflow-hidden py-4 sm:min-h-[380px] lg:min-h-[420px]" ref={emblaRef}>
             <div className="flex touch-pan-y -ml-4">
               {activeItems.length === 0 ? (
                 <div className="flex-[0_0_100%] pl-4">
@@ -142,7 +142,7 @@ export default function NotesCarousel() {
           <button
             onClick={scrollNext}
             disabled={!canScrollNext}
-            className={`absolute right-2 top-[100px] z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_2px_15px_rgba(0,0,0,0.15)] transition-all duration-300 sm:right-0 sm:top-1/2 sm:translate-x-1/2 sm:h-12 sm:w-12 md:top-1/2 ${
+            className={`absolute right-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_2px_15px_rgba(0,0,0,0.15)] transition-all duration-300 sm:right-0 sm:h-12 sm:w-12 sm:translate-x-1/2 ${
               !canScrollNext ? "pointer-events-none opacity-0" : "opacity-100 hover:scale-105"
             }`}
           >
