@@ -255,7 +255,21 @@ export default function CheckoutClient() {
       {/* Checkout Navbar */}
       <header className="bg-white border-b border-gray-100 py-4 sm:py-6 sticky top-0 z-[100]">
         <div className="container mx-auto px-4 sm:px-6 lg:px-20 max-w-7xl">
-          <div className="flex items-center justify-between">
+            <div className="mb-4 flex items-center justify-center gap-2 md:hidden">
+              {STEPS.map((step, idx) => (
+                <span
+                  key={step.id}
+                  className={`rounded-full px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.2em] ${
+                    idx === currentStep
+                      ? "bg-[#7a0c0c] text-white"
+                      : "bg-gray-100 text-gray-400"
+                  }`}
+                >
+                  {step.label}
+                </span>
+              ))}
+            </div>
+            <div className="flex items-center justify-between">
             <Logo className="scale-75 sm:scale-90" />
             <div className="hidden md:flex items-center space-x-12">
               {STEPS.map((step, idx) => (
@@ -280,11 +294,11 @@ export default function CheckoutClient() {
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-20 max-w-7xl py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+      <div className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-12 lg:px-20">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 sm:gap-16">
           
           {/* Left Column: Forms */}
-          <div className="lg:col-span-12 xl:col-span-7 space-y-12">
+          <div className="lg:col-span-12 xl:col-span-7 space-y-8 sm:space-y-12">
             
             <AnimatePresence mode="wait">
               {currentStep === 0 && (
@@ -294,45 +308,45 @@ export default function CheckoutClient() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.4 }}
-                  className="space-y-10"
+                  className="space-y-6 sm:space-y-10"
                 >
                   <section>
-                    <div className="flex items-center space-x-4 mb-8">
-                      <div className="w-1.5 h-6 bg-[#7a0c0c] rounded-full" />
-                      <h2 className="text-2xl font-bold text-gray-900 font-serif-luxury tracking-tight">Contact Information</h2>
+                    <div className="mb-5 flex items-center space-x-3 sm:mb-8 sm:space-x-4">
+                      <div className="h-5 w-1 rounded-full bg-[#7a0c0c] sm:h-6 sm:w-1.5" />
+                      <h2 className="font-serif-luxury text-lg font-bold tracking-tight text-gray-900 sm:text-2xl">Contact Information</h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
                       <input 
                         type="email" 
                         placeholder="Email Address"
                         value={shippingAddress.email}
                         onChange={(e) => setShippingAddress({ ...shippingAddress, email: e.target.value })}
                         required
-                        className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#7a0c0c] outline-none transition-all shadow-sm font-medium text-sm"
+                        className="form-input"
                       />
                       <input 
                         type="tel" 
                         placeholder="Phone Number"
                         value={shippingAddress.phone}
                         onChange={(e) => setShippingAddress({ ...shippingAddress, phone: e.target.value })}
-                        className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#7a0c0c] outline-none transition-all shadow-sm font-medium text-sm"
+                        className="form-input"
                       />
                     </div>
                   </section>
 
                   <section>
-                    <div className="flex items-center space-x-4 mb-8">
-                      <div className="w-1.5 h-6 bg-[#7a0c0c] rounded-full" />
-                      <h2 className="text-2xl font-bold text-gray-900 font-serif-luxury tracking-tight">Shipping Address</h2>
+                    <div className="mb-5 flex items-center space-x-3 sm:mb-8 sm:space-x-4">
+                      <div className="h-5 w-1 rounded-full bg-[#7a0c0c] sm:h-6 sm:w-1.5" />
+                      <h2 className="font-serif-luxury text-lg font-bold tracking-tight text-gray-900 sm:text-2xl">Shipping Address</h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
                       <input 
                         type="text" 
                         placeholder="First Name"
                         value={shippingAddress.firstName}
                         onChange={(e) => setShippingAddress({ ...shippingAddress, firstName: e.target.value })}
                         required
-                        className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#7a0c0c] outline-none transition-all shadow-sm font-medium text-sm"
+                        className="form-input"
                       />
                       <input 
                         type="text" 
@@ -340,14 +354,14 @@ export default function CheckoutClient() {
                         value={shippingAddress.lastName}
                         onChange={(e) => setShippingAddress({ ...shippingAddress, lastName: e.target.value })}
                         required
-                        className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#7a0c0c] outline-none transition-all shadow-sm font-medium text-sm"
+                        className="form-input"
                       />
                       <div className="md:col-span-2">
                         <select
                           value={shippingAddress.country}
                           onChange={(e) => setShippingAddress({ ...shippingAddress, country: e.target.value })}
                           required
-                          className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#7a0c0c] outline-none transition-all shadow-sm font-medium text-sm text-gray-500 appearance-none"
+                          className="form-select md:col-span-2"
                         >
                           <option>United Arab Emirates</option>
                           <option>India</option>
@@ -361,14 +375,14 @@ export default function CheckoutClient() {
                         value={shippingAddress.city}
                         onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
                         required
-                        className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#7a0c0c] outline-none transition-all shadow-sm font-medium text-sm"
+                        className="form-input"
                       />
                       <input 
                         type="text" 
                         placeholder="ZIP / Post Code"
                         value={shippingAddress.postalCode}
                         onChange={(e) => setShippingAddress({ ...shippingAddress, postalCode: e.target.value })}
-                        className="w-full h-16 px-6 bg-white border border-gray-100 rounded-2xl focus:border-[#7a0c0c] outline-none transition-all shadow-sm font-medium text-sm"
+                        className="form-input"
                       />
                       <div className="md:col-span-2">
                         <textarea 
@@ -377,7 +391,7 @@ export default function CheckoutClient() {
                           value={shippingAddress.streetAddress}
                           onChange={(e) => setShippingAddress({ ...shippingAddress, streetAddress: e.target.value })}
                           required
-                          className="w-full px-6 py-5 bg-white border border-gray-100 rounded-2xl focus:border-[#7a0c0c] outline-none transition-all shadow-sm font-medium text-sm resize-none"
+                          className="form-textarea md:col-span-2"
                         />
                       </div>
                     </div>
@@ -385,7 +399,7 @@ export default function CheckoutClient() {
                   
                   <button 
                     onClick={nextStep}
-                    className="w-full md:w-auto px-16 h-16 btn-primary rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center space-x-3"
+                    className="form-btn w-full gap-3 btn-primary shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] md:w-auto"
                   >
                     <span>Continue to Shipping</span>
                     <ArrowRight className="h-4 w-4" />
@@ -400,7 +414,7 @@ export default function CheckoutClient() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.4 }}
-                  className="space-y-10"
+                  className="space-y-6 sm:space-y-10"
                 >
                   <button onClick={prevStep} className="inline-flex items-center text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-[#7a0c0c] mb-4">
                     <ArrowLeft className="h-3 w-3 mr-2" />
@@ -408,16 +422,16 @@ export default function CheckoutClient() {
                   </button>
 
                   <section>
-                    <div className="flex items-center space-x-4 mb-8">
-                      <div className="w-1.5 h-6 bg-[#7a0c0c] rounded-full" />
-                      <h2 className="text-2xl font-bold text-gray-900 font-serif-luxury tracking-tight">Delivery Method</h2>
+                    <div className="mb-5 flex items-center space-x-3 sm:mb-8 sm:space-x-4">
+                      <div className="h-5 w-1 rounded-full bg-[#7a0c0c] sm:h-6 sm:w-1.5" />
+                      <h2 className="font-serif-luxury text-lg font-bold tracking-tight text-gray-900 sm:text-2xl">Delivery Method</h2>
                     </div>
                     
                     <div className="space-y-4">
                       {/* Standard */}
                       <button 
                         onClick={() => setShippingMethod('standard')}
-                        className={`w-full flex items-center justify-between p-8 rounded-3xl border-2 transition-all ${
+                        className={`flex w-full items-center justify-between rounded-2xl border-2 p-4 transition-all sm:rounded-3xl sm:p-8 ${
                           shippingMethod === 'standard' 
                           ? 'border-[#7a0c0c] bg-white shadow-xl' 
                           : 'border-gray-50 bg-white/50 hover:border-gray-200 opacity-60'
@@ -440,7 +454,7 @@ export default function CheckoutClient() {
                       {/* Express */}
                       <button 
                         onClick={() => setShippingMethod('express')}
-                        className={`w-full flex items-center justify-between p-8 rounded-3xl border-2 transition-all ${
+                        className={`flex w-full items-center justify-between rounded-2xl border-2 p-4 transition-all sm:rounded-3xl sm:p-8 ${
                           shippingMethod === 'express' 
                           ? 'border-[#7a0c0c] bg-white shadow-xl' 
                           : 'border-gray-50 bg-white/50 hover:border-gray-200 opacity-60'
@@ -464,7 +478,7 @@ export default function CheckoutClient() {
 
                   <button 
                     onClick={nextStep}
-                    className="w-full md:w-auto px-16 h-16 btn-primary rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center space-x-3"
+                    className="form-btn w-full gap-3 btn-primary shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] md:w-auto"
                   >
                     <span>Continue to Payment</span>
                     <ArrowRight className="h-4 w-4" />
@@ -479,7 +493,7 @@ export default function CheckoutClient() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.4 }}
-                  className="space-y-10"
+                  className="space-y-6 sm:space-y-10"
                 >
                   <button onClick={prevStep} className="inline-flex items-center text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-[#7a0c0c] mb-4">
                     <ArrowLeft className="h-3 w-3 mr-2" />
@@ -487,16 +501,16 @@ export default function CheckoutClient() {
                   </button>
 
                   <section>
-                    <div className="flex items-center space-x-4 mb-8">
-                      <div className="w-1.5 h-6 bg-[#7a0c0c] rounded-full" />
-                      <h2 className="text-2xl font-bold text-gray-900 font-serif-luxury tracking-tight">Payment Method</h2>
+                    <div className="mb-5 flex items-center space-x-3 sm:mb-8 sm:space-x-4">
+                      <div className="h-5 w-1 rounded-full bg-[#7a0c0c] sm:h-6 sm:w-1.5" />
+                      <h2 className="font-serif-luxury text-lg font-bold tracking-tight text-gray-900 sm:text-2xl">Payment Method</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                       {/* Credit Card */}
                       <button 
                         onClick={() => setPaymentMethod('card')}
-                        className={`flex flex-col items-center justify-center p-8 rounded-3xl border-2 transition-all gap-4 ${
+                        className={`flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-5 transition-all sm:gap-4 sm:rounded-3xl sm:p-8 ${
                           paymentMethod === 'card' 
                           ? 'border-[#7a0c0c] bg-white shadow-xl' 
                           : 'border-gray-50 bg-white/50 hover:border-gray-200 opacity-60'
@@ -509,7 +523,7 @@ export default function CheckoutClient() {
                       {/* UPI */}
                       <button 
                         onClick={() => setPaymentMethod('upi')}
-                        className={`flex flex-col items-center justify-center p-8 rounded-3xl border-2 transition-all gap-4 ${
+                        className={`flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-5 transition-all sm:gap-4 sm:rounded-3xl sm:p-8 ${
                           paymentMethod === 'upi' 
                           ? 'border-[#7a0c0c] bg-white shadow-xl' 
                           : 'border-gray-50 bg-white/50 hover:border-gray-200 opacity-60'
@@ -522,7 +536,7 @@ export default function CheckoutClient() {
                       {/* PayPal */}
                       <button 
                         onClick={() => setPaymentMethod('paypal')}
-                        className={`flex flex-col items-center justify-center p-8 rounded-3xl border-2 transition-all gap-4 ${
+                        className={`flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-5 transition-all sm:gap-4 sm:rounded-3xl sm:p-8 ${
                           paymentMethod === 'paypal' 
                           ? 'border-[#7a0c0c] bg-white shadow-xl' 
                           : 'border-gray-50 bg-white/50 hover:border-gray-200 opacity-60'
@@ -535,7 +549,7 @@ export default function CheckoutClient() {
                       {/* COD */}
                       <button 
                         onClick={() => setPaymentMethod('cod')}
-                        className={`flex flex-col items-center justify-center p-8 rounded-3xl border-2 transition-all gap-4 ${
+                        className={`flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-5 transition-all sm:gap-4 sm:rounded-3xl sm:p-8 ${
                           paymentMethod === 'cod' 
                           ? 'border-[#7a0c0c] bg-white shadow-xl' 
                           : 'border-gray-50 bg-white/50 hover:border-gray-200 opacity-60'
@@ -591,7 +605,7 @@ export default function CheckoutClient() {
                   <button 
                     onClick={handleCompleteOrder}
                     disabled={isLoading}
-                    className="w-full md:w-auto px-16 h-16 btn-primary rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center space-x-3"
+                  className="form-btn w-full btn-primary shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] md:w-auto"
                   >
                     {isLoading ? (
                       <div className="h-5 w-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
@@ -659,9 +673,9 @@ export default function CheckoutClient() {
                   <input 
                     type="text" 
                     placeholder="Enter Coupon / Promo Code"
-                    className="flex-grow h-12 px-4 bg-gray-50 border border-transparent rounded-xl focus:border-gray-200 outline-none transition-all text-xs font-medium"
+                    className="form-input flex-grow"
                   />
-                  <button className="btn-primary px-6 h-12 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all shadow-sm">Apply</button>
+                  <button className="btn-primary h-11 shrink-0 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest transition-all shadow-sm sm:h-12 sm:px-6">Apply</button>
                 </div>
               </div>
 

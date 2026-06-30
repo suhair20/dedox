@@ -86,3 +86,31 @@ body {
     background-color: var(--dedox-btn-hover);
   }
 }
+
+@layer components {
+  /* 16px on mobile prevents iOS Safari zoom-on-focus */
+  .form-input,
+  .form-select,
+  .form-textarea {
+    @apply w-full rounded-xl border border-gray-100 bg-white text-base text-gray-900 shadow-sm outline-none transition-all focus:border-[#7a0c0c] focus:ring-2 focus:ring-[#7a0c0c]/10;
+    font-size: 16px;
+  }
+
+  .form-input,
+  .form-select {
+    @apply h-11 px-4 sm:h-14 sm:rounded-2xl sm:px-6;
+  }
+
+  .form-select {
+    @apply appearance-none text-gray-700;
+  }
+
+  .form-textarea {
+    @apply resize-none px-4 py-3 sm:rounded-2xl sm:px-6 sm:py-5;
+    min-height: 5.5rem;
+  }
+
+  .form-btn {
+    @apply inline-flex h-11 items-center justify-center rounded-xl px-8 text-xs font-black uppercase tracking-[0.18em] sm:h-14 sm:rounded-2xl sm:px-16 sm:text-[11px] sm:tracking-[0.2em];
+  }
+}

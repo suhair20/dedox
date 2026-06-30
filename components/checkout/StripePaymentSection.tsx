@@ -68,7 +68,7 @@ function CheckoutPaymentForm({
 
   return (
     <div className="space-y-6">
-      <div className="rounded-3xl border border-gray-100 bg-gray-50/50 p-6 sm:p-8">
+      <div className="rounded-2xl border border-gray-100 bg-gray-50/50 p-4 sm:rounded-3xl sm:p-8">
         <div className="mb-6 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
           <Lock className="h-3.5 w-3.5 text-[#7a0c0c]" />
           Secured by Stripe (test mode)
@@ -83,7 +83,7 @@ function CheckoutPaymentForm({
         type="button"
         onClick={handlePay}
         disabled={!stripe || !elements || !elementReady || isSubmitting}
-        className="flex h-16 w-full items-center justify-center gap-3 rounded-2xl px-8 btn-primary text-[11px] font-black uppercase tracking-[0.2em] shadow-xl transition-all hover:scale-[1.01] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
+        className="form-btn w-full btn-primary shadow-xl transition-all hover:scale-[1.01] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
       >
         {isSubmitting ? (
           <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />

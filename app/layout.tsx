@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit, Cinzel_Decorative, Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
@@ -48,6 +48,11 @@ export const metadata: Metadata = {
     shortcut: SITE_LOGO,
     apple: SITE_LOGO,
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 const websiteJsonLd = {

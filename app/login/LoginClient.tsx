@@ -179,7 +179,7 @@ export default function LoginClient({ redirectTo }: LoginClientProps) {
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder="name@company.com"
-                  className="h-12 w-full rounded-xl border border-transparent bg-[#f3f4f6] px-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#7a0c0c]/30 focus:bg-white focus:ring-2 focus:ring-[#7a0c0c]/10"
+                  className="h-12 w-full rounded-xl border border-transparent bg-[#f3f4f6] px-4 text-base text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#7a0c0c]/30 focus:bg-white focus:ring-2 focus:ring-[#7a0c0c]/10"
                   disabled={loading}
                   required
                 />
@@ -221,7 +221,7 @@ export default function LoginClient({ redirectTo }: LoginClientProps) {
                     setOtp(event.target.value.replace(/\D/g, ""))
                   }
                   placeholder="000000"
-                  className="h-12 w-full rounded-xl border border-transparent bg-[#f3f4f6] px-4 text-center text-lg font-semibold tracking-[0.4em] text-gray-900 outline-none transition placeholder:tracking-normal placeholder:font-normal placeholder:text-gray-400 focus:border-[#7a0c0c]/30 focus:bg-white focus:ring-2 focus:ring-[#7a0c0c]/10"
+                  className="h-12 w-full rounded-xl border border-transparent bg-[#f3f4f6] px-4 text-center text-base font-semibold tracking-[0.35em] text-gray-900 outline-none transition placeholder:tracking-normal placeholder:font-normal placeholder:text-gray-400 focus:border-[#7a0c0c]/30 focus:bg-white focus:ring-2 focus:ring-[#7a0c0c]/10 sm:text-lg sm:tracking-[0.4em]"
                   autoComplete="one-time-code"
                   disabled={loading}
                   required
