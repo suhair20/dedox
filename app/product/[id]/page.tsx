@@ -29,14 +29,15 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   const { formatPrice } = useLocation();
   
   // Gallery state
-  const [mainImage, setMainImage] = useState(product?.image || "");
-  const thumbnails = product?.thumbnails || [product?.image || ""];
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const thumbnails = product?.thumbnails?.length
+    ? product.thumbnails
+    : [product?.image || ""];
+  const mainImage = thumbnails[selectedImageIndex] || product?.image || "";
 
   useEffect(() => {
-    if (product) {
-      setMainImage(product.image);
-    }
-  }, [product]);
+    setSelectedImageIndex(0);
+  }, [product?.id]);
 
   if (loading) {
     return (
@@ -67,74 +68,81 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-20 items-start">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12 xl:gap-20">
           
           {/* Left Column: Visuals */}
-          <div className="lg:col-span-7 sticky top-28">
+          <div className="lg:col-span-7 lg:sticky lg:top-28 lg:self-start">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
-              className="bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.04)] aspect-square relative group"
+              className="relative aspect-square w-full overflow-hidden rounded-[24px] border border-gray-100 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.04)] sm:rounded-[32px]"
             >
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={mainImage}
+                  key={`${product.id}-${selectedImageIndex}`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4 }}
-                  className="w-full h-full"
+                  transition={{ duration: 0.25 }}
+                  className="absolute inset-0"
                 >
                   <Image
                     src={mainImage}
                     alt={product.name}
                     fill
                     unoptimized
-                    className="object-contain p-8 group-hover:scale-105 transition-transform duration-700"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-contain p-4 sm:p-8"
                     priority
                   />
                 </motion.div>
               </AnimatePresence>
               
               {product.oldPrice && (
-                <div className="absolute top-6 left-6 bg-[#7a0c0c] text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg z-10 uppercase tracking-widest">
+                <div className="absolute left-4 top-4 z-10 rounded-full bg-[#7a0c0c] px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-white shadow-lg sm:left-6 sm:top-6 sm:px-4 sm:py-2">
                   Special Offer
                 </div>
               )}
             </motion.div>
 
             {/* Thumbnail Gallery */}
-            <div className="mt-6 flex flex-wrap gap-4 px-2">
-              {thumbnails.map((thumb, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setMainImage(thumb)}
-                  className={`relative w-24 h-24 rounded-2xl overflow-hidden border-2 transition-all duration-300 ${
-                    mainImage === thumb 
-                    ? 'border-[#7a0c0c] scale-105 shadow-md' 
-                    : 'border-transparent hover:border-gray-200 opacity-60 hover:opacity-100'
-                  }`}
-                >
-                  <Image
-                    src={thumb}
-                    alt={`${product.name} view ${idx + 1}`}
-                    fill
-                    unoptimized
-                    className="object-cover"
-                  />
-                </button>
-              ))}
-            </div>
+            {thumbnails.length > 1 && (
+              <div className="-mx-1 mt-4 flex gap-3 overflow-x-auto px-1 pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:mt-6 sm:flex-wrap sm:overflow-visible">
+                {thumbnails.map((thumb, idx) => (
+                  <button
+                    key={`${product.id}-thumb-${idx}`}
+                    type="button"
+                    aria-label={`View image ${idx + 1}`}
+                    aria-pressed={selectedImageIndex === idx}
+                    onClick={() => setSelectedImageIndex(idx)}
+                    className={`relative h-20 w-20 shrink-0 snap-start overflow-hidden rounded-2xl border-2 transition-all duration-200 touch-manipulation sm:h-24 sm:w-24 ${
+                      selectedImageIndex === idx
+                        ? "border-[#7a0c0c] shadow-md"
+                        : "border-gray-200 opacity-70 hover:border-gray-300 hover:opacity-100"
+                    }`}
+                  >
+                    <Image
+                      src={thumb}
+                      alt={`${product.name} view ${idx + 1}`}
+                      fill
+                      unoptimized
+                      sizes="96px"
+                      className="object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Right Column: Information */}
-          <div className="lg:col-span-5">
+          <div className="relative z-0 lg:col-span-5">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-white/50 p-2 md:p-0"
+              className="bg-white p-5 sm:rounded-3xl sm:border sm:border-gray-100 sm:p-8 sm:shadow-sm lg:bg-transparent lg:p-0 lg:shadow-none"
             >
               {/* Product Category/Badge */}
               <div className="mb-2">
@@ -145,7 +153,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
               {/* Title & Brand */}
               <div className="mb-4">
-                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2 font-serif-luxury tracking-tight">
+                <h1 className="mb-2 font-serif-luxury text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl">
                   {product.name}
                 </h1>
                 <p className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">
@@ -170,9 +178,9 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               </p>
 
               {/* Pricing */}
-              <div className="mb-10">
-                <div className="flex items-baseline space-x-4">
-                  <span className="text-5xl font-bold text-[#7a0c0c]">{formatPrice(product.price)}</span>
+              <div className="mb-8 sm:mb-10">
+                <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                  <span className="text-3xl font-bold text-[#7a0c0c] sm:text-5xl">{formatPrice(product.price)}</span>
                   {product.oldPrice && (
                     <span className="text-xl text-gray-300 line-through font-medium leading-none">{formatPrice(product.oldPrice)}</span>
                   )}

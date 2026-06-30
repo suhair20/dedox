@@ -20,8 +20,7 @@ export async function POST(request: Request) {
     if (!identifier) {
       return NextResponse.json(
         {
-          error:
-            "Enter a valid email address or an international phone number with country code.",
+          error: "Enter a valid email address to receive your login code.",
         },
         { status: 400 }
       );

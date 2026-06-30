@@ -4,7 +4,7 @@ const HERO_BANNER = "/images/herosection/websitee banner.jpg.jpeg";
 
 export default function Hero() {
   return (
-    <section className="w-full bg-[#120404]">
+    <section className="w-full">
       <Image
         src={HERO_BANNER}
         alt="Dedox Perfume banner"

@@ -20,8 +20,8 @@ export default function Logo({ className = "", compact = false }: LogoProps) {
     >
       <div className={`relative ${sizeClass}`}>
         <Image
-          src="/dedox logo new-01.svg"
-          alt="Dedox"
+          src="/dedox-perfume-logo.svg"
+          alt="Dedox Perfume"
           fill
           className="object-contain transition-all duration-700 brightness-[1.1] contrast-[1.05] group-hover:scale-110 group-hover:brightness-[1.2]"
           priority
