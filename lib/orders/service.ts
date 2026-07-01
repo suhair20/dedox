@@ -42,6 +42,7 @@ export async function getCustomerOrder(
     return null;
   }
 
-  const { userId: _userId, ...safeOrder } = order;
+  const safeOrder = { ...order };
+  delete safeOrder.userId;
   return safeOrder;
 }

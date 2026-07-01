@@ -57,7 +57,7 @@ export default function ShippingAddressSection({
       })
       .catch(() => setAddresses([]))
       .finally(() => setLoading(false));
-  }, [isAuthenticated]);
+  }, [isAuthenticated, setShippingAddress]);
 
   const selectSaved = (address: SavedAddress) => {
     setMode("saved");
