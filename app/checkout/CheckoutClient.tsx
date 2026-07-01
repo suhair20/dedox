@@ -20,6 +20,7 @@ import Logo from '@/components/Logo';
 import StripePaymentSection from '@/components/checkout/StripePaymentSection';
 import { isStripePaymentMethod } from '@/lib/checkout/paymentMethods';
 import { useAuth } from '@/context/AuthContext';
+import ShippingAddressSection from '@/components/checkout/ShippingAddressSection';
 
 // Step definitions
 const STEPS = [
@@ -56,6 +57,8 @@ export default function CheckoutClient() {
   const [stripeOrderNumber, setStripeOrderNumber] = useState('');
   const [stripeLoading, setStripeLoading] = useState(false);
   const [stripeInitError, setStripeInitError] = useState('');
+  const [saveAddress, setSaveAddress] = useState(false);
+  const [addressLabel, setAddressLabel] = useState('Home');
 
   useEffect(() => {
     if (!user) return;
@@ -85,9 +88,11 @@ export default function CheckoutClient() {
       paymentMethod,
       shippingAddress,
       currency: 'AED',
+      saveAddress,
+      addressLabel,
       ...(stripePaymentIntentId ? { stripePaymentIntentId } : {}),
     }),
-    [cart, shippingMethod, paymentMethod, shippingAddress]
+    [cart, shippingMethod, paymentMethod, shippingAddress, saveAddress, addressLabel]
   );
 
   const finalizeOrder = useCallback(
@@ -313,88 +318,19 @@ export default function CheckoutClient() {
                   <section>
                     <div className="mb-5 flex items-center space-x-3 sm:mb-8 sm:space-x-4">
                       <div className="h-5 w-1 rounded-full bg-[#7a0c0c] sm:h-6 sm:w-1.5" />
-                      <h2 className="font-serif-luxury text-lg font-bold tracking-tight text-gray-900 sm:text-2xl">Contact Information</h2>
+                      <h2 className="font-serif-luxury text-lg font-bold tracking-tight text-gray-900 sm:text-2xl">
+                        Delivery details
+                      </h2>
                     </div>
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
-                      <input 
-                        type="email" 
-                        placeholder="Email Address"
-                        value={shippingAddress.email}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, email: e.target.value })}
-                        required
-                        className="form-input"
-                      />
-                      <input 
-                        type="tel" 
-                        placeholder="Phone Number"
-                        value={shippingAddress.phone}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, phone: e.target.value })}
-                        className="form-input"
-                      />
-                    </div>
-                  </section>
-
-                  <section>
-                    <div className="mb-5 flex items-center space-x-3 sm:mb-8 sm:space-x-4">
-                      <div className="h-5 w-1 rounded-full bg-[#7a0c0c] sm:h-6 sm:w-1.5" />
-                      <h2 className="font-serif-luxury text-lg font-bold tracking-tight text-gray-900 sm:text-2xl">Shipping Address</h2>
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
-                      <input 
-                        type="text" 
-                        placeholder="First Name"
-                        value={shippingAddress.firstName}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, firstName: e.target.value })}
-                        required
-                        className="form-input"
-                      />
-                      <input 
-                        type="text" 
-                        placeholder="Last Name"
-                        value={shippingAddress.lastName}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, lastName: e.target.value })}
-                        required
-                        className="form-input"
-                      />
-                      <div className="md:col-span-2">
-                        <select
-                          value={shippingAddress.country}
-                          onChange={(e) => setShippingAddress({ ...shippingAddress, country: e.target.value })}
-                          required
-                          className="form-select md:col-span-2"
-                        >
-                          <option>United Arab Emirates</option>
-                          <option>India</option>
-                          <option>United States</option>
-                          <option>United Kingdom</option>
-                        </select>
-                      </div>
-                      <input 
-                        type="text" 
-                        placeholder="City"
-                        value={shippingAddress.city}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
-                        required
-                        className="form-input"
-                      />
-                      <input 
-                        type="text" 
-                        placeholder="ZIP / Post Code"
-                        value={shippingAddress.postalCode}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, postalCode: e.target.value })}
-                        className="form-input"
-                      />
-                      <div className="md:col-span-2">
-                        <textarea 
-                          placeholder="Full Street Address"
-                          rows={3}
-                          value={shippingAddress.streetAddress}
-                          onChange={(e) => setShippingAddress({ ...shippingAddress, streetAddress: e.target.value })}
-                          required
-                          className="form-textarea md:col-span-2"
-                        />
-                      </div>
-                    </div>
+                    <ShippingAddressSection
+                      shippingAddress={shippingAddress}
+                      setShippingAddress={setShippingAddress}
+                      saveAddress={saveAddress}
+                      setSaveAddress={setSaveAddress}
+                      addressLabel={addressLabel}
+                      setAddressLabel={setAddressLabel}
+                      isAuthenticated={Boolean(user)}
+                    />
                   </section>
                   
                   <button 

@@ -1,7 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { useProducts } from "@/context/ProductsContext";
 import ProductCard from "@/components/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,7 +24,6 @@ function toggleValue(list: string[], value: string) {
 
 function ShopPageContent() {
   const { products } = useProducts();
-  const searchParams = useSearchParams();
   const [catalog, setCatalog] = useState<CatalogSnapshot>(emptyCatalog);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -47,14 +45,15 @@ function ShopPageContent() {
   }, []);
 
   useEffect(() => {
-    setSearchQuery(searchParams.get("q") || "");
-    setSelectedBrands(searchParams.get("brand") ? [searchParams.get("brand")!] : []);
-    setSelectedCategories(searchParams.get("category") ? [searchParams.get("category")!] : []);
-    setSelectedNotes(searchParams.get("note") ? [searchParams.get("note")!] : []);
-    setSelectedAccords(searchParams.get("accord") ? [searchParams.get("accord")!] : []);
-    setSelectedOccasions(searchParams.get("occasion") ? [searchParams.get("occasion")!] : []);
-    setSelectedConcentration(searchParams.get("concentration") || "");
-  }, [searchParams]);
+    const params = new URLSearchParams(window.location.search);
+    setSearchQuery(params.get("q") || "");
+    setSelectedBrands(params.get("brand") ? [params.get("brand")!] : []);
+    setSelectedCategories(params.get("category") ? [params.get("category")!] : []);
+    setSelectedNotes(params.get("note") ? [params.get("note")!] : []);
+    setSelectedAccords(params.get("accord") ? [params.get("accord")!] : []);
+    setSelectedOccasions(params.get("occasion") ? [params.get("occasion")!] : []);
+    setSelectedConcentration(params.get("concentration") || "");
+  }, []);
 
   const filteredProducts = useMemo(() => {
     const base = filterProducts(products, {
@@ -344,15 +343,5 @@ function ShopPageContent() {
 }
 
 export default function ShopPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-screen items-center justify-center bg-white">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#7a0c0c]/20 border-t-[#7a0c0c]" />
-        </div>
-      }
-    >
-      <ShopPageContent />
-    </Suspense>
-  );
+  return <ShopPageContent />;
 }

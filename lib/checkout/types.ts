@@ -42,6 +42,8 @@ export type CheckoutPayload = {
   shippingAddress: ShippingAddressInput;
   currency?: string;
   stripePaymentIntentId?: string;
+  saveAddress?: boolean;
+  addressLabel?: string;
 };
 
 export type CreateOrderResult = {

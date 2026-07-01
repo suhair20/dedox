@@ -1,3 +1,4 @@
+import { maybeSaveCheckoutAddress } from "@/lib/addresses/service";
 import { getCurrentSession } from "@/lib/auth-server";
 import { getSanityWriteClient } from "@/lib/sanity";
 import { calculateCheckoutTotals } from "@/lib/checkout/calculateTotals";
@@ -125,6 +126,13 @@ export async function createOrderFromCheckout(
   };
 
   const createdOrder = await writeClient.create(orderDoc);
+
+  if (session?.user?.id) {
+    await maybeSaveCheckoutAddress(session.user.id, payload.shippingAddress, {
+      saveAddress: payload.saveAddress,
+      label: payload.addressLabel,
+    });
+  }
 
   return {
     orderId: createdOrder._id,
