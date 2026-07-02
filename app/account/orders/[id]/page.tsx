@@ -19,7 +19,11 @@ export default async function AccountOrderDetailPage({ params }: PageProps) {
 
   return (
     <AccountPageShell>
-      <AccountPageHeader backHref="/account/orders" backLabel="All orders" />
+      <AccountPageHeader
+        backHref="/account/orders"
+        backLabel="All orders"
+        title="Order details"
+      />
       <OrderDetailView orderId={params.id} initialOrder={initialOrder} />
     </AccountPageShell>
   );

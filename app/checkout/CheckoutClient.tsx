@@ -21,6 +21,7 @@ import StripePaymentSection from '@/components/checkout/StripePaymentSection';
 import { isStripePaymentMethod } from '@/lib/checkout/paymentMethods';
 import { useAuth } from '@/context/AuthContext';
 import ShippingAddressSection from '@/components/checkout/ShippingAddressSection';
+import type { ShippingAddressInput } from '@/lib/checkout/types';
 
 // Step definitions
 const STEPS = [
@@ -29,7 +30,7 @@ const STEPS = [
   { id: 'payment', label: 'Payment' }
 ];
 
-const emptyAddress = {
+const emptyAddress: ShippingAddressInput = {
   email: '',
   phone: '',
   firstName: '',
@@ -47,7 +48,7 @@ export default function CheckoutClient() {
   const [currentStep, setCurrentStep] = useState(0);
   const [shippingMethod, setShippingMethod] = useState<'standard' | 'express'>('standard');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'paypal' | 'cod'>('card');
-  const [shippingAddress, setShippingAddress] = useState(emptyAddress);
+  const [shippingAddress, setShippingAddress] = useState<ShippingAddressInput>(emptyAddress);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState('');
