@@ -1,6 +1,7 @@
-import { Mail, MapPin, Package, ShoppingBag, Sparkles } from "lucide-react";
+import { Gift, Mail, MapPin, Package, ShoppingBag, Sparkles } from "lucide-react";
 import { requireAuthSession } from "@/lib/auth-server";
 import { listCustomerOrders } from "@/lib/orders/service";
+import { getPointsSummary } from "@/lib/loyalty/service";
 import AccountPageShell from "@/components/account/AccountPageShell";
 import AccountOverview from "@/components/account/AccountOverview";
 import AccountNavCard from "@/components/account/AccountNavCard";
@@ -16,8 +17,14 @@ export default async function AccountPage() {
   const initial = getInitial(user.contact);
 
   let orders: Awaited<ReturnType<typeof listCustomerOrders>> = [];
+  let pointsBalance = 0;
   try {
-    orders = await listCustomerOrders(user.id);
+    const [orderRows, points] = await Promise.all([
+      listCustomerOrders(user.id),
+      getPointsSummary(user.id),
+    ]);
+    orders = orderRows;
+    pointsBalance = points.balance;
   } catch (error) {
     console.error("ACCOUNT_PAGE_ORDERS_ERROR:", error);
   }
@@ -40,9 +47,15 @@ export default async function AccountPage() {
               {initial}
             </div>
             <div className="min-w-0 flex-1 pt-0.5">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm">
-                <Sparkles className="h-3 w-3" />
-                Member
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm">
+                  <Sparkles className="h-3 w-3" />
+                  Member
+                </div>
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm">
+                  <Gift className="h-3 w-3" />
+                  {pointsBalance} pts
+                </div>
               </div>
               <h1 className="mt-3 font-serif-luxury text-2xl font-bold tracking-tight sm:text-3xl">
                 Your account
@@ -60,13 +73,19 @@ export default async function AccountPage() {
         </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-3 sm:mt-6 sm:grid-cols-3 sm:gap-4">
+      <div className="mt-5 grid grid-cols-1 gap-3 sm:mt-6 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         <AccountNavCard
           href="/account/orders"
           icon={Package}
           title="My orders"
           description="Track deliveries and order history"
           featured
+        />
+        <AccountNavCard
+          href="/account/rewards"
+          icon={Gift}
+          title="Rewards"
+          description={`${pointsBalance} points · unlock free bottles`}
         />
         <AccountNavCard
           href="/account/addresses"

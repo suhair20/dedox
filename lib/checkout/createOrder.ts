@@ -7,6 +7,13 @@ import { verifyStripePayment } from "@/lib/checkout/verifyStripePayment";
 import {
   isStripePaymentMethod,
 } from "@/lib/checkout/paymentMethods";
+import { pointsFor } from "@/lib/loyalty/points";
+import {
+  assertCanRedeem,
+  recordRedemption,
+  rewardImageUrl,
+} from "@/lib/loyalty/service";
+import type { RewardProduct } from "@/lib/loyalty/types";
 import type {
   CheckoutPayload,
   CreateOrderResult,
@@ -31,6 +38,12 @@ type OrderLineItemDoc = {
   category?: string;
 };
 
+type RedeemedRewardDoc = {
+  productId: string;
+  name: string;
+  pointsSpent: number;
+};
+
 type OrderDocument = {
   _type: "order";
   orderNumber: string;
@@ -46,6 +59,8 @@ type OrderDocument = {
   currency: string;
   user?: SanityReference;
   stripePaymentIntentId?: string;
+  pointsEarned: number;
+  redeemedReward?: RedeemedRewardDoc;
 };
 
 export function generateOrderNumber() {
@@ -74,6 +89,20 @@ export async function prepareCheckout(payload: CheckoutPayload) {
   return { items, totals };
 }
 
+function toRewardLineItem(reward: RewardProduct): OrderLineItemDoc {
+  return {
+    _type: "orderLineItem",
+    product: { _type: "reference", _ref: reward._id },
+    productId: reward._id,
+    name: reward.name,
+    price: 0,
+    quantity: 1,
+    image: rewardImageUrl(reward),
+    brand: "Loyalty Reward",
+    category: "Reward",
+  };
+}
+
 export async function createOrderFromCheckout(
   payload: CheckoutPayload,
   options?: { orderNumber?: string }
@@ -90,12 +119,24 @@ export async function createOrderFromCheckout(
   const session = await getCurrentSession();
   const writeClient = getSanityWriteClient();
   const orderNumber = options?.orderNumber ?? generateOrderNumber();
+  const pointsEarned = pointsFor(totals.total);
 
-  const orderDoc: OrderDocument = {
-    _type: "order",
-    orderNumber,
-    status: "pending",
-    items: items.map((item: ValidatedCheckoutItem) => ({
+  let reward: RewardProduct | null = null;
+  if (payload.redeemRewardProductId) {
+    if (!session?.user?.id) {
+      throw new Error("Sign in to redeem loyalty points.");
+    }
+    if (items.length === 0) {
+      throw new Error("Add a paid product before redeeming a reward gift.");
+    }
+    reward = await assertCanRedeem(
+      session.user.id,
+      payload.redeemRewardProductId
+    );
+  }
+
+  const lineItems: OrderLineItemDoc[] = items.map(
+    (item: ValidatedCheckoutItem) => ({
       _type: "orderLineItem",
       product: { _type: "reference", _ref: item.id },
       productId: item.id,
@@ -105,7 +146,18 @@ export async function createOrderFromCheckout(
       image: item.image,
       brand: item.brand,
       category: item.category,
-    })),
+    })
+  );
+
+  if (reward) {
+    lineItems.push(toRewardLineItem(reward));
+  }
+
+  const orderDoc: OrderDocument = {
+    _type: "order",
+    orderNumber,
+    status: "pending",
+    items: lineItems,
     subtotal: totals.subtotal,
     shippingCost: totals.shippingCost,
     tax: totals.tax,
@@ -117,6 +169,16 @@ export async function createOrderFromCheckout(
       ...payload.shippingAddress,
     },
     currency: payload.currency || "AED",
+    pointsEarned,
+    ...(reward
+      ? {
+          redeemedReward: {
+            productId: reward._id,
+            name: reward.name,
+            pointsSpent: reward.pointsCost,
+          },
+        }
+      : {}),
     ...(payload.stripePaymentIntentId
       ? { stripePaymentIntentId: payload.stripePaymentIntentId }
       : {}),
@@ -126,6 +188,15 @@ export async function createOrderFromCheckout(
   };
 
   const createdOrder = await writeClient.create(orderDoc);
+
+  if (session?.user?.id && reward) {
+    await recordRedemption(session.user.id, {
+      points: reward.pointsCost,
+      productId: reward._id,
+      productName: reward.name,
+      orderNumber,
+    });
+  }
 
   if (session?.user?.id) {
     await maybeSaveCheckoutAddress(session.user.id, payload.shippingAddress, {

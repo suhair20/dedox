@@ -1,4 +1,12 @@
+import dns from "node:dns";
 import { createClient } from "@sanity/client";
+
+// Prefer IPv4 — Windows/NAT64 IPv6 routes often cause ConnectTimeoutError to Sanity.
+try {
+  dns.setDefaultResultOrder("ipv4first");
+} catch {
+  // Older Node versions may not support this; ignore.
+}
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "nalaisnd";
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
@@ -13,6 +21,7 @@ export const client = createClient({
   dataset,
   useCdn: false,
   apiVersion,
+  timeout: 20_000,
 });
 
 export function getSanityWriteClient() {
@@ -28,5 +37,6 @@ export function getSanityWriteClient() {
     useCdn: false,
     apiVersion,
     token: writeToken,
+    timeout: 20_000,
   });
 }

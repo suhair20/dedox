@@ -1,13 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useProducts } from "@/context/ProductsContext";
+import { useCart } from "@/context/CartContext";
 import ProductCard from "@/components/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
-import { Filter, X, LayoutGrid, List, Search } from "lucide-react";
+import { Filter, Gift, X, LayoutGrid, List, Search } from "lucide-react";
 import { filterProducts } from "@/lib/productFilters";
 import { FilterCheckboxGroup, FilterRadioGroup } from "@/components/shop/ShopFilterGroups";
 import type { CatalogSnapshot } from "@/lib/catalogTypes";
+import {
+  clearPendingReward,
+  readPendingReward,
+  type PendingReward,
+} from "@/lib/loyalty/pendingReward";
 
 const emptyCatalog: CatalogSnapshot = {
   categories: [],
@@ -24,6 +31,7 @@ function toggleValue(list: string[], value: string) {
 
 function ShopPageContent() {
   const { products } = useProducts();
+  const { cart } = useCart();
   const [catalog, setCatalog] = useState<CatalogSnapshot>(emptyCatalog);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -36,6 +44,8 @@ function ShopPageContent() {
   const [sortBy, setSortBy] = useState<"featured" | "price-low" | "price-high" | "name">("featured");
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [pendingReward, setPendingReward] = useState<PendingReward | null>(null);
+  const [showClaimBanner, setShowClaimBanner] = useState(false);
 
   useEffect(() => {
     fetch("/api/catalog")
@@ -53,6 +63,10 @@ function ShopPageContent() {
     setSelectedAccords(params.get("accord") ? [params.get("accord")!] : []);
     setSelectedOccasions(params.get("occasion") ? [params.get("occasion")!] : []);
     setSelectedConcentration(params.get("concentration") || "");
+
+    const pending = readPendingReward();
+    setPendingReward(pending);
+    setShowClaimBanner(params.get("claim") === "1" && Boolean(pending));
   }, []);
 
   const filteredProducts = useMemo(() => {
@@ -189,6 +203,46 @@ function ShopPageContent() {
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        {showClaimBanner && pendingReward ? (
+          <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-[#7a0c0c]/20 bg-[#7a0c0c]/[0.04] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+            <div className="flex items-start gap-3">
+              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#7a0c0c] text-white">
+                <Gift className="h-4 w-4" />
+              </span>
+              <div>
+                <p className="text-sm font-bold text-gray-900">
+                  Add a perfume to claim “{pendingReward.name}”
+                </p>
+                <p className="mt-1 text-xs text-gray-500">
+                  Your free gift ({pendingReward.pointsCost} pts) ships only with a paid
+                  order. Add any product, then go to checkout.
+                </p>
+              </div>
+            </div>
+            <div className="flex shrink-0 items-center gap-2">
+              {cart.length > 0 ? (
+                <Link
+                  href="/checkout"
+                  className="rounded-full bg-[#7a0c0c] px-4 py-2 text-xs font-bold uppercase tracking-widest text-white"
+                >
+                  Go to checkout
+                </Link>
+              ) : null}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowClaimBanner(false);
+                  clearPendingReward();
+                  setPendingReward(null);
+                }}
+                className="rounded-full border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-500 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : null}
+
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="font-serif-luxury text-3xl font-bold text-[#7a0c0c]">Shop Collection</h1>

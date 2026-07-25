@@ -2,6 +2,7 @@
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import RewardsScrollModal from "@/components/RewardsScrollModal";
 import { usePathname } from "next/navigation";
 import { CartProvider } from "@/context/CartContext";
 import { LocationProvider } from "@/context/LocationContext";
@@ -28,6 +29,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {!hideNavbar && <Navbar />}
             <main className="flex-grow">{children}</main>
             {!hideFooter && <Footer />}
+            {!hideNavbar && <RewardsScrollModal />}
           </CartProvider>
         </AuthProvider>
       </ProductsProvider>

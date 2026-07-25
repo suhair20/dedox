@@ -44,6 +44,8 @@ export type CheckoutPayload = {
   stripePaymentIntentId?: string;
   saveAddress?: boolean;
   addressLabel?: string;
+  /** Optional loyalty reward product to attach free with this paid order. */
+  redeemRewardProductId?: string;
 };
 
 export type CreateOrderResult = {

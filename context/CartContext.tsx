@@ -12,6 +12,8 @@ export interface CartItem {
 
 interface CartContextType {
   cart: CartItem[];
+  /** False until localStorage cart has been read (avoids empty-cart flash redirects). */
+  cartReady: boolean;
   addToCart: (product: any, quantity: number) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
@@ -24,6 +26,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [cartReady, setCartReady] = useState(false);
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -35,12 +38,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         console.error("Failed to parse cart", e);
       }
     }
+    setCartReady(true);
   }, []);
 
-  // Save cart to localStorage on change
+  // Save cart to localStorage on change (after hydration)
   useEffect(() => {
+    if (!cartReady) return;
     localStorage.setItem('dedox_cart', JSON.stringify(cart));
-  }, [cart]);
+  }, [cart, cartReady]);
 
   const addToCart = (product: any, quantity: number) => {
     setCart(prevCart => {
@@ -87,7 +92,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <CartContext.Provider value={{ 
-      cart, 
+      cart,
+      cartReady,
       addToCart, 
       removeFromCart, 
       updateQuantity, 

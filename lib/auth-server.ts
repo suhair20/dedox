@@ -2,6 +2,7 @@ import "server-only";
 
 import {
   AUTH_COOKIE_NAME,
+  type AuthChannel,
   type AuthIdentifier,
   type AuthUserRecord,
   type SessionUser,
@@ -96,6 +97,27 @@ export function buildSessionUser(user: AuthUserRecord): SessionUser | null {
   };
 }
 
+function sessionFromTokenPayload(payload: {
+  userId: string;
+  channel: AuthChannel;
+  email?: string;
+  phone?: string;
+}): { user: SessionUser } | null {
+  const contact = payload.email || payload.phone;
+  if (!contact) return null;
+
+  return {
+    user: {
+      id: payload.userId,
+      email: payload.email,
+      phone: payload.phone,
+      contact,
+      channel: payload.channel,
+      isVerified: true,
+    },
+  };
+}
+
 export async function getCurrentSession(): Promise<{ user: SessionUser } | null> {
   const token = cookies().get(AUTH_COOKIE_NAME)?.value;
   if (!token) {
@@ -107,17 +129,23 @@ export async function getCurrentSession(): Promise<{ user: SessionUser } | null>
     return null;
   }
 
-  const user = await getUserById(payload.userId);
-  if (!user || !user.isVerified) {
-    return null;
-  }
+  try {
+    const user = await getUserById(payload.userId);
+    if (!user || !user.isVerified) {
+      return null;
+    }
 
-  const sessionUser = buildSessionUser(user);
-  if (!sessionUser) {
-    return null;
-  }
+    const sessionUser = buildSessionUser(user);
+    if (!sessionUser) {
+      return null;
+    }
 
-  return { user: sessionUser };
+    return { user: sessionUser };
+  } catch (error) {
+    // Sanity timeout/network failure — don't 500 the page; trust a valid JWT.
+    console.error("GET_CURRENT_SESSION_SANITY_ERROR:", error);
+    return sessionFromTokenPayload(payload);
+  }
 }
 
 export async function requireAuthSession(redirectPath: string) {

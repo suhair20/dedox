@@ -18,10 +18,20 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '@/components/Logo';
 import StripePaymentSection from '@/components/checkout/StripePaymentSection';
+import CheckoutRewardsSection from '@/components/checkout/CheckoutRewardsSection';
+import CheckoutPointsTeaser from '@/components/checkout/CheckoutPointsTeaser';
 import { isStripePaymentMethod } from '@/lib/checkout/paymentMethods';
 import { useAuth } from '@/context/AuthContext';
 import ShippingAddressSection from '@/components/checkout/ShippingAddressSection';
 import type { ShippingAddressInput } from '@/lib/checkout/types';
+import type { RewardProduct } from '@/lib/loyalty/types';
+import { pointsFor } from '@/lib/loyalty/points';
+import {
+  clearPendingReward,
+  readPendingReward,
+} from '@/lib/loyalty/pendingReward';
+import GiftCelebration from '@/components/rewards/GiftCelebration';
+import { useRouter } from 'next/navigation';
 
 // Step definitions
 const STEPS = [
@@ -42,9 +52,10 @@ const emptyAddress: ShippingAddressInput = {
 };
 
 export default function CheckoutClient() {
-  const { cart, getCartTotal, clearCart } = useCart();
+  const { cart, cartReady, getCartTotal, clearCart } = useCart();
   const { user } = useAuth();
   const { formatPrice } = useLocation();
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [shippingMethod, setShippingMethod] = useState<'standard' | 'express'>('standard');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'paypal' | 'cod'>('card');
@@ -60,6 +71,29 @@ export default function CheckoutClient() {
   const [stripeInitError, setStripeInitError] = useState('');
   const [saveAddress, setSaveAddress] = useState(false);
   const [addressLabel, setAddressLabel] = useState('Home');
+  const [pointsBalance, setPointsBalance] = useState(0);
+  const [isNewMember, setIsNewMember] = useState(true);
+  const [rewardProducts, setRewardProducts] = useState<RewardProduct[]>([]);
+  const [redeemRewardProductId, setRedeemRewardProductId] = useState<string | null>(null);
+  const [rewardsLoaded, setRewardsLoaded] = useState(false);
+  const [claimedGiftName, setClaimedGiftName] = useState<string | null>(null);
+  const [showGiftCelebration, setShowGiftCelebration] = useState(false);
+  const [earnedPointsPreview, setEarnedPointsPreview] = useState(0);
+
+  useEffect(() => {
+    if (!cartReady || isSuccess) return;
+    if (cart.length === 0) {
+      const pending = readPendingReward();
+      router.replace(pending ? '/shop?claim=1' : '/shop');
+    }
+  }, [cart.length, cartReady, isSuccess, router]);
+
+  useEffect(() => {
+    const pending = readPendingReward();
+    if (pending?.productId) {
+      setRedeemRewardProductId(pending.productId);
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -70,11 +104,73 @@ export default function CheckoutClient() {
     }));
   }, [user]);
 
+  useEffect(() => {
+    if (!user) {
+      setPointsBalance(0);
+      setRewardProducts([]);
+      setRewardsLoaded(true);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadRewards() {
+      try {
+        const response = await fetch('/api/account/points');
+        if (!response.ok) {
+          if (!cancelled) setRewardsLoaded(true);
+          return;
+        }
+        const data = await response.json();
+        if (cancelled) return;
+        setPointsBalance(data.summary?.balance ?? 0);
+        setIsNewMember(
+          (data.summary?.earnedActive ?? 0) === 0 &&
+            (data.summary?.redeemedActive ?? 0) === 0
+        );
+        setRewardProducts(Array.isArray(data.rewards) ? data.rewards : []);
+      } catch {
+        if (!cancelled) {
+          setPointsBalance(0);
+          setIsNewMember(true);
+          setRewardProducts([]);
+        }
+      } finally {
+        if (!cancelled) setRewardsLoaded(true);
+      }
+    }
+
+    loadRewards();
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
+  useEffect(() => {
+    if (!rewardsLoaded || !redeemRewardProductId) return;
+    const stillValid = rewardProducts.some(
+      (r) => r._id === redeemRewardProductId && r.pointsCost <= pointsBalance
+    );
+    if (!stillValid) {
+      setRedeemRewardProductId(null);
+      clearPendingReward();
+    }
+  }, [redeemRewardProductId, rewardProducts, pointsBalance, rewardsLoaded]);
+
+  const selectedReward = rewardProducts.find(
+    (r) => r._id === redeemRewardProductId
+  ) ?? null;
+
   // Derived calculations
   const subtotal = getCartTotal();
   const shippingCost = shippingMethod === 'express' ? 50 : 0; // AED 50 for express
   const tax = subtotal * 0.05; // 5% VAT
   const grandTotal = subtotal + shippingCost + tax;
+  const pointsEarnedThisOrder = pointsFor(grandTotal);
+  const cheapestRewardCost =
+    rewardProducts.length > 0
+      ? Math.min(...rewardProducts.map((r) => r.pointsCost))
+      : null;
 
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, STEPS.length - 1));
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 0));
@@ -91,13 +187,27 @@ export default function CheckoutClient() {
       currency: 'AED',
       saveAddress,
       addressLabel,
+      ...(redeemRewardProductId ? { redeemRewardProductId } : {}),
       ...(stripePaymentIntentId ? { stripePaymentIntentId } : {}),
     }),
-    [cart, shippingMethod, paymentMethod, shippingAddress, saveAddress, addressLabel]
+    [
+      cart,
+      shippingMethod,
+      paymentMethod,
+      shippingAddress,
+      saveAddress,
+      addressLabel,
+      redeemRewardProductId,
+    ]
   );
 
   const finalizeOrder = useCallback(
     async (stripePaymentIntentId?: string) => {
+      const giftName =
+        rewardProducts.find((r) => r._id === redeemRewardProductId)?.name ||
+        null;
+      const pointsPreview = pointsEarnedThisOrder;
+
       const response = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -111,10 +221,23 @@ export default function CheckoutClient() {
 
       setOrderNumber(data.orderNumber || stripeOrderNumber || '');
       setOrderId(data.orderId || '');
+      setEarnedPointsPreview(pointsPreview);
+      clearPendingReward();
       clearCart();
+      if (redeemRewardProductId && giftName) {
+        setClaimedGiftName(giftName);
+        setShowGiftCelebration(true);
+      }
       setIsSuccess(true);
     },
-    [buildOrderPayload, clearCart, stripeOrderNumber]
+    [
+      buildOrderPayload,
+      clearCart,
+      stripeOrderNumber,
+      redeemRewardProductId,
+      rewardProducts,
+      pointsEarnedThisOrder,
+    ]
   );
 
   useEffect(() => {
@@ -210,7 +333,18 @@ export default function CheckoutClient() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <div className="relative min-h-screen bg-white flex items-center justify-center p-4">
+        <GiftCelebration
+          active={showGiftCelebration}
+          intensity="full"
+          title="Reward claimed!"
+          subtitle={
+            claimedGiftName
+              ? `${claimedGiftName} ships free with this order.`
+              : "Your free gift ships with this order."
+          }
+          onComplete={() => setShowGiftCelebration(false)}
+        />
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -221,7 +355,9 @@ export default function CheckoutClient() {
           </div>
           <h1 className="text-4xl font-black text-gray-900 mb-4 font-serif-luxury uppercase tracking-tight">Order Confirmed</h1>
           <p className="text-gray-500 mb-8 leading-relaxed">
-            Thank you for choosing Dedox. Your exquisite collection is being prepared for delivery. Expect its arrival shortly.
+            {claimedGiftName
+              ? `Thank you for choosing Dedox. Your order — plus free gift “${claimedGiftName}” — is being prepared for delivery.`
+              : "Thank you for choosing Dedox. Your exquisite collection is being prepared for delivery. Expect its arrival shortly."}
           </p>
           <div className="bg-gray-50 p-6 rounded-3xl mb-10 text-left border border-gray-100">
             <div className="flex justify-between mb-2">
@@ -234,6 +370,19 @@ export default function CheckoutClient() {
                 {shippingMethod === 'express' ? '1-2 Days' : '3-5 Days'}
               </span>
             </div>
+            {earnedPointsPreview > 0 ? (
+              <div className="mt-4 rounded-2xl border border-[#7a0c0c]/10 bg-white px-4 py-3">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#7a0c0c]">
+                  Rewards
+                </p>
+                <p className="mt-1 text-sm font-bold text-gray-900">
+                  +{earnedPointsPreview} points after delivery
+                </p>
+                <p className="mt-1 text-xs text-gray-500">
+                  Keep shopping — collect enough points and unlock a free bottle on a later order.
+                </p>
+              </div>
+            ) : null}
           </div>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             {orderId ? (
@@ -413,6 +562,20 @@ export default function CheckoutClient() {
                     </div>
                   </section>
 
+                  {user ? (
+                    <CheckoutRewardsSection
+                      balance={pointsBalance}
+                      rewards={rewardProducts}
+                      selectedRewardId={redeemRewardProductId}
+                      onSelect={(id) => {
+                        setRedeemRewardProductId(id);
+                        if (!id) {
+                          clearPendingReward();
+                        }
+                      }}
+                    />
+                  ) : null}
+
                   <button 
                     onClick={nextStep}
                     className="form-btn w-full gap-3 btn-primary shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] md:w-auto"
@@ -583,6 +746,33 @@ export default function CheckoutClient() {
                       </div>
                     </div>
                   ))}
+                  {selectedReward ? (
+                    <div className="flex space-x-6 items-center">
+                      <div className="relative w-20 h-24 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 shadow-sm border border-[#7a0c0c]/20">
+                        <Image
+                          src={
+                            selectedReward.imageUrl ||
+                            "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=200"
+                          }
+                          alt={selectedReward.name}
+                          fill
+                          unoptimized
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="flex-grow">
+                        <h4 className="text-[13px] font-black text-gray-900 uppercase tracking-wide leading-tight mb-1">
+                          {selectedReward.name}
+                        </h4>
+                        <p className="text-[11px] text-gray-400 font-medium">
+                          Loyalty gift · {selectedReward.pointsCost} pts
+                        </p>
+                        <p className="text-xs font-black text-green-600 mt-2 uppercase tracking-widest">
+                          Free
+                        </p>
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
 
                 {/* Calculation Table */}
@@ -604,6 +794,15 @@ export default function CheckoutClient() {
                     <span className="text-2xl font-black text-[#7a0c0c] tracking-tight">{formatPrice(grandTotal)}</span>
                   </div>
                 </div>
+
+                <CheckoutPointsTeaser
+                  orderTotal={grandTotal}
+                  pointsEarned={pointsEarnedThisOrder}
+                  currentBalance={user ? pointsBalance : 0}
+                  cheapestRewardCost={cheapestRewardCost}
+                  isNewMember={Boolean(user) && isNewMember}
+                  isGuest={!user}
+                />
 
                 {/* Promo Code */}
                 <div className="mt-8 flex space-x-2">
