@@ -25,6 +25,15 @@ const emptyCatalog: CatalogSnapshot = {
   concentrations: [],
 };
 
+const PRICE_RANGES = [
+  { label: "All", min: 0, max: Infinity },
+  { label: "To 500", min: 0, max: 500 },
+  { label: "Under 1000", min: 0, max: 1000 },
+  { label: "Under 1500", min: 0, max: 1500 },
+  { label: "Under 2000", min: 0, max: 2000 },
+  { label: "Under 2500", min: 0, max: 2500 },
+];
+
 function toggleValue(list: string[], value: string) {
   return list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
 }
@@ -40,7 +49,7 @@ function ShopPageContent() {
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const [selectedConcentration, setSelectedConcentration] = useState("");
   const [stockStatus, setStockStatus] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 2000 });
+  const [priceRange, setPriceRange] = useState(PRICE_RANGES[0]);
   const [sortBy, setSortBy] = useState<"featured" | "price-low" | "price-high" | "name">("featured");
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
@@ -137,7 +146,7 @@ function ShopPageContent() {
     setSelectedOccasions([]);
     setSelectedConcentration("");
     setStockStatus([]);
-    setPriceRange({ min: 0, max: 2000 });
+    setPriceRange(PRICE_RANGES[0]);
   };
 
   const renderFilters = () => (
@@ -272,6 +281,23 @@ function ShopPageContent() {
           </aside>
 
           <main className="flex-grow">
+            <div className="mb-6 flex items-center space-x-3 overflow-x-auto pb-2 scrollbar-hide no-scrollbar">
+              {PRICE_RANGES.map((range) => (
+                <button
+                  key={range.label}
+                  type="button"
+                  onClick={() => setPriceRange(range)}
+                  className={`whitespace-nowrap rounded-full px-5 py-2 text-xs font-black uppercase tracking-widest transition-all duration-300 ${
+                    priceRange.label === range.label
+                      ? "btn-primary text-white shadow-lg"
+                      : "bg-white text-gray-400 shadow-sm hover:text-gray-900"
+                  }`}
+                >
+                  {range.label}
+                </button>
+              ))}
+            </div>
+
             <div className="mb-10 flex flex-col items-center justify-between gap-6 border-b border-gray-100 pb-8 sm:flex-row">
               <div className="text-sm font-medium text-gray-500">
                 Showing <span className="font-bold text-black">{filteredProducts.length}</span> items

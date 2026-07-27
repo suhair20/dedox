@@ -4,7 +4,6 @@ import "./globals.css";
 import AppShell from "@/components/AppShell";
 import {
   SITE_DESCRIPTION,
-  SITE_LOGO,
   SITE_NAME,
   SITE_URL,
 } from "@/lib/site";
@@ -44,9 +43,14 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
   },
   icons: {
-    icon: [{ url: SITE_LOGO, type: "image/svg+xml" }],
-    shortcut: SITE_LOGO,
-    apple: SITE_LOGO,
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icons/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/icon-48.png", sizes: "48x48", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/icons/icon-180.png", sizes: "180x180", type: "image/png" }],
   },
 };
 

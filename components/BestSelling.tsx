@@ -7,11 +7,11 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const PRICE_RANGES = [
   { label: "All", min: 0, max: Infinity },
-  { label: "Under 500", min: 0, max: 500 },
-  { label: "500 - 1000", min: 500, max: 1000 },
-  { label: "1000 - 5000", min: 1000, max: 5000 },
-  { label: "5000 - 10000", min: 5000, max: 10000 },
-  { label: "10000+", min: 10000, max: Infinity },
+  { label: "To 500", min: 0, max: 500 },
+  { label: "Under 1000", min: 0, max: 1000 },
+  { label: "Under 1500", min: 0, max: 1500 },
+  { label: "Under 2000", min: 0, max: 2000 },
+  { label: "Under 2500", min: 0, max: 2500 },
 ];
 
 export default function BestSelling() {
@@ -20,8 +20,8 @@ export default function BestSelling() {
 
   const filteredItems = useMemo(() => {
     return products
-      .filter((p) => p.price >= activeRange.min && p.price < activeRange.max)
-      .slice(0, 10); // This ensures only 10 products show up
+      .filter((p) => p.price >= activeRange.min && p.price <= activeRange.max)
+      .slice(0, 10);
   }, [activeRange, products]);
   return (
     <section className="py-24 bg-[#fafafa]" id="best-selling">
