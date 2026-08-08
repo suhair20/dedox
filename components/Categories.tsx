@@ -52,7 +52,7 @@ export default function Categories() {
               >
                 <Link
                   href={`/category/${cat.slug}`}
-                  className="group relative mb-4 block aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-sm sm:mb-6"
+                  className="group relative mb-4 block aspect-[3/4] w-full overflow-hidden rounded-[1.35rem] shadow-[0_12px_40px_rgba(15,23,42,0.12)] sm:mb-6 sm:rounded-[1.75rem]"
                 >
                   <Image
                     src={cat.imageUrl || FALLBACK_IMAGE}

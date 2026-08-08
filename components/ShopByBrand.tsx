@@ -33,7 +33,7 @@ export default function ShopByBrand() {
         </div>
 
         <div className="flex flex-col items-center justify-center gap-6 sm:gap-10 lg:flex-row lg:gap-12">
-          <div className="grid grid-cols-2 place-items-center gap-3 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 md:gap-6">
+          <div className="grid grid-cols-2 place-items-center gap-4 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 md:gap-6">
             {brands.length === 0 ? (
               <div className="col-span-full rounded-2xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-400 sm:p-8">
                 Mark brands as Featured in Admin to show them here.
@@ -43,7 +43,7 @@ export default function ShopByBrand() {
                 <Link
                   key={brand.id}
                   href={`/shop?brand=${encodeURIComponent(brand.slug)}`}
-                  className="group flex h-[4.75rem] w-[4.75rem] items-center justify-center overflow-hidden rounded-xl border border-gray-100 bg-white text-center shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-[#7a0c0c] hover:bg-[#7a0c0c] hover:shadow-xl active:scale-[0.98] sm:h-24 sm:w-24 sm:rounded-2xl sm:shadow-lg md:h-24 md:w-36"
+                  className="group flex h-28 w-28 items-center justify-center overflow-hidden rounded-2xl border border-gray-100 bg-white text-center shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-[#7a0c0c] hover:bg-[#7a0c0c] hover:shadow-xl active:scale-[0.98] sm:h-24 sm:w-24 md:h-24 md:w-36"
                 >
                   {brand.imageUrl ? (
                     <Image
@@ -52,10 +52,10 @@ export default function ShopByBrand() {
                       width={120}
                       height={48}
                       unoptimized
-                      className="max-h-8 max-w-[85%] object-contain transition group-hover:brightness-0 sm:max-h-12"
+                      className="max-h-12 max-w-[85%] object-contain transition group-hover:brightness-0"
                     />
                   ) : (
-                    <span className="px-1 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-900 transition-colors duration-300 group-hover:font-black group-hover:text-black sm:text-[13px] sm:tracking-[0.2em] md:text-[14px]">
+                    <span className="px-1 text-[12px] font-bold uppercase tracking-[0.18em] text-gray-900 transition-colors duration-300 group-hover:font-black group-hover:text-black sm:text-[13px] sm:tracking-[0.2em] md:text-[14px]">
                       {brand.name}
                     </span>
                   )}

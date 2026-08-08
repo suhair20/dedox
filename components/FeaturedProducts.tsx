@@ -57,7 +57,7 @@ export default function FeaturedProducts() {
 
       <div
         ref={containerRef}
-        className="cursor-grab select-none overflow-x-auto scrollbar-hide"
+        className="cursor-grab select-none overflow-x-auto bg-[#ffffff] scrollbar-hide"
         style={{ cursor: isDragging ? "grabbing" : "grab" }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => { setIsPaused(false); handleMouseUp(); }}
@@ -67,7 +67,7 @@ export default function FeaturedProducts() {
       >
         <div
           ref={trackRef}
-          className="flex gap-2.5 px-4 sm:gap-4"
+          className="flex gap-3 bg-[#ffffff] px-4 py-1 sm:gap-4 sm:px-6"
           style={{
             animation: `marquee ${featured.length * 3}s linear infinite`,
             animationPlayState: isPaused ? "paused" : "running",
@@ -77,7 +77,7 @@ export default function FeaturedProducts() {
           {displayProducts.map((product, idx) => (
             <div
               key={`${product.id}-${idx}`}
-              className="w-[min(42vw,10.5rem)] shrink-0 sm:w-[200px] md:w-[240px] lg:w-[260px]"
+              className="w-[9.75rem] shrink-0 sm:w-[200px] md:w-[240px] lg:w-[260px]"
             >
               <ProductCard product={product} />
             </div>

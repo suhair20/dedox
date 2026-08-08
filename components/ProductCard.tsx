@@ -39,14 +39,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div
-      className="group relative flex h-full flex-col rounded-xl border border-transparent bg-white p-1.5 transition-all duration-300 hover:border-white/50 hover:shadow-[0_20px_50px_rgba(122,12,12,0.1)] sm:rounded-2xl sm:p-2"
+      className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-gray-100 bg-[#ffffff] p-2 shadow-sm transition-all duration-300 hover:border-white/50 hover:shadow-[0_20px_50px_rgba(122,12,12,0.1)] sm:rounded-2xl sm:p-2.5"
       onMouseEnter={() => setShowCart(true)}
       onMouseLeave={() => setShowCart(false)}
       onTouchStart={() => setShowCart(true)}
     >
-      <Link href={`/product/${product.id}`} className="flex flex-grow flex-col">
+      <Link href={`/product/${product.id}`} className="flex min-w-0 flex-grow flex-col">
         <div
-          className="relative mb-2 aspect-[3/4] w-full overflow-hidden rounded-lg bg-white sm:mb-4 sm:aspect-[4/5] sm:rounded-xl"
+          className="relative mb-2 aspect-[3/4] w-full overflow-hidden rounded-lg bg-[#ffffff] sm:mb-4 sm:aspect-[4/5] sm:rounded-xl"
           onClick={(e) => {
             if (!showCart) {
               e.preventDefault();
@@ -59,9 +59,8 @@ export default function ProductCard({ product }: ProductCardProps) {
             alt={product.name}
             fill
             unoptimized
-            className="object-contain object-center transition-transform duration-1000 group-hover:scale-110"
-            sizes="(max-width: 640px) 42vw, (max-width: 1024px) 25vw, 15vw"
-            style={{ mixBlendMode: "multiply" }}
+            className="object-contain object-center p-1.5 transition-transform duration-1000 group-hover:scale-105 sm:p-2"
+            sizes="(max-width: 640px) 10rem, (max-width: 1024px) 25vw, 15vw"
           />
 
           <button
@@ -69,7 +68,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             onClick={handleAddToCart}
             disabled={!product.inStock}
             aria-hidden={!showCart}
-            className={`absolute bottom-1.5 left-1.5 right-1.5 z-10 flex h-8 items-center justify-center gap-1.5 rounded-full transition-all duration-300 sm:bottom-2 sm:left-2 sm:right-2 sm:h-10 sm:gap-3 ${
+            className={`absolute bottom-2 left-2 right-2 z-10 mx-auto flex h-7 max-w-[calc(100%-0.5rem)] items-center justify-center gap-1 rounded-full px-2 transition-all duration-300 sm:bottom-2.5 sm:left-2.5 sm:right-2.5 sm:h-10 sm:max-w-none sm:gap-2 sm:px-3 ${
               showCart
                 ? "translate-y-0 opacity-100"
                 : "pointer-events-none translate-y-2 opacity-0"
@@ -79,20 +78,23 @@ export default function ProductCard({ product }: ProductCardProps) {
                 : "btn-primary active:scale-95 shadow-md"
             }`}
           >
-            <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            <span className="text-[9px] font-black uppercase tracking-[0.15em] sm:text-[10px] sm:tracking-[0.2em]">
-              {product.inStock ? "Add to cart" : "Sold Out"}
+            <ShoppingCart className="h-3 w-3 shrink-0 sm:h-4 sm:w-4" />
+            <span className="truncate text-[8px] font-black uppercase tracking-[0.12em] sm:text-[10px] sm:tracking-[0.2em]">
+              <span className="sm:hidden">{product.inStock ? "Add" : "Sold"}</span>
+              <span className="hidden sm:inline">
+                {product.inStock ? "Add to cart" : "Sold Out"}
+              </span>
             </span>
           </button>
         </div>
 
-        <div className="flex flex-grow flex-col px-0.5 pb-0.5 sm:px-2 sm:pb-2">
+        <div className="flex min-w-0 flex-grow flex-col px-0.5 pb-0.5 sm:px-1.5 sm:pb-1.5">
           <div className="mb-0.5 flex items-start justify-between gap-1 sm:mb-1 sm:gap-2">
-            <p className="text-[8px] font-bold uppercase tracking-[0.14em] text-[#7a0c0c] sm:text-[10px] sm:tracking-[0.2em]">
+            <p className="truncate text-[8px] font-bold uppercase tracking-[0.14em] text-[#7a0c0c] sm:text-[10px] sm:tracking-[0.2em]">
               {product.brand}
             </p>
             {!product.inStock && (
-              <span className="text-[7px] font-black uppercase tracking-widest text-red-500 sm:text-[9px]">
+              <span className="shrink-0 text-[7px] font-black uppercase tracking-widest text-red-500 sm:text-[9px]">
                 Out of Stock
               </span>
             )}
@@ -101,7 +103,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             {product.name}
           </h3>
 
-          <div className="mt-auto flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2">
+          <div className="mt-auto flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2">
             <span className="text-[13px] font-bold text-gray-900 sm:text-sm">
               {formatPrice(product.price)}
             </span>
