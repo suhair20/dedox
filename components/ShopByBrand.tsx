@@ -21,21 +21,21 @@ export default function ShopByBrand() {
   }, []);
 
   return (
-    <section className="bg-white py-24" id="brands">
+    <section className="bg-[#ffffff] py-10 sm:py-16 md:py-24" id="brands">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-16 text-center">
-          <h2 className="mb-4 font-serif-luxury text-4xl text-gray-900 md:text-5xl">
+        <div className="mb-6 text-center sm:mb-12 md:mb-16">
+          <h2 className="mb-3 font-serif-luxury text-[1.75rem] text-gray-900 sm:mb-4 sm:text-4xl md:text-5xl">
             Shop by Brand
           </h2>
-          <p className="text-[11px] font-black uppercase tracking-[0.4em] text-gray-500">
+          <p className="text-[10px] font-black uppercase tracking-[0.35em] text-gray-500 sm:text-[11px] sm:tracking-[0.4em]">
             The Curated Selection
           </p>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-12 lg:flex-row">
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
+        <div className="flex flex-col items-center justify-center gap-6 sm:gap-10 lg:flex-row lg:gap-12">
+          <div className="grid grid-cols-2 place-items-center gap-3 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 md:gap-6">
             {brands.length === 0 ? (
-              <div className="col-span-full rounded-2xl border border-dashed border-gray-200 p-8 text-center text-sm text-gray-400">
+              <div className="col-span-full rounded-2xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-400 sm:p-8">
                 Mark brands as Featured in Admin to show them here.
               </div>
             ) : (
@@ -43,7 +43,7 @@ export default function ShopByBrand() {
                 <Link
                   key={brand.id}
                   href={`/shop?brand=${encodeURIComponent(brand.slug)}`}
-                  className="group flex h-28 w-28 items-center justify-center overflow-hidden rounded-2xl border border-gray-100 bg-white text-center shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-[#7a0c0c] hover:bg-[#7a0c0c] hover:shadow-xl active:scale-[0.98] md:h-24 md:w-36"
+                  className="group flex h-[4.75rem] w-[4.75rem] items-center justify-center overflow-hidden rounded-xl border border-gray-100 bg-white text-center shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-[#7a0c0c] hover:bg-[#7a0c0c] hover:shadow-xl active:scale-[0.98] sm:h-24 sm:w-24 sm:rounded-2xl sm:shadow-lg md:h-24 md:w-36"
                 >
                   {brand.imageUrl ? (
                     <Image
@@ -52,10 +52,10 @@ export default function ShopByBrand() {
                       width={120}
                       height={48}
                       unoptimized
-                      className="max-h-12 object-contain transition group-hover:brightness-0"
+                      className="max-h-8 max-w-[85%] object-contain transition group-hover:brightness-0 sm:max-h-12"
                     />
                   ) : (
-                    <span className="text-[13px] font-bold uppercase tracking-[0.2em] text-gray-900 transition-colors duration-300 group-hover:font-black group-hover:text-black md:text-[14px]">
+                    <span className="px-1 text-[10px] font-bold uppercase tracking-[0.15em] text-gray-900 transition-colors duration-300 group-hover:font-black group-hover:text-black sm:text-[13px] sm:tracking-[0.2em] md:text-[14px]">
                       {brand.name}
                     </span>
                   )}
@@ -64,14 +64,14 @@ export default function ShopByBrand() {
             )}
           </div>
 
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center px-2">
             <Link
               href="/shop"
-              className="btn-primary rounded-full px-12 py-4 text-[11px] font-bold uppercase tracking-[0.2em] shadow-lg transition-all"
+              className="btn-primary max-w-full rounded-full px-6 py-3 text-center text-[10px] font-bold uppercase tracking-[0.2em] shadow-lg transition-all sm:px-12 sm:py-4 sm:text-[11px]"
             >
               Explore All Brands
             </Link>
-            <p className="mt-4 text-[9px] uppercase tracking-widest text-gray-400">
+            <p className="mt-3 text-[9px] uppercase tracking-widest text-gray-400 sm:mt-4">
               The Full Archive
             </p>
           </div>

@@ -9,7 +9,7 @@ import FloatingButtons from "@/components/FloatingButtons";
 
 export default function Home() {
   return (
-    <div className="flex flex-col w-full overflow-x-hidden bg-white">
+    <div className="flex w-full min-w-0 flex-col overflow-x-hidden bg-[#ffffff]">
       <Hero />
       <NotesCarousel />
       <FeaturedProducts />

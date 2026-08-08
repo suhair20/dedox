@@ -17,11 +17,26 @@
   --dedox-btn-dark: #660000;
 }
 
+html {
+  background-color: #ffffff;
+  overflow-x: hidden;
+}
+
 body {
   color: var(--foreground);
-  background: var(--background);
+  background-color: #ffffff;
+  background: #ffffff;
   font-family: 'Inter', sans-serif;
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  min-width: 0;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+  height: auto;
 }
 
 @layer utilities {

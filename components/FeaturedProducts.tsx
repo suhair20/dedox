@@ -41,19 +41,23 @@ export default function FeaturedProducts() {
   };
 
   return (
-    <section className="py-24 bg-white" id="featured">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
-        <h2 className="text-4xl md:text-5xl font-serif-luxury text-gray-900 mb-4">The Highlight</h2>
-        <p className="text-gray-400 text-[11px] uppercase tracking-[0.3em] font-black mb-8">Curated pieces from the void</p>
-        <Link href="/shop" className="group relative text-[10px] font-black uppercase tracking-widest text-[#7a0c0c] pb-1 overflow-hidden inline-block">
+    <section className="overflow-x-hidden bg-[#ffffff] py-10 sm:py-16 md:py-24" id="featured">
+      <div className="container mx-auto mb-6 max-w-7xl px-4 text-center sm:mb-12 sm:px-6 md:mb-16 lg:px-8">
+        <h2 className="mb-3 font-serif-luxury text-[1.75rem] text-gray-900 sm:mb-4 sm:text-4xl md:text-5xl">
+          The Highlight
+        </h2>
+        <p className="mb-5 text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 sm:mb-8 sm:text-[11px]">
+          Curated pieces from the void
+        </p>
+        <Link href="/shop" className="group relative inline-block overflow-hidden pb-1 text-[10px] font-black uppercase tracking-widest text-[#7a0c0c]">
           <span>View all collection</span>
-          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#7a0c0c] -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+          <div className="absolute bottom-0 left-0 h-0.5 w-full -translate-x-full bg-[#7a0c0c] transition-transform duration-500 group-hover:translate-x-0" />
         </Link>
       </div>
 
       <div
         ref={containerRef}
-        className="overflow-x-auto scrollbar-hide cursor-grab select-none"
+        className="cursor-grab select-none overflow-x-auto scrollbar-hide"
         style={{ cursor: isDragging ? "grabbing" : "grab" }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => { setIsPaused(false); handleMouseUp(); }}
@@ -63,7 +67,7 @@ export default function FeaturedProducts() {
       >
         <div
           ref={trackRef}
-          className="flex gap-4 px-4"
+          className="flex gap-2.5 px-4 sm:gap-4"
           style={{
             animation: `marquee ${featured.length * 3}s linear infinite`,
             animationPlayState: isPaused ? "paused" : "running",
@@ -71,7 +75,10 @@ export default function FeaturedProducts() {
           }}
         >
           {displayProducts.map((product, idx) => (
-            <div key={`${product.id}-${idx}`} className="w-[260px] flex-shrink-0">
+            <div
+              key={`${product.id}-${idx}`}
+              className="w-[min(42vw,10.5rem)] shrink-0 sm:w-[200px] md:w-[240px] lg:w-[260px]"
+            >
               <ProductCard product={product} />
             </div>
           ))}

@@ -39,14 +39,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div
-      className="group relative flex h-full flex-col rounded-2xl border border-transparent bg-white p-2 transition-all duration-300 hover:border-white/50 hover:shadow-[0_20px_50px_rgba(122,12,12,0.1)]"
+      className="group relative flex h-full flex-col rounded-xl border border-transparent bg-white p-1.5 transition-all duration-300 hover:border-white/50 hover:shadow-[0_20px_50px_rgba(122,12,12,0.1)] sm:rounded-2xl sm:p-2"
       onMouseEnter={() => setShowCart(true)}
       onMouseLeave={() => setShowCart(false)}
       onTouchStart={() => setShowCart(true)}
     >
       <Link href={`/product/${product.id}`} className="flex flex-grow flex-col">
         <div
-          className="relative mb-3 aspect-[4/5] w-full overflow-hidden rounded-xl bg-[#fafafa] sm:mb-4"
+          className="relative mb-2 aspect-[3/4] w-full overflow-hidden rounded-lg bg-white sm:mb-4 sm:aspect-[4/5] sm:rounded-xl"
           onClick={(e) => {
             if (!showCart) {
               e.preventDefault();
@@ -60,7 +60,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             fill
             unoptimized
             className="object-contain object-center transition-transform duration-1000 group-hover:scale-110"
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 15vw"
+            sizes="(max-width: 640px) 42vw, (max-width: 1024px) 25vw, 15vw"
             style={{ mixBlendMode: "multiply" }}
           />
 
@@ -69,7 +69,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             onClick={handleAddToCart}
             disabled={!product.inStock}
             aria-hidden={!showCart}
-            className={`absolute bottom-2 left-2 right-2 z-10 flex h-9 items-center justify-center gap-2 rounded-full transition-all duration-300 sm:h-10 sm:gap-3 ${
+            className={`absolute bottom-1.5 left-1.5 right-1.5 z-10 flex h-8 items-center justify-center gap-1.5 rounded-full transition-all duration-300 sm:bottom-2 sm:left-2 sm:right-2 sm:h-10 sm:gap-3 ${
               showCart
                 ? "translate-y-0 opacity-100"
                 : "pointer-events-none translate-y-2 opacity-0"
@@ -79,37 +79,41 @@ export default function ProductCard({ product }: ProductCardProps) {
                 : "btn-primary active:scale-95 shadow-md"
             }`}
           >
-            <ShoppingCart className="h-4 w-4" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+            <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span className="text-[9px] font-black uppercase tracking-[0.15em] sm:text-[10px] sm:tracking-[0.2em]">
               {product.inStock ? "Add to cart" : "Sold Out"}
             </span>
           </button>
         </div>
 
-        <div className="flex flex-grow flex-col px-1 pb-1 sm:px-2 sm:pb-2">
-          <div className="mb-1 flex items-start justify-between gap-2">
-            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#7a0c0c] sm:text-[10px] sm:tracking-[0.2em]">
+        <div className="flex flex-grow flex-col px-0.5 pb-0.5 sm:px-2 sm:pb-2">
+          <div className="mb-0.5 flex items-start justify-between gap-1 sm:mb-1 sm:gap-2">
+            <p className="text-[8px] font-bold uppercase tracking-[0.14em] text-[#7a0c0c] sm:text-[10px] sm:tracking-[0.2em]">
               {product.brand}
             </p>
             {!product.inStock && (
-              <span className="text-[8px] font-black uppercase tracking-widest text-red-500 sm:text-[9px]">
+              <span className="text-[7px] font-black uppercase tracking-widest text-red-500 sm:text-[9px]">
                 Out of Stock
               </span>
             )}
           </div>
-          <h3 className="mb-2 line-clamp-2 text-[12px] font-bold leading-snug text-gray-900 transition-colors group-hover:text-[#7a0c0c] sm:text-[13px]">
+          <h3 className="mb-1.5 line-clamp-2 text-[11px] font-bold leading-snug text-gray-900 transition-colors group-hover:text-[#7a0c0c] sm:mb-2 sm:text-[13px]">
             {product.name}
           </h3>
 
-          <div className="mt-auto flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <span className="text-sm font-bold text-gray-900">{formatPrice(product.price)}</span>
+          <div className="mt-auto flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2">
+            <span className="text-[13px] font-bold text-gray-900 sm:text-sm">
+              {formatPrice(product.price)}
+            </span>
             {product.oldPrice && product.oldPrice > product.price && (
               <>
-                <span className="text-[11px] font-medium text-gray-400 line-through">
+                <span className="text-[10px] font-medium text-gray-400 line-through sm:text-[11px]">
                   {formatPrice(product.oldPrice)}
                 </span>
                 {off !== null && (
-                  <span className="text-[11px] font-semibold text-emerald-600">{off}% off</span>
+                  <span className="text-[10px] font-semibold text-emerald-600 sm:text-[11px]">
+                    {off}% off
+                  </span>
                 )}
               </>
             )}

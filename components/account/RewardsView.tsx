@@ -152,7 +152,7 @@ export default function RewardsView({ summary, rewards }: RewardsViewProps) {
           </p>
         </div>
       ) : (
-        <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 scrollbar-hide sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+        <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 scrollbar-hide sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 lg:grid-cols-3">
           {sortedRewards.map((reward, idx) => {
             const affordable = summary.balance >= reward.pointsCost;
             const remaining = reward.pointsCost - summary.balance;

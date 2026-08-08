@@ -27,7 +27,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <AuthProvider>
           <CartProvider>
             {!hideNavbar && <Navbar />}
-            <main className="flex-grow">{children}</main>
+            <main className="min-w-0 flex-grow overflow-x-hidden bg-white">{children}</main>
             {!hideFooter && <Footer />}
             {!hideNavbar && <RewardsScrollModal />}
           </CartProvider>
