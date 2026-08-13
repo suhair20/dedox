@@ -24,6 +24,7 @@ import { isStripePaymentMethod } from '@/lib/checkout/paymentMethods';
 import { useAuth } from '@/context/AuthContext';
 import ShippingAddressSection from '@/components/checkout/ShippingAddressSection';
 import type { ShippingAddressInput } from '@/lib/checkout/types';
+import { DEFAULT_SHIPPING_COUNTRY } from '@/lib/locale/countries';
 import type { RewardProduct } from '@/lib/loyalty/types';
 import { pointsFor } from '@/lib/loyalty/points';
 import {
@@ -45,7 +46,7 @@ const emptyAddress: ShippingAddressInput = {
   phone: '',
   firstName: '',
   lastName: '',
-  country: 'United Arab Emirates',
+  country: DEFAULT_SHIPPING_COUNTRY,
   city: '',
   postalCode: '',
   streetAddress: '',

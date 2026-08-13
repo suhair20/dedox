@@ -93,7 +93,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                     fill
                     unoptimized
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-contain p-4 sm:p-8"
+                    className="origin-bottom scale-[1.15] object-contain object-bottom sm:scale-[1.12]"
                     priority
                   />
                 </motion.div>
@@ -128,7 +128,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                       fill
                       unoptimized
                       sizes="96px"
-                      className="object-cover"
+                      className="origin-bottom scale-110 object-contain object-bottom"
                     />
                   </button>
                 ))}
@@ -144,25 +144,34 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="bg-white p-5 sm:rounded-3xl sm:border sm:border-gray-100 sm:p-8 sm:shadow-sm lg:bg-transparent lg:p-0 lg:shadow-none"
             >
-              {/* Product Category/Badge */}
-              <div className="mb-2">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#7a0c0c]/70">
-                  DE DOX CERTIFIED PRODUCT
-                </span>
-              </div>
-
-              {/* Title & Brand */}
-              <div className="mb-4">
-                <h1 className="mb-2 font-serif-luxury text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl">
-                  {product.name}
-                </h1>
-                <p className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">
-                  By {product.brand} • {product.category}
-                </p>
+              {/* Title, brand & price */}
+              <div className="mb-6 rounded-2xl bg-[#7a0c0c] p-5 text-white sm:mb-8 sm:p-6">
+                <div className="mb-2">
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/70">
+                    DE DOX CERTIFIED PRODUCT
+                  </span>
+                </div>
+                <div className="mb-4">
+                  <h1 className="mb-2 font-serif-luxury text-2xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
+                    {product.name}
+                  </h1>
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/75">
+                    By {product.brand} • {product.category}
+                  </p>
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                    <span className="text-3xl font-bold text-white sm:text-5xl">{formatPrice(product.price)}</span>
+                    {product.oldPrice && (
+                      <span className="text-xl font-medium leading-none text-white/50 line-through">{formatPrice(product.oldPrice)}</span>
+                    )}
+                  </div>
+                  <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-white/60">Inclusive of all taxes</p>
+                </div>
               </div>
 
               {/* Ratings */}
-              <div className="flex items-center space-x-4 mb-6">
+              <div className="mb-6 flex items-center space-x-4">
                 <div className="bg-[#7a0c0c] text-white px-2.5 py-1 rounded flex items-center space-x-1.5 shadow-sm">
                   <span className="text-sm font-black">{product.rating || 4.8}</span>
                   <Star className="h-3.5 w-3.5 fill-white" />
@@ -173,20 +182,9 @@ export default function ProductPage({ params }: { params: { id: string } }) {
               </div>
 
               {/* Subtitle */}
-              <p className="text-sm text-gray-500 font-medium mb-8 leading-relaxed italic">
+              <p className="mb-8 text-sm font-medium italic leading-relaxed text-gray-500">
                 {product.subtitle || "Authentically sourced, premium luxury fragrance."}
               </p>
-
-              {/* Pricing */}
-              <div className="mb-8 sm:mb-10">
-                <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                  <span className="text-3xl font-bold text-[#7a0c0c] sm:text-5xl">{formatPrice(product.price)}</span>
-                  {product.oldPrice && (
-                    <span className="text-xl text-gray-300 line-through font-medium leading-none">{formatPrice(product.oldPrice)}</span>
-                  )}
-                </div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">Inclusive of all taxes</p>
-              </div>
 
               {/* Info Boxes */}
               <div className="grid grid-cols-2 gap-4 mb-8">

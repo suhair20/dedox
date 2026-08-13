@@ -21,18 +21,16 @@ export default function ShopByBrand() {
   }, []);
 
   return (
-    <section className="bg-[#ffffff] py-10 sm:py-16 md:py-24" id="brands">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 text-center sm:mb-12 md:mb-16">
-          <h2 className="mb-3 font-serif-luxury text-[1.75rem] text-gray-900 sm:mb-4 sm:text-4xl md:text-5xl">
-            Shop by Brand
-          </h2>
+    <section className="home-section" id="brands">
+      <div className="home-section-inner">
+        <div className="home-section-header">
+          <h2 className="home-section-title">Shop by Brand</h2>
           <p className="text-[10px] font-black uppercase tracking-[0.35em] text-gray-500 sm:text-[11px] sm:tracking-[0.4em]">
             The Curated Selection
           </p>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-6 sm:gap-10 lg:flex-row lg:gap-12">
+        <div className="flex flex-col items-center justify-center gap-8 sm:gap-10 lg:flex-row lg:gap-12">
           <div className="grid grid-cols-2 place-items-center gap-4 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 md:gap-6">
             {brands.length === 0 ? (
               <div className="col-span-full rounded-2xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-400 sm:p-8">

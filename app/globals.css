@@ -48,6 +48,26 @@ svg {
     font-family: var(--font-montserrat), sans-serif;
     font-weight: 700;
   }
+
+  .home-section {
+    @apply bg-[#ffffff] py-12 sm:py-16 lg:py-20;
+  }
+
+  .home-section-inner {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .home-section-header {
+    @apply mb-8 text-center sm:mb-10;
+  }
+
+  .home-section-title {
+    @apply mb-3 font-serif-luxury text-[1.75rem] leading-tight text-gray-900 sm:mb-4 sm:text-4xl lg:text-5xl;
+  }
+
+  .home-section-subtitle {
+    @apply mx-auto max-w-2xl text-sm leading-relaxed text-gray-500 sm:text-base;
+  }
   
   .glass-card {
     background: var(--glass-white);

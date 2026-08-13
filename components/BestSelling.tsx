@@ -24,20 +24,18 @@ export default function BestSelling() {
       .slice(0, 10);
   }, [activeRange, products]);
   return (
-    <section className="bg-[#ffffff] py-10 sm:py-16 md:py-24" id="best-selling">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 text-center sm:mb-12">
-          <h2 className="mb-3 font-serif-luxury text-[1.75rem] text-gray-900 sm:mb-4 sm:text-4xl md:text-5xl">
-            Best Selling
-          </h2>
-          <p className="mx-auto max-w-2xl px-1 text-xs leading-relaxed text-gray-500 sm:text-sm">
+    <section className="home-section" id="best-selling">
+      <div className="home-section-inner">
+        <div className="home-section-header">
+          <h2 className="home-section-title">Best Selling</h2>
+          <p className="home-section-subtitle">
             The perfumes that define contemporary elegance: powerful, complex, and eternally captivating.
           </p>
         </div>
 
         {/* Price Filter Chips */}
-        <div className="mb-6 flex justify-center sm:mb-12 md:mb-16">
-          <div className="no-scrollbar flex w-full max-w-full items-center justify-start gap-2 overflow-x-auto px-1 pb-2 scrollbar-hide sm:justify-center sm:gap-3 sm:px-4 sm:pb-4">
+        <div className="mb-8 flex justify-center sm:mb-10">
+          <div className="no-scrollbar flex w-full max-w-full items-center justify-start gap-2 overflow-x-auto px-1 pb-2 scrollbar-hide sm:justify-center sm:gap-3 sm:px-4 sm:pb-0">
             {PRICE_RANGES.map((range) => (
               <button
                 key={range.label}
@@ -76,7 +74,7 @@ export default function BestSelling() {
         </motion.div>
 
         {filteredItems.length === 0 && (
-          <div className="py-12 text-center sm:py-20">
+          <div className="py-12 text-center sm:py-16">
             <p className="font-serif-luxury text-xl italic text-gray-400 sm:text-2xl">No products found in this range.</p>
           </div>
         )}

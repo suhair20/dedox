@@ -1,6 +1,9 @@
 "use client";
 
 import type { ShippingAddressInput } from "@/lib/checkout/types";
+import {
+  SHIPPING_COUNTRIES,
+} from "@/lib/locale/countries";
 
 type AddressFormFieldsProps = {
   value: ShippingAddressInput;
@@ -100,10 +103,11 @@ export default function AddressFormFields({
             className="form-select"
             required
           >
-            <option>United Arab Emirates</option>
-            <option>India</option>
-            <option>United States</option>
-            <option>United Kingdom</option>
+            {SHIPPING_COUNTRIES.map((country) => (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            ))}
           </select>
         </div>
         <div>

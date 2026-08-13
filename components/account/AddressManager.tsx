@@ -10,13 +10,14 @@ import {
   getAddressDisplayName,
   savedAddressToShippingInput,
 } from "@/lib/addresses/utils";
+import { DEFAULT_SHIPPING_COUNTRY } from "@/lib/locale/countries";
 
 const emptyForm: ShippingAddressInput = {
   email: "",
   phone: "",
   firstName: "",
   lastName: "",
-  country: "United Arab Emirates",
+  country: DEFAULT_SHIPPING_COUNTRY,
   city: "",
   postalCode: "",
   streetAddress: "",

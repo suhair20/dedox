@@ -4,6 +4,7 @@ import FeaturedProducts from "@/components/FeaturedProducts";
 import Categories from "@/components/Categories";
 import BestSelling from "@/components/BestSelling";
 import ShopByBrand from "@/components/ShopByBrand";
+import ShopByPrice from "@/components/ShopByPrice";
 import Features from "@/components/Features";
 import FloatingButtons from "@/components/FloatingButtons";
 
@@ -12,6 +13,7 @@ export default function Home() {
     <div className="flex w-full min-w-0 flex-col overflow-x-hidden bg-[#ffffff]">
       <Hero />
       <NotesCarousel />
+      <ShopByPrice />
       <FeaturedProducts />
       <ShopByBrand />
       <BestSelling />

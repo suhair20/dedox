@@ -75,13 +75,13 @@ export default function NotesCarousel() {
   }, [activeTab, emblaApi]);
 
   return (
-    <section className="w-full overflow-hidden bg-[#ffffff] py-10 sm:py-16 md:py-24">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto mb-8 flex w-full max-w-3xl flex-col items-center justify-center text-center sm:mb-12 md:mb-16">
-          <h2 className="mb-3 font-serif-luxury text-[1.75rem] leading-tight text-gray-900 sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl">
+    <section className="home-section w-full overflow-hidden">
+      <div className="home-section-inner">
+        <div className="home-section-header mx-auto flex w-full max-w-3xl flex-col items-center justify-center">
+          <h2 className="home-section-title">
             Explore Our Fragrances
           </h2>
-          <p className="mb-6 max-w-xl px-1 font-inter text-sm leading-relaxed text-gray-600 sm:mb-10 sm:text-base md:text-lg">
+          <p className="home-section-subtitle mb-6 sm:mb-8">
             Discover scents by note, accord, occasion, and concentration — all managed from your catalog.
           </p>
 
@@ -103,7 +103,7 @@ export default function NotesCarousel() {
           </div>
         </div>
 
-        <div className="relative mx-auto mt-4 max-w-7xl sm:mt-6">
+        <div className="relative mx-auto mt-2 max-w-7xl sm:mt-4">
           <button
             onClick={scrollPrev}
             disabled={!canScrollPrev}
@@ -150,7 +150,7 @@ export default function NotesCarousel() {
           </button>
         </div>
 
-        <div className="mt-8 flex justify-center px-2 sm:mt-16">
+        <div className="mt-8 flex justify-center px-2 sm:mt-10">
           <Link
             href="/shop"
             className="btn-primary max-w-full rounded-full px-6 py-3 text-center text-xs font-bold uppercase tracking-wider shadow-lg transition-colors sm:px-12 sm:py-3.5 sm:text-sm"

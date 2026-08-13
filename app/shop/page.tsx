@@ -73,6 +73,27 @@ function ShopPageContent() {
     setSelectedOccasions(params.get("occasion") ? [params.get("occasion")!] : []);
     setSelectedConcentration(params.get("concentration") || "");
 
+    const maxPriceParam = params.get("maxPrice");
+    const minPriceParam = params.get("minPrice");
+    if (maxPriceParam || minPriceParam) {
+      const min = minPriceParam ? Number(minPriceParam) : 0;
+      const max = maxPriceParam ? Number(maxPriceParam) : Infinity;
+      if (!Number.isNaN(min) && !Number.isNaN(max)) {
+        const matched = PRICE_RANGES.find(
+          (range) => range.min === min && range.max === max
+        );
+        setPriceRange(
+          matched || {
+            label: maxPriceParam
+              ? `Under ${maxPriceParam}`
+              : `From ${minPriceParam}`,
+            min,
+            max,
+          }
+        );
+      }
+    }
+
     const pending = readPendingReward();
     setPendingReward(pending);
     setShowClaimBanner(params.get("claim") === "1" && Boolean(pending));

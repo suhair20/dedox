@@ -10,12 +10,15 @@ export interface CurrencyInfo {
 }
 
 export const SUPPORTED_CURRENCIES: Record<string, CurrencyInfo> = {
-  AED: { code: 'AED', symbol: 'Dhs.', name: 'UAE', flag: '🇦🇪' },
-  INR: { code: 'INR', symbol: '₹', name: 'India', flag: '🇮🇳' },
+  AED: { code: 'AED', symbol: 'AED', name: 'UAE', flag: '🇦🇪' },
   USD: { code: 'USD', symbol: '$', name: 'USA', flag: '🇺🇸' },
   GBP: { code: 'GBP', symbol: '£', name: 'UK', flag: '🇬🇧' },
   EUR: { code: 'EUR', symbol: '€', name: 'Europe', flag: '🇪🇺' },
+  INR: { code: 'INR', symbol: '₹', name: 'India', flag: '🇮🇳' },
 };
+
+/** Display order: AED first (store base), India last. Checkout always charges AED. */
+export const CURRENCY_DISPLAY_ORDER: string[] = ['AED', 'USD', 'GBP', 'INR'];
 
 interface LocationContextType {
   country: string;

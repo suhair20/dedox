@@ -24,13 +24,11 @@ export default function Categories() {
   }, []);
 
   return (
-    <section className="overflow-x-hidden bg-[#ffffff] py-10 pb-14 sm:pb-24 md:pb-28">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-20">
-        <div className="mb-6 text-center sm:mb-14 md:mb-20">
-          <h2 className="mb-3 font-serif-luxury text-[1.75rem] text-gray-900 sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl">
-            Shop by Category
-          </h2>
-          <p className="mx-auto max-w-2xl text-[10px] font-black uppercase tracking-[0.35em] text-gray-500 sm:text-[11px] sm:tracking-[0.4em]">
+    <section className="home-section overflow-x-hidden">
+      <div className="home-section-inner">
+        <div className="home-section-header">
+          <h2 className="home-section-title">Shop by Category</h2>
+          <p className="text-[10px] font-black uppercase tracking-[0.35em] text-gray-500 sm:text-[11px] sm:tracking-[0.4em]">
             Curated collections for the modern vessel.
           </p>
         </div>

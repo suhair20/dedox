@@ -41,12 +41,10 @@ export default function FeaturedProducts() {
   };
 
   return (
-    <section className="overflow-x-hidden bg-[#ffffff] py-10 sm:py-16 md:py-24" id="featured">
-      <div className="container mx-auto mb-6 max-w-7xl px-4 text-center sm:mb-12 sm:px-6 md:mb-16 lg:px-8">
-        <h2 className="mb-3 font-serif-luxury text-[1.75rem] text-gray-900 sm:mb-4 sm:text-4xl md:text-5xl">
-          The Highlight
-        </h2>
-        <p className="mb-5 text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 sm:mb-8 sm:text-[11px]">
+    <section className="home-section overflow-x-hidden" id="featured">
+      <div className="home-section-header home-section-inner">
+        <h2 className="home-section-title">The Highlight</h2>
+        <p className="mb-5 text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 sm:mb-6 sm:text-[11px]">
           Curated pieces from the void
         </p>
         <Link href="/shop" className="group relative inline-block overflow-hidden pb-1 text-[10px] font-black uppercase tracking-widest text-[#7a0c0c]">

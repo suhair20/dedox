@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useLocation, SUPPORTED_CURRENCIES } from '@/context/LocationContext';
+import { useLocation, SUPPORTED_CURRENCIES, CURRENCY_DISPLAY_ORDER } from '@/context/LocationContext';
 import { ChevronDown} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -42,10 +42,14 @@ export default function CurrencySwitcher() {
             className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-100 shadow-2xl rounded-2xl overflow-hidden z-[200]"
           >
             <div className="p-3 border-b border-gray-50 bg-gray-50/50">
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#7a0c0c]">Select Region</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#7a0c0c]">View prices in</span>
+              <p className="mt-1 text-[10px] leading-snug text-gray-500">Checkout is always in AED</p>
             </div>
             <div className="p-1">
-              {Object.values(SUPPORTED_CURRENCIES).map((item) => (
+              {CURRENCY_DISPLAY_ORDER.map((code) => {
+                const item = SUPPORTED_CURRENCIES[code];
+                if (!item) return null;
+                return (
                 <button
                   key={item.code}
                   onClick={() => {
@@ -66,7 +70,8 @@ export default function CurrencySwitcher() {
                     {item.code}
                   </span>
                 </button>
-              ))}
+              );
+              })}
             </div>
           </motion.div>
         )}
