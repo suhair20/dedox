@@ -1,36 +1,148 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Truck, ShieldCheck, CreditCard } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { CreditCard, ShieldCheck, Truck } from "lucide-react";
+
+const features = [
+  {
+    icon: Truck,
+    n: "01",
+    title: "Fast Delivery",
+    desc: "Swift dispatch from the UAE. Express in 1–2 days.",
+  },
+  {
+    icon: ShieldCheck,
+    n: "02",
+    title: "100% Original",
+    desc: "Authentic bottles only. Sealed and guaranteed.",
+  },
+  {
+    icon: CreditCard,
+    n: "03",
+    title: "Secure Payment",
+    desc: "Encrypted checkout. Your order stays protected.",
+  },
+];
+
+function FeatureCard({
+  feature,
+  index,
+}: {
+  feature: (typeof features)[number];
+  index: number;
+}) {
+  return (
+    <article className="group relative h-full overflow-hidden rounded-[1.75rem] border border-[#7a0c0c]/10 bg-gradient-to-b from-[#fffaf8] to-white px-6 py-8 shadow-[0_18px_50px_rgba(122,12,12,0.08)] sm:px-7 sm:py-10">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#7a0c0c]/40 to-transparent" />
+      <div className="pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full bg-[#7a0c0c]/[0.06] blur-2xl" />
+
+      <div className="flex items-start justify-between">
+        <motion.div
+          animate={{ y: [0, -4, 0] }}
+          transition={{ duration: 4 + index, repeat: Infinity, ease: "easeInOut" }}
+          className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#7a0c0c]/10 bg-white shadow-[0_10px_24px_rgba(122,12,12,0.1)]"
+        >
+          <feature.icon className="h-6 w-6 text-[#7a0c0c]" />
+        </motion.div>
+        <span className="font-serif-luxury text-2xl text-[#7a0c0c]/20">{feature.n}</span>
+      </div>
+
+      <h3 className="mt-5 font-serif-luxury text-2xl text-gray-900">{feature.title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-gray-500">{feature.desc}</p>
+      <div className="mt-5 h-px w-10 bg-[#7a0c0c]/20" />
+    </article>
+  );
+}
 
 export default function Features() {
-  const features = [
-    { icon: Truck, title: "Fast Delivery", desc: "Get your favorite scents delivered swiftly." },
-    { icon: ShieldCheck, title: "100% Original", desc: "Guaranteed authentic premium fragrances." },
-    { icon: CreditCard, title: "Secure Payment", desc: "Safe and encrypted checkout process." }
-  ];
+  const [active, setActive] = useState(0);
+  const [direction, setDirection] = useState(1);
+
+  const goTo = (next: number) => {
+    setDirection(next > active || (active === features.length - 1 && next === 0) ? 1 : -1);
+    setActive((next + features.length) % features.length);
+  };
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setDirection(1);
+      setActive((current) => (current + 1) % features.length);
+    }, 3200);
+    return () => window.clearInterval(timer);
+  }, []);
 
   return (
-    <section className="home-section overflow-x-hidden border-t border-gray-100">
+    <section className="home-section overflow-hidden">
       <div className="home-section-inner">
-        {/* Mobile: horizontal drag scroll. Desktop: 3-column grid */}
-        <div className="-mx-4 flex gap-6 overflow-x-auto px-4 pb-1 scrollbar-hide divide-y-0 divide-gray-100 sm:gap-10 md:mx-0 md:grid md:grid-cols-3 md:gap-12 md:overflow-visible md:px-0 md:pb-0 md:divide-x">
-          {features.map((f, idx) => (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="home-section-header"
+        >
+          <p className="mb-3 text-[10px] font-black uppercase tracking-[0.35em] text-[#7a0c0c]/70">
+            The Dedox Promise
+          </p>
+          <h2 className="home-section-title">Crafted to be trusted</h2>
+        </motion.div>
+
+        <div className="hidden gap-5 md:grid md:grid-cols-3">
+          {features.map((feature, idx) => (
             <motion.div
-              key={f.title}
-              initial={{ opacity: 0, y: 20 }}
+              key={feature.title}
+              initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: idx * 0.2, duration: 0.6 }}
-              className="flex w-[min(72vw,18rem)] shrink-0 flex-col items-center px-4 text-center sm:w-[50vw] sm:px-6 md:w-auto md:px-8"
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.12, duration: 0.55 }}
+              whileHover={{ y: -8 }}
             >
-              <div className="mb-5 rounded-full border border-white bg-[#FAF9F6] p-4 transition-transform duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.05)] sm:mb-6 sm:p-6">
-                <f.icon className="h-8 w-8 text-[#7a0c0c] opacity-90 sm:h-10 sm:w-10" />
-              </div>
-              <h3 className="mb-2 text-lg font-bold tracking-tight text-gray-900 sm:mb-3 sm:text-xl">{f.title}</h3>
-              <p className="max-w-[280px] text-xs font-medium leading-relaxed text-gray-500 sm:text-sm">{f.desc}</p>
+              <FeatureCard feature={feature} index={idx} />
             </motion.div>
           ))}
+        </div>
+
+        <div className="md:hidden">
+          <div
+            className="relative min-h-[15.5rem] overflow-hidden"
+            onTouchStart={(e) => {
+              const startX = e.changedTouches[0].clientX;
+              const handleEnd = (endEvent: TouchEvent) => {
+                const walk = endEvent.changedTouches[0].clientX - startX;
+                if (walk < -40) goTo(active + 1);
+                if (walk > 40) goTo(active - 1);
+                window.removeEventListener("touchend", handleEnd);
+              };
+              window.addEventListener("touchend", handleEnd, { once: true });
+            }}
+          >
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={features[active].title}
+                custom={direction}
+                initial={{ opacity: 0, x: direction > 0 ? 72 : -72 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: direction > 0 ? -72 : 72 }}
+                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <FeatureCard feature={features[active]} index={active} />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          <div className="mt-5 flex items-center justify-center gap-2">
+            {features.map((feature, idx) => (
+              <button
+                key={feature.title}
+                type="button"
+                aria-label={feature.title}
+                onClick={() => goTo(idx)}
+                className={`h-1.5 rounded-full transition-all ${
+                  idx === active ? "w-7 bg-[#7a0c0c]" : "w-2 bg-[#7a0c0c]/25"
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

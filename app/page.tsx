@@ -5,6 +5,7 @@ import Categories from "@/components/Categories";
 import BestSelling from "@/components/BestSelling";
 import ShopByBrand from "@/components/ShopByBrand";
 import ShopByPrice from "@/components/ShopByPrice";
+import LoyaltyTeaser from "@/components/LoyaltyTeaser";
 import Features from "@/components/Features";
 import FloatingButtons from "@/components/FloatingButtons";
 
@@ -15,6 +16,7 @@ export default function Home() {
       <NotesCarousel />
       <ShopByPrice />
       <FeaturedProducts />
+      <LoyaltyTeaser />
       <ShopByBrand />
       <BestSelling />
       <Categories />

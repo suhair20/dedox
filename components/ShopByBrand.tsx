@@ -28,6 +28,11 @@ export default function ShopByBrand() {
           <p className="text-[10px] font-black uppercase tracking-[0.35em] text-gray-500 sm:text-[11px] sm:tracking-[0.4em]">
             The Curated Selection
           </p>
+          <p className="home-section-subtitle mt-4">
+            Houses we stand behind — the names collectors ask for, chosen for
+            character, quality, and the way they wear in this climate. Tap a
+            house to see every bottle we hold from that house.
+          </p>
         </div>
 
         <div className="flex flex-col items-center justify-center gap-8 sm:gap-10 lg:flex-row lg:gap-12">
@@ -69,8 +74,8 @@ export default function ShopByBrand() {
             >
               Explore All Brands
             </Link>
-            <p className="mt-3 text-[9px] uppercase tracking-widest text-gray-400 sm:mt-4">
-              The Full Archive
+            <p className="mt-3 max-w-[16rem] text-center text-[11px] leading-relaxed text-gray-400 sm:mt-4">
+              The full archive — every house, every bottle, in one shop.
             </p>
           </div>
         </div>

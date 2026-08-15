@@ -10,30 +10,34 @@ export default function Footer() {
           <div className="col-span-2 space-y-5 md:col-span-1 md:space-y-6">
             <Logo className="-ml-4 !items-start scale-90" />
             <p className="max-w-xs text-sm leading-relaxed text-gray-300">
-              Discover the essence of luxury with our exclusive fragrance collection crafted for elegance and style.
+              Dedox is a UAE house of original luxury fragrance. We curate
+              bottles for presence, longevity, and the climate we live in —
+              so every order arrives authentic, sealed, and ready to wear.
             </p>
           </div>
           <div className="min-w-0">
             <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-white sm:mb-4 sm:text-sm">Shop</h4>
             <ul className="space-y-2.5 sm:space-y-3">
-              <li><Link href="#" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Men&apos;s Fragrances</Link></li>
-              <li><Link href="#" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Women&apos;s Fragrances</Link></li>
-              <li><Link href="#" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Unisex Collection</Link></li>
-              <li><Link href="#" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Gift Sets</Link></li>
+              <li><Link href="/shop" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Shop all</Link></li>
+              <li><Link href="/category/men" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Men&apos;s Fragrances</Link></li>
+              <li><Link href="/category/women" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Women&apos;s Fragrances</Link></li>
+              <li><Link href="/category/unisex" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Unisex Collection</Link></li>
             </ul>
           </div>
           <div className="min-w-0">
             <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-white sm:mb-4 sm:text-sm">Company</h4>
             <ul className="space-y-2.5 sm:space-y-3">
-              <li><Link href="#" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">About Us</Link></li>
-              <li><Link href="#" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Contact</Link></li>
-              <li><Link href="#" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Privacy Policy</Link></li>
-              <li><Link href="#" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Terms of Service</Link></li>
+              <li><Link href="/about" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Signature</Link></li>
+              <li><Link href="/contact" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Contact</Link></li>
+              <li><Link href="/account/rewards" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Rewards</Link></li>
             </ul>
           </div>
           <div className="col-span-2 min-w-0 md:col-span-1">
             <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-white sm:mb-4 sm:text-sm">Follow</h4>
-            <p className="mb-4 max-w-sm text-sm text-gray-200">Stay updated with our latest collections and offers.</p>
+            <p className="mb-4 max-w-sm text-sm leading-relaxed text-gray-200">
+              Follow for new arrivals, private edits, and Rewards drops — the
+              next bottle often appears here first.
+            </p>
             <div className="flex space-x-3 sm:space-x-4">
               <Link href="#" className="text-gray-200 hover:text-[#fca5a5] transition-colors p-2 -ml-2 rounded-full hover:bg-white/10">
                 <Globe className="h-5 w-5" />

@@ -82,7 +82,10 @@ export default function NotesCarousel() {
             Explore Our Fragrances
           </h2>
           <p className="home-section-subtitle mb-6 sm:mb-8">
-            Discover scents by note, accord, occasion, and concentration — all managed from your catalog.
+            Begin with what you love to smell. Browse by note, accord, occasion,
+            or concentration — oud or rose, woody or fresh, office or evening,
+            parfum or eau de parfum — then open the shop already filtered to
+            that world.
           </p>
 
           <div className="flex w-full max-w-full snap-x overflow-x-auto rounded-full bg-gray-100 p-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:w-auto sm:max-w-full sm:p-1.5 [&::-webkit-scrollbar]:hidden">

@@ -29,7 +29,12 @@ export default function Categories() {
         <div className="home-section-header">
           <h2 className="home-section-title">Shop by Category</h2>
           <p className="text-[10px] font-black uppercase tracking-[0.35em] text-gray-500 sm:text-[11px] sm:tracking-[0.4em]">
-            Curated collections for the modern vessel.
+            Curated collections for the modern vessel
+          </p>
+          <p className="home-section-subtitle mt-4">
+            Start with who will wear it. Men, women, and unisex — each
+            collection is edited so you can move quickly from a first impression
+            to a bottle you will actually finish.
           </p>
         </div>
 

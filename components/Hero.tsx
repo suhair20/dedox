@@ -1,18 +1,33 @@
 import Image from "next/image";
 
-const HERO_BANNER = "/images/herosection/websitee banner.jpg.jpeg";
+/** Desktop wide banner — export at 2400 × 800 px (3:1). */
+const HERO_DESKTOP = "/images/herosection/websitee banner.jpg.jpeg";
+
+/** Phone banner — add public/images/herosection/banner-mobile.jpg at 1080 × 1350 px. */
 
 export default function Hero() {
   return (
-    <section className="w-full">
+    <section className="w-full overflow-hidden bg-white">
+      <div className="relative aspect-[4/5] w-full max-h-[70vh] md:hidden">
+        <Image
+          src={HERO_DESKTOP}
+          alt="Dedox Perfume banner"
+          fill
+          priority
+          unoptimized
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+      </div>
+
       <Image
-        src={HERO_BANNER}
+        src={HERO_DESKTOP}
         alt="Dedox Perfume banner"
         width={2400}
         height={800}
         priority
         sizes="100vw"
-        className="block h-auto w-full"
+        className="hidden h-auto w-full md:block"
       />
     </section>
   );

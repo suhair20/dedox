@@ -39,7 +39,9 @@ export default function ShopByPrice() {
             Shop by Price
           </h2>
           <p className="home-section-subtitle">
-            Find the perfect fragrance for your budget
+            Set the most you wish to spend and we will show bottles that fit —
+            from an everyday signature to a rare niche piece. All prices are in
+            AED. Slide to your range, then explore the collection that matches it.
           </p>
         </div>
 

@@ -29,7 +29,10 @@ export default function BestSelling() {
         <div className="home-section-header">
           <h2 className="home-section-title">Best Selling</h2>
           <p className="home-section-subtitle">
-            The perfumes that define contemporary elegance: powerful, complex, and eternally captivating.
+            The bottles our clients return to — powerful, complex, and made to
+            last on skin. These are the scents that sell first because they
+            wear beautifully from morning through night. Filter by budget to
+            find the one that belongs to you.
           </p>
         </div>
 
