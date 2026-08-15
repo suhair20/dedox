@@ -19,7 +19,7 @@ export default function FloatingButtons() {
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 1, type: "spring", stiffness: 200, damping: 20 }}
-        className="fixed bottom-6 left-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:bg-[#20bd5a] hover:scale-110 transition-all duration-300 flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-[#25D366]/30"
+        className="fixed bottom-24 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-2xl transition-all duration-300 hover:scale-110 hover:bg-[#20bd5a] focus:outline-none focus:ring-4 focus:ring-[#25D366]/30 md:bottom-6 md:left-6 md:h-auto md:w-auto md:p-4"
         aria-label="WhatsApp"
       >
         <MessageCircle className="h-7 w-7" />
@@ -29,7 +29,7 @@ export default function FloatingButtons() {
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 1.2, type: "spring", stiffness: 200, damping: 20 }}
-        className="fixed bottom-6 right-6 z-50 btn-primary p-4 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-[#7a0c0c]/30"
+        className="fixed bottom-24 right-4 z-50 hidden h-12 w-12 items-center justify-center rounded-full shadow-2xl transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-[#7a0c0c]/30 btn-primary md:bottom-6 md:right-6 md:flex md:h-auto md:w-auto md:p-4"
         aria-label="Wishlist"
       >
         <Heart className="h-7 w-7" />

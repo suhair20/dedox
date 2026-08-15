@@ -50,23 +50,23 @@ svg {
   }
 
   .home-section {
-    @apply bg-[#ffffff] py-12 sm:py-16 lg:py-20;
+    @apply bg-[#ffffff] py-8 sm:py-16 lg:py-20;
   }
 
   .home-section-inner {
-    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-7xl px-[clamp(1.15rem,5.2vw,2rem)] sm:px-6 lg:px-8;
   }
 
   .home-section-header {
-    @apply mb-8 text-center sm:mb-10;
+    @apply mx-auto mb-7 w-full max-w-3xl text-center sm:mb-10;
   }
 
   .home-section-title {
-    @apply mb-3 font-serif-luxury text-[1.75rem] leading-tight text-gray-900 sm:mb-4 sm:text-4xl lg:text-5xl;
+    @apply mb-3 font-serif-luxury text-[clamp(1.4rem,6.4vw,1.85rem)] leading-tight text-gray-900 sm:mb-4 sm:text-4xl lg:text-5xl;
   }
 
   .home-section-subtitle {
-    @apply mx-auto max-w-2xl text-sm leading-relaxed text-gray-500 sm:text-base;
+    @apply mx-auto max-w-[min(36rem,100%)] px-0.5 text-[clamp(0.8rem,3.5vw,1rem)] leading-relaxed text-gray-500 sm:text-base;
   }
   
   .glass-card {

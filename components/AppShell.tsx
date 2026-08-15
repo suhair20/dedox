@@ -3,6 +3,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import RewardsScrollModal from "@/components/RewardsScrollModal";
+import MobileDock from "@/components/MobileDock";
 import { usePathname } from "next/navigation";
 import { CartProvider } from "@/context/CartContext";
 import { LocationProvider } from "@/context/LocationContext";
@@ -22,9 +23,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <AuthProvider>
           <CartProvider>
             {!hideNavbar && <Navbar />}
-            <main className={`min-w-0 flex-grow overflow-x-hidden bg-white ${hideNavbar ? "" : "pt-16 sm:pt-[4.5rem] xl:pt-20"}`}>{children}</main>
+            <main className={`min-w-0 flex-grow overflow-x-hidden bg-white ${hideNavbar ? "" : "pt-16 pb-24 sm:pt-[4.5rem] md:pb-0 xl:pt-20"}`}>{children}</main>
             {!hideFooter && <Footer />}
             {!hideNavbar && <RewardsScrollModal />}
+            {!hideNavbar && <MobileDock />}
           </CartProvider>
         </AuthProvider>
       </ProductsProvider>

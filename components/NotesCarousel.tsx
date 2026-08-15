@@ -78,9 +78,7 @@ export default function NotesCarousel() {
     <section className="home-section w-full overflow-hidden">
       <div className="home-section-inner">
         <div className="home-section-header mx-auto flex w-full max-w-3xl flex-col items-center justify-center">
-          <h2 className="home-section-title">
-            Explore Our Fragrances
-          </h2>
+          <h2 className="home-section-title">Explore Our Fragrances</h2>
           <p className="home-section-subtitle mb-6 sm:mb-8">
             Begin with what you love to smell. Browse by note, accord, occasion,
             or concentration — oud or rose, woody or fresh, office or evening,
@@ -149,7 +147,7 @@ export default function NotesCarousel() {
               !canScrollNext ? "pointer-events-none opacity-0" : "opacity-100 hover:scale-105"
             }`}
           >
-            <ArrowRight className="h-4 w-4 text-[#0b5c14] sm:h-5 sm:w-5" />
+            <ArrowRight className="h-4 w-4 text-[#7a0c0c] sm:h-5 sm:w-5" />
           </button>
         </div>
 
