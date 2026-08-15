@@ -13,13 +13,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isCheckout = pathname === "/checkout";
   const isLogin = pathname === "/login";
-  const isComingSoon = pathname === "/coming-soon";
-  const hideFooter = isCheckout || isLogin || isComingSoon;
-  const hideNavbar = isCheckout || isLogin || isComingSoon;
-
-  if (isComingSoon) {
-    return <>{children}</>;
-  }
+  const hideFooter = isCheckout || isLogin;
+  const hideNavbar = isCheckout || isLogin;
 
   return (
     <LocationProvider>
