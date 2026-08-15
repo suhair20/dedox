@@ -3,14 +3,15 @@ import Image from "next/image";
 /** Desktop wide banner — export at 2400 × 800 px (3:1). */
 const HERO_DESKTOP = "/images/herosection/websitee banner.jpg.jpeg";
 
-/** Phone banner — add public/images/herosection/banner-mobile.jpg at 1080 × 1350 px. */
+/** Phone banner — public/website banner(phone)1.jpg.jpeg */
+const HERO_MOBILE = "/website banner(phone)1.jpg.jpeg";
 
 export default function Hero() {
   return (
     <section className="w-full overflow-hidden bg-white">
       <div className="relative aspect-[4/5] w-full max-h-[70vh] md:hidden">
         <Image
-          src={HERO_DESKTOP}
+          src={HERO_MOBILE}
           alt="Dedox Perfume banner"
           fill
           priority
