@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Star } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLocation } from "@/context/LocationContext";
@@ -17,6 +17,8 @@ interface ProductCardProps {
     category: string;
     brand: string;
     inStock: boolean;
+    rating?: number;
+    reviewCount?: number;
   };
 }
 
@@ -102,6 +104,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           <h3 className="mb-1.5 line-clamp-2 text-[11px] font-bold leading-snug text-white sm:mb-2 sm:text-[13px]">
             {product.name}
           </h3>
+          {product.reviewCount ? (
+            <p className="mb-1.5 flex items-center gap-1 text-[10px] font-semibold text-amber-200 sm:text-[11px]">
+              <Star className="h-3 w-3 fill-amber-200 text-amber-200" />
+              {Number(product.rating || 0).toFixed(1)} ({product.reviewCount})
+            </p>
+          ) : null}
 
           <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2">
             <span className="text-[13px] font-bold text-white sm:text-sm">

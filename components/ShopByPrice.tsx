@@ -3,32 +3,25 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import PriceRangeSlider, {
+  PRICE_SLIDER_MAX,
+  formatAed,
+} from "@/components/PriceRangeSlider";
 
-const MIN_PRICE = 0;
-const MAX_PRICE = 2000;
-const STEP = 50;
 const DEFAULT_PRICE = 300;
-
-function formatAed(amount: number) {
-  return `AED ${amount.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  })}`;
-}
 
 export default function ShopByPrice() {
   const [price, setPrice] = useState(DEFAULT_PRICE);
 
-  const atMax = price >= MAX_PRICE;
-  const progress = ((price - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100;
+  const atMax = price >= PRICE_SLIDER_MAX;
 
   const displayValue = useMemo(() => {
-    if (atMax) return `${formatAed(MAX_PRICE)}+`;
+    if (atMax) return `${formatAed(PRICE_SLIDER_MAX)}+`;
     return formatAed(price);
   }, [atMax, price]);
 
   const exploreHref = atMax
-    ? `/shop?minPrice=${MAX_PRICE}`
+    ? `/shop?minPrice=${PRICE_SLIDER_MAX}`
     : `/shop?maxPrice=${price}`;
 
   return (
@@ -46,29 +39,7 @@ export default function ShopByPrice() {
         </div>
 
         <div className="mx-auto max-w-xl">
-          <div className="mb-3 flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 sm:text-xs">
-            <span>AED {MIN_PRICE}</span>
-            <span>AED {MAX_PRICE.toLocaleString()}+</span>
-          </div>
-
-          <div className="relative px-1 py-4">
-            <div className="pointer-events-none absolute left-1 right-1 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-gray-200">
-              <div
-                className="h-full rounded-full bg-[#7a0c0c]"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <input
-              type="range"
-              min={MIN_PRICE}
-              max={MAX_PRICE}
-              step={STEP}
-              value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
-              aria-label="Shop by price"
-              className="price-slider relative z-10 w-full cursor-pointer appearance-none bg-transparent"
-            />
-          </div>
+          <PriceRangeSlider value={price} onChange={setPrice} />
 
           <p className="mt-2 mb-8 font-serif-luxury text-2xl font-bold text-[#7a0c0c] sm:mb-8 sm:text-3xl">
             {displayValue}
@@ -83,7 +54,7 @@ export default function ShopByPrice() {
               {atMax ? "Fragrances from" : "Fragrances under"}
             </p>
             <p className="relative mt-1 font-serif-luxury text-2xl font-bold text-[#7a0c0c] sm:text-3xl">
-              {atMax ? `${formatAed(MAX_PRICE)}+` : formatAed(price)}
+              {atMax ? `${formatAed(PRICE_SLIDER_MAX)}+` : formatAed(price)}
             </p>
             <span className="relative mt-6 inline-flex items-center gap-2 rounded-full bg-[#7a0c0c] px-5 py-2.5 text-xs font-black uppercase tracking-[0.2em] text-white shadow-[0_8px_24px_rgba(122,12,12,0.35)] transition-transform group-hover:scale-105">
               Explore
@@ -92,42 +63,6 @@ export default function ShopByPrice() {
           </Link>
         </div>
       </div>
-
-      <style jsx>{`
-        .price-slider {
-          height: 1.5rem;
-        }
-        .price-slider::-webkit-slider-runnable-track {
-          height: 0.375rem;
-          background: transparent;
-        }
-        .price-slider::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 1.25rem;
-          height: 1.25rem;
-          margin-top: -0.4375rem;
-          border-radius: 9999px;
-          background: #7a0c0c;
-          border: 3px solid #ffffff;
-          box-shadow: 0 2px 10px rgba(122, 12, 12, 0.35);
-          cursor: pointer;
-        }
-        .price-slider::-moz-range-track {
-          height: 0.375rem;
-          background: transparent;
-          border: none;
-        }
-        .price-slider::-moz-range-thumb {
-          width: 1.25rem;
-          height: 1.25rem;
-          border-radius: 9999px;
-          background: #7a0c0c;
-          border: 3px solid #ffffff;
-          box-shadow: 0 2px 10px rgba(122, 12, 12, 0.35);
-          cursor: pointer;
-        }
-      `}</style>
     </section>
   );
 }

@@ -4,7 +4,9 @@ import "./globals.css";
 import AppShell from "@/components/AppShell";
 import {
   SITE_DESCRIPTION,
+  SITE_LOGO,
   SITE_NAME,
+  SITE_TITLE,
   SITE_URL,
 } from "@/lib/site";
 
@@ -24,10 +26,18 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: SITE_NAME,
+    default: SITE_TITLE,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
+  keywords: [
+    "dedoxperfume",
+    "luxury perfume UAE",
+    "buy perfume Dubai",
+    "men's fragrance",
+    "women's perfume",
+    "oud perfume",
+  ],
   robots: {
     index: true,
     follow: true,
@@ -37,8 +47,11 @@ export const metadata: Metadata = {
     },
   },
   applicationName: SITE_NAME,
+  alternates: {
+    canonical: SITE_URL,
+  },
   openGraph: {
-    title: SITE_NAME,
+    title: SITE_TITLE,
     siteName: SITE_NAME,
     description: SITE_DESCRIPTION,
     type: "website",
@@ -47,7 +60,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
   },
   icons: {
@@ -69,10 +82,25 @@ export const viewport: Viewport = {
 
 const websiteJsonLd = {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: SITE_NAME,
-  url: SITE_URL,
-  description: SITE_DESCRIPTION,
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: `${SITE_URL}${SITE_LOGO}`,
+    },
+    {
+      "@type": "WebSite",
+      name: SITE_NAME,
+      url: SITE_URL,
+      description: SITE_DESCRIPTION,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${SITE_URL}/shop?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
 };
 
 export default function RootLayout({
