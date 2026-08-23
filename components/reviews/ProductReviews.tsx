@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { BadgeCheck } from "lucide-react";
 import type { StoreReview } from "@/lib/reviews";
 import { ratingBreakdown } from "@/lib/reviews";
@@ -19,17 +19,18 @@ export default function ProductReviews({
   const [reviews, setReviews] = useState<StoreReview[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const load = () => {
+  const load = useCallback(() => {
+    setLoading(true);
     fetch(`/api/reviews?productId=${encodeURIComponent(productId)}&limit=50`)
       .then((res) => res.json())
       .then((data) => setReviews(Array.isArray(data.reviews) ? data.reviews : []))
       .catch(() => setReviews([]))
       .finally(() => setLoading(false));
-  };
+  }, [productId]);
 
   useEffect(() => {
     load();
-  }, [productId]);
+  }, [load]);
 
   const count = reviews.length || reviewCount || 0;
   const average =

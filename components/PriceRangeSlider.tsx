@@ -20,7 +20,6 @@ export default function PriceRangeSlider({
   onChange: (value: number) => void;
   label?: string;
 }) {
-  const atMax = value >= PRICE_SLIDER_MAX;
   const progress =
     ((value - PRICE_SLIDER_MIN) / (PRICE_SLIDER_MAX - PRICE_SLIDER_MIN)) * 100;
 
