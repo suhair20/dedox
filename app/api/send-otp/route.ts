@@ -8,6 +8,7 @@ import {
   type AuthUserRecord,
 } from "@/lib/auth";
 import { deliverOtpCode } from "@/lib/otp-delivery";
+import { consumeOtpSendLimit, getClientIp } from "@/lib/otpRateLimit";
 import otpGenerator from "otp-generator";
 
 export async function POST(request: Request) {
@@ -26,6 +27,23 @@ export async function POST(request: Request) {
       );
     }
 
+    const user: AuthUserRecord | null = await getUserByIdentifier(identifier);
+
+    if (user && user.lastOtpSent) {
+      const lastSent = new Date(user.lastOtpSent).getTime();
+      if (Date.now() - lastSent < 60000) {
+        return NextResponse.json(
+          { error: "Please wait 60 seconds before requesting a new OTP" },
+          { status: 429 }
+        );
+      }
+    }
+
+    const rate = consumeOtpSendLimit(getClientIp(request), identifier.value);
+    if (!rate.ok) {
+      return NextResponse.json({ error: rate.error }, { status: 429 });
+    }
+
     const otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       specialChars: false,
@@ -35,19 +53,6 @@ export async function POST(request: Request) {
 
     const hashedOtp = await hashOtp(otp);
     const expiry = getOtpExpiryDate();
-    const user: AuthUserRecord | null = await getUserByIdentifier(identifier);
-
-    if (user && user.lastOtpSent) {
-      const lastSent = new Date(user.lastOtpSent).getTime();
-      const now = Date.now();
-
-      if (now - lastSent < 60000) {
-        return NextResponse.json(
-          { error: "Please wait 60 seconds before requesting a new OTP" },
-          { status: 429 }
-        );
-      }
-    }
 
     await saveOtpForIdentifier(
       identifier,

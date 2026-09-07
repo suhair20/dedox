@@ -8,6 +8,7 @@ import {
   type AuthUserRecord,
 } from "@/lib/auth";
 import { deliverOtpCode } from "@/lib/otp-delivery";
+import { consumeOtpSendLimit, getClientIp } from "@/lib/otpRateLimit";
 import otpGenerator from "otp-generator";
 
 export async function POST(request: Request) {
@@ -38,14 +39,17 @@ export async function POST(request: Request) {
 
     if (user.lastOtpSent) {
       const lastSent = new Date(user.lastOtpSent).getTime();
-      const now = Date.now();
-
-      if (now - lastSent < 60000) {
+      if (Date.now() - lastSent < 60000) {
         return NextResponse.json(
           { error: "Please wait 60 seconds before resending" },
           { status: 429 }
         );
       }
+    }
+
+    const rate = consumeOtpSendLimit(getClientIp(request), identifier.value);
+    if (!rate.ok) {
+      return NextResponse.json({ error: rate.error }, { status: 429 });
     }
 
     const otp = otpGenerator.generate(6, {

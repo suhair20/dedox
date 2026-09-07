@@ -187,7 +187,7 @@ export default function CheckoutClient() {
 
   // Derived calculations
   const subtotal = getCartTotal();
-  const shippingCost = shippingMethod === 'express' ? 50 : 0; // AED 50 for express
+  const shippingCost = 0;
   const discount = Math.min(appliedCoupon?.discount || 0, subtotal);
   const grandTotal = subtotal - discount + shippingCost;
   const pointsEarnedThisOrder = pointsFor(grandTotal);
