@@ -58,7 +58,7 @@ export default function FeaturedProducts() {
           {slides.map((product, index) => (
             <div
               key={`${product.id}-${index}`}
-              className="min-w-0 shrink-0 grow-0 basis-[12.5rem] pr-3 sm:basis-[200px] sm:pr-4 md:basis-[240px] lg:basis-[260px]"
+              className="min-w-0 shrink-0 grow-0 basis-[9.75rem] pr-3 sm:basis-[200px] sm:pr-4 md:basis-[240px] lg:basis-[260px]"
             >
               <ProductCard product={product} swipeFriendly />
             </div>
