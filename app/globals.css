@@ -19,7 +19,7 @@
 
 html {
   background-color: #ffffff;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -27,9 +27,15 @@ body {
   background-color: #ffffff;
   background: #ffffff;
   font-family: 'Inter', sans-serif;
-  scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
   min-width: 0;
+  overscroll-behavior-y: auto;
+}
+
+@media (min-width: 768px) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 img,

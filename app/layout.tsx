@@ -109,7 +109,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-white overflow-x-hidden">
+    <html lang="en" className="bg-white overflow-x-clip">
       <head>
         <script
           type="application/ld+json"
@@ -117,7 +117,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${outfit.className} ${outfit.variable} ${montserrat.variable} ${cinzel.variable} ${inter.variable} flex min-h-screen flex-col overflow-x-hidden bg-[#ffffff] antialiased text-gray-900`}
+        className={`${outfit.className} ${outfit.variable} ${montserrat.variable} ${cinzel.variable} ${inter.variable} flex min-h-[100dvh] flex-col overflow-x-clip bg-[#ffffff] antialiased text-gray-900`}
       >
         <AppShell>{children}</AppShell>
       </body>

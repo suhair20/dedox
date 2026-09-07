@@ -115,7 +115,7 @@ export default function NotesCarousel() {
             <ArrowLeft className="h-4 w-4 text-gray-900 sm:h-5 sm:w-5" />
           </button>
 
-          <div className="-my-4 min-h-[260px] overflow-hidden py-4 sm:min-h-[380px] lg:min-h-[420px]" ref={emblaRef}>
+          <div className="-my-4 min-h-[260px] overflow-hidden py-4 [touch-action:pan-x_pan-y] sm:min-h-[380px] lg:min-h-[420px]" ref={emblaRef}>
             <div className="-ml-3 flex touch-pan-y sm:-ml-4">
               {activeItems.length === 0 ? (
                 <div className="flex-[0_0_100%] pl-3 sm:pl-4">

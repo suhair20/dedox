@@ -1,4 +1,4 @@
-import { getCurrentSession } from "@/lib/auth-server";
+import { getSessionFromToken } from "@/lib/auth-server";
 import { redirect } from "next/navigation";
 import LoginClient from "./LoginClient";
 import type { Metadata } from "next";
@@ -22,7 +22,7 @@ export default async function LoginPage({
   searchParams?: { redirect?: string };
 }) {
   const redirectTo = getSafeRedirectPath(searchParams?.redirect);
-  const session = await getCurrentSession();
+  const session = getSessionFromToken();
 
   if (session) {
     redirect(redirectTo);

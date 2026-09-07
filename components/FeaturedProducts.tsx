@@ -4,6 +4,7 @@ import { useProducts } from "@/context/ProductsContext";
 import ProductCard from "./ProductCard";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 
 export default function FeaturedProducts() {
   const { products } = useProducts();
@@ -20,6 +21,14 @@ export default function FeaturedProducts() {
   const copyCount = Math.max(3, featured.length > 0 && featured.length < 6 ? 4 : 3);
   const sets = Array.from({ length: copyCount }, (_, i) => i);
 
+  const [emblaRef] = useEmblaCarousel({
+    loop: featured.length > 1,
+    align: "start",
+    dragFree: true,
+    duration: 22,
+    skipSnaps: true,
+  });
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container || featured.length === 0) return;
@@ -31,7 +40,6 @@ export default function FeaturedProducts() {
       if (width <= 0) return 0;
 
       let delta = 0;
-      // Stay in the middle copy so both forward and reverse can wrap.
       while (container.scrollLeft < width) {
         container.scrollLeft += width;
         delta += width;
@@ -124,7 +132,7 @@ export default function FeaturedProducts() {
   const cardClass = "w-[9.75rem] shrink-0 sm:w-[200px] md:w-[240px] lg:w-[260px]";
 
   return (
-    <section className="home-section overflow-x-hidden" id="featured">
+    <section className="home-section" id="featured">
       <div className="home-section-header home-section-inner">
         <h2 className="home-section-title">The Highlight</h2>
         <p className="mb-3 text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 sm:text-[11px]">
@@ -141,10 +149,25 @@ export default function FeaturedProducts() {
         </Link>
       </div>
 
+      {/* Phone: native-feel Embla swipe */}
+      <div className="overflow-hidden md:hidden" ref={emblaRef}>
+        <div className="flex pl-4">
+          {featured.map((product) => (
+            <div
+              key={product.id}
+              className="min-w-0 shrink-0 grow-0 basis-[9.75rem] pr-3"
+            >
+              <ProductCard product={product} swipeFriendly />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop / tablet: auto-moving strip */}
       <div
         ref={containerRef}
-        className="cursor-grab select-none overflow-x-auto bg-[#ffffff] scrollbar-hide active:cursor-grabbing"
-        style={{ scrollBehavior: "auto", WebkitOverflowScrolling: "touch" }}
+        className="hidden cursor-grab select-none overflow-x-auto bg-[#ffffff] scrollbar-hide active:cursor-grabbing md:block"
+        style={{ scrollBehavior: "auto" }}
         onMouseEnter={() => {
           pausedRef.current = true;
         }}
@@ -152,12 +175,6 @@ export default function FeaturedProducts() {
           if (!draggingRef.current) pausedRef.current = false;
         }}
         onPointerDown={handlePointerDown}
-        onTouchStart={() => {
-          pausedRef.current = true;
-        }}
-        onTouchEnd={() => {
-          pausedRef.current = false;
-        }}
         onClickCapture={handleClickCapture}
       >
         <div className="flex w-max pl-4 sm:pl-6">

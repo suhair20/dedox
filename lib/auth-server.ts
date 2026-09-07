@@ -118,6 +118,20 @@ function sessionFromTokenPayload(payload: {
   };
 }
 
+export function getSessionFromToken(): { user: SessionUser } | null {
+  const token = cookies().get(AUTH_COOKIE_NAME)?.value;
+  if (!token) {
+    return null;
+  }
+
+  const payload = verifyToken(token);
+  if (!payload?.userId) {
+    return null;
+  }
+
+  return sessionFromTokenPayload(payload);
+}
+
 export async function getCurrentSession(): Promise<{ user: SessionUser } | null> {
   const token = cookies().get(AUTH_COOKIE_NAME)?.value;
   if (!token) {
@@ -129,22 +143,33 @@ export async function getCurrentSession(): Promise<{ user: SessionUser } | null>
     return null;
   }
 
+  const fromToken = sessionFromTokenPayload(payload);
+
   try {
-    const user = await getUserById(payload.userId);
-    if (!user || !user.isVerified) {
+    const user = await Promise.race([
+      getUserById(payload.userId),
+      new Promise<null>((resolve) => {
+        setTimeout(() => resolve(null), 400);
+      }),
+    ]);
+
+    if (!user) {
+      return fromToken;
+    }
+
+    if (!user.isVerified) {
       return null;
     }
 
     const sessionUser = buildSessionUser(user);
     if (!sessionUser) {
-      return null;
+      return fromToken;
     }
 
     return { user: sessionUser };
   } catch (error) {
-    // Sanity timeout/network failure — don't 500 the page; trust a valid JWT.
     console.error("GET_CURRENT_SESSION_SANITY_ERROR:", error);
-    return sessionFromTokenPayload(payload);
+    return fromToken;
   }
 }
 

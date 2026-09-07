@@ -21,7 +21,13 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function LoginClient({ redirectTo }: LoginClientProps) {
   const router = useRouter();
-  const { refreshSession } = useAuth();
+  const { refreshSession, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(redirectTo);
+    }
+  }, [isAuthenticated, redirectTo, router]);
 
   const [step, setStep] = useState<1 | 2>(1);
   const [email, setEmail] = useState("");
@@ -101,15 +107,9 @@ export default function LoginClient({ redirectTo }: LoginClientProps) {
         return;
       }
 
-      const session = await refreshSession();
-      if (!session) {
-        setError("Sign-in could not be completed. Please try again.");
-        return;
-      }
-
       setSuccess(data.message || "Welcome back.");
-      router.push(redirectTo);
-      router.refresh();
+      router.replace(redirectTo);
+      void refreshSession();
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {

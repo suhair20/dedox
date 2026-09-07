@@ -20,6 +20,7 @@ interface ProductCardProps {
     subtitle?: string;
     description?: string;
   };
+  swipeFriendly?: boolean;
 }
 
 function discountPercent(price: number, oldPrice?: number) {
@@ -33,7 +34,7 @@ function briefText(product: ProductCardProps["product"]) {
   return text;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, swipeFriendly = false }: ProductCardProps) {
   const [showCart, setShowCart] = useState(false);
   const { addToCart } = useCart();
   const { formatPrice } = useLocation();
@@ -51,12 +52,13 @@ export default function ProductCard({ product }: ProductCardProps) {
       className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:border-[#7a0c0c]/20 hover:shadow-[0_20px_50px_rgba(122,12,12,0.12)] sm:rounded-2xl"
       onMouseEnter={() => setShowCart(true)}
       onMouseLeave={() => setShowCart(false)}
-      onTouchStart={() => setShowCart(true)}
+      onTouchStart={swipeFriendly ? undefined : () => setShowCart(true)}
     >
       <Link href={`/product/${product.id}`} className="flex min-w-0 flex-grow flex-col">
         <div
           className="relative m-2 mb-0 aspect-[3/4] overflow-hidden rounded-lg bg-white sm:m-2.5 sm:mb-0 sm:aspect-[4/5] sm:rounded-xl"
           onClick={(e) => {
+            if (swipeFriendly) return;
             if (!showCart) {
               e.preventDefault();
               setShowCart(true);
