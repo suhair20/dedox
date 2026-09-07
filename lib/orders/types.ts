@@ -24,6 +24,8 @@ export type CustomerOrder = {
   subtotal?: number;
   shippingCost?: number;
   tax?: number;
+  discount?: number;
+  couponCode?: string;
   total: number;
   shippingMethod?: string;
   paymentMethod?: string;

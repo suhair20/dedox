@@ -20,11 +20,12 @@ import Logo from '@/components/Logo';
 import StripePaymentSection from '@/components/checkout/StripePaymentSection';
 import CheckoutRewardsSection from '@/components/checkout/CheckoutRewardsSection';
 import CheckoutPointsTeaser from '@/components/checkout/CheckoutPointsTeaser';
-import { isStripePaymentMethod } from '@/lib/checkout/paymentMethods';
+import { canUseCashOnDelivery, isStripePaymentMethod } from '@/lib/checkout/paymentMethods';
 import { useAuth } from '@/context/AuthContext';
 import ShippingAddressSection from '@/components/checkout/ShippingAddressSection';
 import type { ShippingAddressInput } from '@/lib/checkout/types';
 import { DEFAULT_SHIPPING_COUNTRY } from '@/lib/locale/countries';
+import { checkoutDeliveryCopy } from '@/lib/checkout/deliveryCopy';
 import type { RewardProduct } from '@/lib/loyalty/types';
 import { pointsFor } from '@/lib/loyalty/points';
 import {
@@ -58,7 +59,7 @@ export default function CheckoutClient() {
   const { formatPrice } = useLocation();
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
-  const [shippingMethod, setShippingMethod] = useState<'standard' | 'express'>('standard');
+  const shippingMethod = 'standard' as const;
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'paypal' | 'cod'>('card');
   const [shippingAddress, setShippingAddress] = useState<ShippingAddressInput>(emptyAddress);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,6 +81,13 @@ export default function CheckoutClient() {
   const [claimedGiftName, setClaimedGiftName] = useState<string | null>(null);
   const [showGiftCelebration, setShowGiftCelebration] = useState(false);
   const [earnedPointsPreview, setEarnedPointsPreview] = useState(0);
+  const [couponInput, setCouponInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discount: number;
+  } | null>(null);
+  const [couponError, setCouponError] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
 
   useEffect(() => {
     if (!cartReady || isSuccess) return;
@@ -158,20 +166,95 @@ export default function CheckoutClient() {
     }
   }, [redeemRewardProductId, rewardProducts, pointsBalance, rewardsLoaded]);
 
+  useEffect(() => {
+    if (
+      paymentMethod === "cod" &&
+      !canUseCashOnDelivery(shippingAddress.country, shippingAddress.city)
+    ) {
+      setPaymentMethod("card");
+    }
+  }, [paymentMethod, shippingAddress.country, shippingAddress.city]);
+
   const selectedReward = rewardProducts.find(
     (r) => r._id === redeemRewardProductId
   ) ?? null;
 
+  const deliveryCopy = checkoutDeliveryCopy(shippingAddress.country);
+  const codAvailable = canUseCashOnDelivery(
+    shippingAddress.country,
+    shippingAddress.city
+  );
+
   // Derived calculations
   const subtotal = getCartTotal();
   const shippingCost = shippingMethod === 'express' ? 50 : 0; // AED 50 for express
-  const tax = subtotal * 0.05; // 5% VAT
-  const grandTotal = subtotal + shippingCost + tax;
+  const discount = Math.min(appliedCoupon?.discount || 0, subtotal);
+  const grandTotal = subtotal - discount + shippingCost;
   const pointsEarnedThisOrder = pointsFor(grandTotal);
   const cheapestRewardCost =
     rewardProducts.length > 0
       ? Math.min(...rewardProducts.map((r) => r.pointsCost))
       : null;
+
+  useEffect(() => {
+    if (!appliedCoupon?.code || cart.length === 0) return;
+    let cancelled = false;
+    fetch('/api/coupons/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        code: appliedCoupon.code,
+        items: cart.map((item) => ({ id: item.id, quantity: item.quantity })),
+        shippingMethod,
+      }),
+    })
+      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+      .then(({ ok, data }) => {
+        if (cancelled) return;
+        if (!ok) {
+          setAppliedCoupon(null);
+          setCouponError(data.error || 'Coupon no longer applies to this cart.');
+          return;
+        }
+        setAppliedCoupon({ code: data.code, discount: data.discount });
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setAppliedCoupon(null);
+          setCouponError('Coupon no longer applies to this cart.');
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [appliedCoupon?.code, cart, shippingMethod]);
+
+  const applyCoupon = async () => {
+    setCouponLoading(true);
+    setCouponError('');
+    try {
+      const response = await fetch('/api/coupons/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: couponInput,
+          items: cart.map((item) => ({ id: item.id, quantity: item.quantity })),
+          shippingMethod,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setAppliedCoupon(null);
+        throw new Error(data.error || 'This coupon is not valid.');
+      }
+      setAppliedCoupon({ code: data.code, discount: data.discount });
+      setCouponInput(data.code);
+    } catch (error) {
+      setCouponError(error instanceof Error ? error.message : 'This coupon is not valid.');
+    } finally {
+      setCouponLoading(false);
+    }
+  };
 
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, STEPS.length - 1));
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 0));
@@ -189,6 +272,7 @@ export default function CheckoutClient() {
       saveAddress,
       addressLabel,
       ...(redeemRewardProductId ? { redeemRewardProductId } : {}),
+      ...(appliedCoupon?.code ? { couponCode: appliedCoupon.code } : {}),
       ...(stripePaymentIntentId ? { stripePaymentIntentId } : {}),
     }),
     [
@@ -199,6 +283,7 @@ export default function CheckoutClient() {
       saveAddress,
       addressLabel,
       redeemRewardProductId,
+      appliedCoupon,
     ]
   );
 
@@ -265,6 +350,7 @@ export default function CheckoutClient() {
             paymentMethod,
             shippingAddress,
             currency: 'AED',
+            ...(appliedCoupon?.code ? { couponCode: appliedCoupon.code } : {}),
           }),
         });
 
@@ -295,11 +381,16 @@ export default function CheckoutClient() {
     return () => {
       cancelled = true;
     };
-  }, [currentStep, paymentMethod, cart, shippingMethod, shippingAddress]);
+  }, [currentStep, paymentMethod, cart, shippingMethod, shippingAddress, appliedCoupon]);
 
   const handleCompleteOrder = async () => {
     if (cart.length === 0) {
       setCheckoutError('Your cart is empty.');
+      return;
+    }
+
+    if (paymentMethod === 'cod' && !codAvailable) {
+      setCheckoutError('Cash on Delivery is available only for Dubai addresses.');
       return;
     }
 
@@ -368,7 +459,7 @@ export default function CheckoutClient() {
             <div className="flex justify-between">
               <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Estimated Arrival</span>
               <span className="text-xs font-black text-[#7a0c0c]">
-                {shippingMethod === 'express' ? '1-2 Days' : '3-5 Days'}
+                {deliveryCopy.eta}
               </span>
             </div>
             {earnedPointsPreview > 0 ? (
@@ -511,55 +602,15 @@ export default function CheckoutClient() {
                   <section>
                     <div className="mb-5 flex items-center space-x-3 sm:mb-8 sm:space-x-4">
                       <div className="h-5 w-1 rounded-full bg-[#7a0c0c] sm:h-6 sm:w-1.5" />
-                      <h2 className="font-serif-luxury text-lg font-bold tracking-tight text-gray-900 sm:text-2xl">Delivery Method</h2>
+                      <h2 className="font-serif-luxury text-lg font-bold tracking-tight text-gray-900 sm:text-2xl">Delivery</h2>
                     </div>
-                    
-                    <div className="space-y-4">
-                      {/* Standard */}
-                      <button 
-                        onClick={() => setShippingMethod('standard')}
-                        className={`flex w-full items-center justify-between rounded-2xl border-2 p-4 transition-all sm:rounded-3xl sm:p-8 ${
-                          shippingMethod === 'standard' 
-                          ? 'border-[#7a0c0c] bg-white shadow-xl' 
-                          : 'border-gray-50 bg-white/50 hover:border-gray-200 opacity-60'
-                        }`}
-                      >
-                        <div className="flex items-center space-x-6 text-left">
-                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                            shippingMethod === 'standard' ? 'border-[#7a0c0c]' : 'border-gray-300'
-                          }`}>
-                            {shippingMethod === 'standard' && <div className="w-3 h-3 bg-[#7a0c0c] rounded-full" />}
-                          </div>
-                          <div>
-                            <p className="font-black uppercase tracking-widest text-[11px] text-gray-900 mb-1">Standard Delivery</p>
-                            <p className="text-[12px] text-gray-500 font-medium italic underline decoration-gray-200 underline-offset-4 decoration-2">Arrival in 3 - 5 Business Days</p>
-                          </div>
-                        </div>
-                        <span className="text-sm font-black text-green-600 uppercase tracking-widest">Free</span>
-                      </button>
-
-                      {/* Express */}
-                      <button 
-                        onClick={() => setShippingMethod('express')}
-                        className={`flex w-full items-center justify-between rounded-2xl border-2 p-4 transition-all sm:rounded-3xl sm:p-8 ${
-                          shippingMethod === 'express' 
-                          ? 'border-[#7a0c0c] bg-white shadow-xl' 
-                          : 'border-gray-50 bg-white/50 hover:border-gray-200 opacity-60'
-                        }`}
-                      >
-                        <div className="flex items-center space-x-6 text-left">
-                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                            shippingMethod === 'express' ? 'border-[#7a0c0c]' : 'border-gray-300'
-                          }`}>
-                            {shippingMethod === 'express' && <div className="w-3 h-3 bg-[#7a0c0c] rounded-full" />}
-                          </div>
-                          <div>
-                            <p className="font-black uppercase tracking-widest text-[11px] text-gray-900 mb-1">Express Courier</p>
-                            <p className="text-[12px] text-gray-500 font-medium italic underline decoration-gray-200 underline-offset-4 decoration-2">Priority Arrival in 1 - 2 Days</p>
-                          </div>
-                        </div>
-                        <span className="text-sm font-black text-[#7a0c0c]">{formatPrice(50)}</span>
-                      </button>
+                    <div className="rounded-2xl border border-gray-100 bg-white p-5 sm:rounded-3xl sm:p-8">
+                      <p className="text-[11px] font-black uppercase tracking-widest text-gray-900">
+                        {deliveryCopy.title}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-500">
+                        {deliveryCopy.body}
+                      </p>
                     </div>
                   </section>
 
@@ -647,18 +698,29 @@ export default function CheckoutClient() {
                         <span className="text-[10px] font-black uppercase tracking-widest text-gray-900">PayPal Express Checkout</span>
                       </button>
 
-                      {/* COD */}
-                      <button 
-                        onClick={() => setPaymentMethod('cod')}
-                        className={`flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-5 transition-all sm:gap-4 sm:rounded-3xl sm:p-8 ${
-                          paymentMethod === 'cod' 
-                          ? 'border-[#7a0c0c] bg-white shadow-xl' 
-                          : 'border-gray-50 bg-white/50 hover:border-gray-200 opacity-60'
-                        }`}
-                      >
-                        <Banknote className={`h-8 w-8 ${paymentMethod === 'cod' ? 'text-[#7a0c0c]' : 'text-gray-400'}`} />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-gray-900">Cash on Delivery</span>
-                      </button>
+                      {codAvailable ? (
+                        <button
+                          type="button"
+                          onClick={() => setPaymentMethod('cod')}
+                          className={`flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-5 transition-all sm:gap-4 sm:rounded-3xl sm:p-8 ${
+                            paymentMethod === 'cod'
+                            ? 'border-[#7a0c0c] bg-white shadow-xl'
+                            : 'border-gray-50 bg-white/50 hover:border-gray-200 opacity-60'
+                          }`}
+                        >
+                          <Banknote className={`h-8 w-8 ${paymentMethod === 'cod' ? 'text-[#7a0c0c]' : 'text-gray-400'}`} />
+                          <span className="text-[10px] font-black uppercase tracking-widest text-gray-900">Cash on Delivery</span>
+                        </button>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-5 text-center sm:rounded-3xl sm:p-8 md:col-span-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                            Cash on Delivery
+                          </p>
+                          <p className="mt-2 text-xs text-gray-500">
+                            Available only for Dubai addresses. Please pay by card, UPI, or PayPal.
+                          </p>
+                        </div>
+                      )}
                     </div>
 
                     <AnimatePresence>
@@ -782,13 +844,17 @@ export default function CheckoutClient() {
                     <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Subtotal</span>
                     <span className="text-sm font-bold text-gray-900">{formatPrice(subtotal)}</span>
                   </div>
+                  {discount > 0 ? (
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                        Coupon {appliedCoupon?.code}
+                      </span>
+                      <span className="text-sm font-bold text-green-600">-{formatPrice(discount)}</span>
+                    </div>
+                  ) : null}
                   <div className="flex justify-between items-center">
                     <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Est. Shipping</span>
                     <span className={`text-sm font-black uppercase tracking-widest ${shippingCost === 0 ? 'text-green-600' : 'text-gray-900'}`}>{shippingCost === 0 ? 'Complementary' : formatPrice(shippingCost)}</span>
-                  </div>
-                  <div className="flex justify-between items-center pb-6">
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">VAT / Taxes</span>
-                    <span className="text-sm font-bold text-gray-900">{formatPrice(tax)}</span>
                   </div>
                   <div className="flex justify-between items-center py-6 border-t-[3px] border-[#7a0c0c]/5">
                     <span className="text-base font-black text-gray-900 uppercase tracking-[0.2em] font-serif-luxury">Order Total</span>
@@ -806,13 +872,48 @@ export default function CheckoutClient() {
                 />
 
                 {/* Promo Code */}
-                <div className="mt-8 flex space-x-2">
-                  <input 
-                    type="text" 
-                    placeholder="Enter Coupon / Promo Code"
-                    className="form-input flex-grow"
-                  />
-                  <button className="btn-primary h-11 shrink-0 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest transition-all shadow-sm sm:h-12 sm:px-6">Apply</button>
+                <div className="mt-8">
+                  <div className="flex space-x-2">
+                    <input
+                      type="text"
+                      value={couponInput}
+                      onChange={(event) => {
+                        setCouponInput(event.target.value);
+                        setCouponError('');
+                      }}
+                      placeholder="Enter Coupon / Promo Code"
+                      className="form-input flex-grow uppercase"
+                    />
+                    {appliedCoupon ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAppliedCoupon(null);
+                          setCouponInput('');
+                          setCouponError('');
+                        }}
+                        className="h-11 shrink-0 rounded-xl border border-gray-200 px-4 text-[10px] font-black uppercase tracking-widest text-gray-500 sm:h-12 sm:px-6"
+                      >
+                        Remove
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => void applyCoupon()}
+                        disabled={couponLoading || !couponInput.trim()}
+                        className="btn-primary h-11 shrink-0 rounded-xl px-4 text-[10px] font-black uppercase tracking-widest transition-all shadow-sm disabled:opacity-60 sm:h-12 sm:px-6"
+                      >
+                        {couponLoading ? 'Checking…' : 'Apply'}
+                      </button>
+                    )}
+                  </div>
+                  {couponError ? (
+                    <p className="mt-2 text-xs font-medium text-red-600">{couponError}</p>
+                  ) : appliedCoupon ? (
+                    <p className="mt-2 text-xs font-medium text-green-600">
+                      {appliedCoupon.code} applied. You save {formatPrice(discount)}.
+                    </p>
+                  ) : null}
                 </div>
               </div>
 

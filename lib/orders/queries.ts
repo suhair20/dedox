@@ -6,6 +6,8 @@ export const CUSTOMER_ORDER_PROJECTION = `{
   subtotal,
   shippingCost,
   tax,
+  discount,
+  couponCode,
   total,
   shippingMethod,
   paymentMethod,

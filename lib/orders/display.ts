@@ -91,8 +91,8 @@ export const PAYMENT_LABELS: Record<string, string> = {
 };
 
 export const SHIPPING_LABELS: Record<string, string> = {
-  standard: "Standard (3–5 days)",
-  express: "Express (1–2 days)",
+  standard: "Complimentary delivery",
+  express: "Complimentary delivery",
 };
 
 export function isTerminalStatus(status: string) {

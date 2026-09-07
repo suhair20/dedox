@@ -1,5 +1,11 @@
 import type { PaymentMethod } from "@/lib/checkout/types";
 
+import { isDubaiDelivery } from "@/lib/checkout/deliveryCopy";
+
+export function canUseCashOnDelivery(country?: string, city?: string) {
+  return isDubaiDelivery(country, city);
+}
+
 export function isStripePaymentMethod(
   method: PaymentMethod
 ): method is "card" | "upi" | "paypal" {

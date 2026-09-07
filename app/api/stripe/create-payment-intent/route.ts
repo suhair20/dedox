@@ -4,6 +4,12 @@ import { calculateCheckoutTotals } from "@/lib/checkout/calculateTotals";
 import { validateCartItems } from "@/lib/checkout/validateCart";
 import type { CheckoutPayload } from "@/lib/checkout/types";
 import { generateOrderNumber } from "@/lib/checkout/createOrder";
+import {
+  assertCouponUsable,
+  discountFromCoupon,
+  fetchCouponByCode,
+  normalizeCouponCode,
+} from "@/lib/coupons";
 import { isStripePaymentMethod } from "@/lib/checkout/paymentMethods";
 import { STRIPE_CURRENCY, toStripeAmount } from "@/lib/stripe/config";
 import { getStripeServer } from "@/lib/stripe/server";
@@ -22,7 +28,7 @@ export async function POST(request: Request) {
 
     const body = (await request.json()) as Pick<
       CheckoutPayload,
-      "items" | "shippingMethod" | "paymentMethod" | "shippingAddress" | "currency"
+      "items" | "shippingMethod" | "paymentMethod" | "shippingAddress" | "currency" | "couponCode"
     >;
 
     if (!isStripePaymentMethod(body.paymentMethod)) {
@@ -47,7 +53,18 @@ export async function POST(request: Request) {
     }
 
     const items = await validateCartItems(body.items);
-    const totals = calculateCheckoutTotals(items, body.shippingMethod);
+    const code = normalizeCouponCode(body.couponCode || "");
+    let discount = 0;
+    if (code) {
+      const coupon = await fetchCouponByCode(code);
+      if (!coupon) {
+        throw new Error("This coupon is not valid.");
+      }
+      const base = calculateCheckoutTotals(items, body.shippingMethod);
+      assertCouponUsable(coupon, base.subtotal);
+      discount = discountFromCoupon(base.subtotal, coupon);
+    }
+    const totals = calculateCheckoutTotals(items, body.shippingMethod, discount);
     const orderNumber = generateOrderNumber();
     const stripe = getStripeServer();
 
@@ -60,6 +77,7 @@ export async function POST(request: Request) {
         orderNumber,
         customerEmail: body.shippingAddress.email,
         paymentMethod: body.paymentMethod,
+        couponCode: code || "",
       },
       description: `Dedox order ${orderNumber}`,
     });

@@ -33,6 +33,7 @@ export type CheckoutTotals = {
   shippingCost: number;
   tax: number;
   total: number;
+  discount: number;
 };
 
 export type CheckoutPayload = {
@@ -46,6 +47,7 @@ export type CheckoutPayload = {
   addressLabel?: string;
   /** Optional loyalty reward product to attach free with this paid order. */
   redeemRewardProductId?: string;
+  couponCode?: string;
 };
 
 export type CreateOrderResult = {

@@ -11,7 +11,7 @@ const PRICE_RANGES = [
   { label: "Under 1000", min: 0, max: 1000 },
   { label: "Under 1500", min: 0, max: 1500 },
   { label: "Under 2000", min: 0, max: 2000 },
-  { label: "Under 2500", min: 0, max: 2500 },
+  { label: "2500+", min: 2500, max: Infinity },
 ];
 
 export default function BestSelling() {

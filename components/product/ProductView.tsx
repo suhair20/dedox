@@ -112,7 +112,7 @@ export default function ProductView({ params }: { params: { id: string } }) {
                     fill
                     unoptimized
                     sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="origin-bottom scale-[1.15] object-contain object-bottom sm:scale-[1.12]"
+                    className="object-contain object-center p-6 sm:p-10"
                     priority
                   />
                 </motion.div>
@@ -147,7 +147,7 @@ export default function ProductView({ params }: { params: { id: string } }) {
                       fill
                       unoptimized
                       sizes="96px"
-                      className="origin-bottom scale-110 object-contain object-bottom"
+                      className="object-contain object-center p-2"
                     />
                   </button>
                 ))}

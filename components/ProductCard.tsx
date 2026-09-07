@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingCart, Star } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useLocation } from "@/context/LocationContext";
@@ -17,8 +17,8 @@ interface ProductCardProps {
     category: string;
     brand: string;
     inStock: boolean;
-    rating?: number;
-    reviewCount?: number;
+    subtitle?: string;
+    description?: string;
   };
 }
 
@@ -27,11 +27,18 @@ function discountPercent(price: number, oldPrice?: number) {
   return Math.round((1 - price / oldPrice) * 100);
 }
 
+function briefText(product: ProductCardProps["product"]) {
+  const text = (product.subtitle || product.description || "").trim();
+  if (!text) return null;
+  return text;
+}
+
 export default function ProductCard({ product }: ProductCardProps) {
   const [showCart, setShowCart] = useState(false);
   const { addToCart } = useCart();
   const { formatPrice } = useLocation();
   const off = discountPercent(product.price, product.oldPrice);
+  const brief = briefText(product);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -61,7 +68,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             alt={product.name}
             fill
             unoptimized
-            className="origin-bottom scale-[1.22] object-contain object-bottom transition-transform duration-1000 group-hover:scale-[1.28] sm:scale-[1.18] sm:group-hover:scale-[1.24]"
+            className="object-contain object-center p-3 transition-transform duration-1000 group-hover:scale-105 sm:p-4"
             sizes="(max-width: 640px) 10rem, (max-width: 1024px) 25vw, 15vw"
           />
 
@@ -90,38 +97,37 @@ export default function ProductCard({ product }: ProductCardProps) {
           </button>
         </div>
 
-        <div className="mt-auto flex min-w-0 flex-grow flex-col bg-[#7a0c0c] px-3 py-3 sm:px-3.5 sm:py-3.5">
+        <div className="mt-auto flex min-w-0 flex-grow flex-col bg-gray-100 px-3 py-3 sm:px-3.5 sm:py-3.5">
           <div className="mb-0.5 flex items-start justify-between gap-1 sm:mb-1 sm:gap-2">
-            <p className="truncate text-[8px] font-bold uppercase tracking-[0.14em] text-white/75 sm:text-[10px] sm:tracking-[0.2em]">
+            <p className="truncate text-[8px] font-bold uppercase tracking-[0.14em] text-gray-500 sm:text-[10px] sm:tracking-[0.2em]">
               {product.brand}
             </p>
             {!product.inStock && (
-              <span className="shrink-0 text-[7px] font-black uppercase tracking-widest text-white/90 sm:text-[9px]">
+              <span className="shrink-0 text-[7px] font-black uppercase tracking-widest text-[#7a0c0c] sm:text-[9px]">
                 Out of Stock
               </span>
             )}
           </div>
-          <h3 className="mb-1.5 line-clamp-2 text-[11px] font-bold leading-snug text-white sm:mb-2 sm:text-[13px]">
+          <h3 className="mb-1 line-clamp-2 text-[11px] font-bold leading-snug text-gray-900 sm:mb-1.5 sm:text-[13px]">
             {product.name}
           </h3>
-          {product.reviewCount ? (
-            <p className="mb-1.5 flex items-center gap-1 text-[10px] font-semibold text-amber-200 sm:text-[11px]">
-              <Star className="h-3 w-3 fill-amber-200 text-amber-200" />
-              {Number(product.rating || 0).toFixed(1)} ({product.reviewCount})
+          {brief ? (
+            <p className="mb-2 line-clamp-2 text-[10px] leading-snug text-gray-500 sm:text-[11px]">
+              {brief}
             </p>
           ) : null}
 
-          <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2">
-            <span className="text-[13px] font-bold text-white sm:text-sm">
+          <div className="mt-auto flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2">
+            <span className="text-[13px] font-bold text-[#7a0c0c] sm:text-sm">
               {formatPrice(product.price)}
             </span>
             {product.oldPrice && product.oldPrice > product.price && (
               <>
-                <span className="text-[10px] font-medium text-white/60 line-through sm:text-[11px]">
+                <span className="text-[10px] font-medium text-gray-400 line-through sm:text-[11px]">
                   {formatPrice(product.oldPrice)}
                 </span>
                 {off !== null && (
-                  <span className="text-[10px] font-semibold text-amber-200 sm:text-[11px]">
+                  <span className="text-[10px] font-semibold text-[#7a0c0c] sm:text-[11px]">
                     {off}% off
                   </span>
                 )}

@@ -202,14 +202,22 @@ export default function OrderDetailView({
                 <dt>Subtotal</dt>
                 <dd>{formatOrderMoney(order.subtotal, currency)}</dd>
               </div>
+              {order.discount ? (
+                <div className="flex justify-between text-green-600">
+                  <dt>Coupon {order.couponCode || ""}</dt>
+                  <dd>-{formatOrderMoney(order.discount, currency)}</dd>
+                </div>
+              ) : null}
               <div className="flex justify-between text-gray-500">
                 <dt>Shipping</dt>
                 <dd>{formatOrderMoney(order.shippingCost, currency)}</dd>
               </div>
-              <div className="flex justify-between text-gray-500">
-                <dt>Tax</dt>
-                <dd>{formatOrderMoney(order.tax, currency)}</dd>
-              </div>
+              {order.tax ? (
+                <div className="flex justify-between text-gray-500">
+                  <dt>Tax</dt>
+                  <dd>{formatOrderMoney(order.tax, currency)}</dd>
+                </div>
+              ) : null}
               <div className="flex justify-between border-t border-gray-100 pt-4 text-base font-bold text-gray-900">
                 <dt>Total</dt>
                 <dd className="text-[#7a0c0c]">{formatOrderMoney(order.total, currency)}</dd>

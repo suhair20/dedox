@@ -1,6 +1,25 @@
 import Link from "next/link";
-import { MessageCircle, Share2, Globe } from "lucide-react";
 import Logo from "./Logo";
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/site";
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+    </svg>
+  );
+}
 
 export default function Footer() {
   return (
@@ -38,17 +57,22 @@ export default function Footer() {
               Follow for new arrivals, private edits, and Rewards drops — the
               next bottle often appears here first.
             </p>
-            <div className="flex space-x-3 sm:space-x-4">
-              <Link href="#" className="text-gray-200 hover:text-[#fca5a5] transition-colors p-2 -ml-2 rounded-full hover:bg-white/10">
-                <Globe className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-gray-300 hover:text-[#fca5a5] transition-colors p-2 rounded-full hover:bg-white/10">
-                <Share2 className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-gray-300 hover:text-[#fca5a5] transition-colors p-2 rounded-full hover:bg-white/10">
-                <MessageCircle className="h-5 w-5" />
-              </Link>
-            </div>
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full max-w-xs items-center gap-3 rounded-full border border-white/20 bg-white px-4 py-3 text-[#7a0c0c] shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-transform hover:scale-[1.03] hover:bg-[#fff5f5]"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#7a0c0c] text-white">
+                <InstagramIcon className="h-5 w-5" />
+              </span>
+              <span className="min-w-0 text-left">
+                <span className="block text-[10px] font-black uppercase tracking-widest text-[#7a0c0c]/70">
+                  Instagram
+                </span>
+                <span className="block truncate text-sm font-bold">@{INSTAGRAM_HANDLE}</span>
+              </span>
+            </a>
           </div>
         </div>
         <div className="mt-12 border-t border-white/10 pt-8 flex flex-col items-center justify-between sm:flex-row gap-4">

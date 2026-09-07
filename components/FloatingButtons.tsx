@@ -3,6 +3,7 @@
 import { Heart, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import { WHATSAPP_URL } from "@/lib/site";
 
 export default function FloatingButtons() {
   const [mounted, setMounted] = useState(false);
@@ -15,7 +16,10 @@ export default function FloatingButtons() {
 
   return (
     <AnimatePresence>
-      <motion.button
+      <motion.a
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 1, type: "spring", stiffness: 200, damping: 20 }}
@@ -23,7 +27,7 @@ export default function FloatingButtons() {
         aria-label="WhatsApp"
       >
         <MessageCircle className="h-7 w-7" />
-      </motion.button>
+      </motion.a>
 
       <motion.button
         initial={{ scale: 0, opacity: 0 }}

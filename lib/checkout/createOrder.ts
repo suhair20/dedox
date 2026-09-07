@@ -5,6 +5,7 @@ import { calculateCheckoutTotals } from "@/lib/checkout/calculateTotals";
 import { validateCartItems } from "@/lib/checkout/validateCart";
 import { verifyStripePayment } from "@/lib/checkout/verifyStripePayment";
 import {
+  canUseCashOnDelivery,
   isStripePaymentMethod,
 } from "@/lib/checkout/paymentMethods";
 import { pointsFor } from "@/lib/loyalty/points";
@@ -20,6 +21,14 @@ import type {
   ShippingAddressInput,
   ValidatedCheckoutItem,
 } from "@/lib/checkout/types";
+import {
+  assertCouponUsable,
+  discountFromCoupon,
+  fetchCouponByCode,
+  incrementCouponUse,
+  normalizeCouponCode,
+  type CouponDoc,
+} from "@/lib/coupons";
 
 type SanityReference = {
   _type: "reference";
@@ -53,6 +62,8 @@ type OrderDocument = {
   shippingCost: number;
   tax: number;
   total: number;
+  discount?: number;
+  couponCode?: string;
   shippingMethod: CheckoutPayload["shippingMethod"];
   paymentMethod: CheckoutPayload["paymentMethod"];
   shippingAddress: ShippingAddressInput & { _type: "shippingAddress" };
@@ -84,9 +95,22 @@ export async function prepareCheckout(payload: CheckoutPayload) {
   assertShippingAddress(payload.shippingAddress);
 
   const items = await validateCartItems(payload.items);
-  const totals = calculateCheckoutTotals(items, payload.shippingMethod);
+  const code = normalizeCouponCode(payload.couponCode || "");
+  let coupon: CouponDoc | null = null;
+  let discount = 0;
 
-  return { items, totals };
+  if (code) {
+    coupon = await fetchCouponByCode(code);
+    if (!coupon) {
+      throw new Error("This coupon is not valid.");
+    }
+    const base = calculateCheckoutTotals(items, payload.shippingMethod);
+    assertCouponUsable(coupon, base.subtotal);
+    discount = discountFromCoupon(base.subtotal, coupon);
+  }
+
+  const totals = calculateCheckoutTotals(items, payload.shippingMethod, discount);
+  return { items, totals, coupon };
 }
 
 function toRewardLineItem(reward: RewardProduct): OrderLineItemDoc {
@@ -107,7 +131,18 @@ export async function createOrderFromCheckout(
   payload: CheckoutPayload,
   options?: { orderNumber?: string }
 ): Promise<CreateOrderResult> {
-  const { items, totals } = await prepareCheckout(payload);
+  const { items, totals, coupon } = await prepareCheckout(payload);
+
+  if (payload.paymentMethod === "cod") {
+    if (
+      !canUseCashOnDelivery(
+        payload.shippingAddress.country,
+        payload.shippingAddress.city
+      )
+    ) {
+      throw new Error("Cash on Delivery is available only for Dubai addresses.");
+    }
+  }
 
   if (isStripePaymentMethod(payload.paymentMethod)) {
     if (!payload.stripePaymentIntentId) {
@@ -162,6 +197,8 @@ export async function createOrderFromCheckout(
     shippingCost: totals.shippingCost,
     tax: totals.tax,
     total: totals.total,
+    discount: totals.discount,
+    ...(coupon ? { couponCode: coupon.code } : {}),
     shippingMethod: payload.shippingMethod,
     paymentMethod: payload.paymentMethod,
     shippingAddress: {
@@ -188,6 +225,14 @@ export async function createOrderFromCheckout(
   };
 
   const createdOrder = await writeClient.create(orderDoc);
+
+  if (coupon?._id) {
+    try {
+      await incrementCouponUse(coupon._id);
+    } catch (error) {
+      console.error("COUPON_USE_INCREMENT_ERROR:", error);
+    }
+  }
 
   if (session?.user?.id && reward) {
     await recordRedemption(session.user.id, {
