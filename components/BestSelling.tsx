@@ -4,25 +4,37 @@ import { useProducts } from "@/context/ProductsContext";
 import ProductCard from "./ProductCard";
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "@/context/LocationContext";
 
 const PRICE_RANGES = [
-  { label: "All", min: 0, max: Infinity },
-  { label: "To 500", min: 0, max: 500 },
-  { label: "Under 1000", min: 0, max: 1000 },
-  { label: "Under 1500", min: 0, max: 1500 },
-  { label: "Under 2000", min: 0, max: 2000 },
-  { label: "2500+", min: 2500, max: Infinity },
-];
+  { id: "all", min: 0, max: Infinity },
+  { id: "to-500", min: 0, max: 500 },
+  { id: "under-1000", min: 0, max: 1000 },
+  { id: "under-1500", min: 0, max: 1500 },
+  { id: "under-2000", min: 0, max: 2000 },
+  { id: "2500-plus", min: 2500, max: Infinity },
+] as const;
 
 export default function BestSelling() {
   const { products } = useProducts();
-  const [activeRange, setActiveRange] = useState(PRICE_RANGES[0]);
+  const { formatPrice } = useLocation();
+  const [activeId, setActiveId] = useState<(typeof PRICE_RANGES)[number]["id"]>("all");
+
+  const activeRange = PRICE_RANGES.find((range) => range.id === activeId) ?? PRICE_RANGES[0];
 
   const filteredItems = useMemo(() => {
     return products
       .filter((p) => p.price >= activeRange.min && p.price <= activeRange.max)
       .slice(0, 10);
   }, [activeRange, products]);
+
+  const rangeLabel = (range: (typeof PRICE_RANGES)[number]) => {
+    if (range.id === "all") return "All";
+    if (range.max === Infinity) return `${formatPrice(range.min)}+`;
+    if (range.min === 0 && range.id === "to-500") return `To ${formatPrice(range.max)}`;
+    return `Under ${formatPrice(range.max)}`;
+  };
+
   return (
     <section className="home-section" id="best-selling">
       <div className="home-section-inner">
@@ -36,20 +48,19 @@ export default function BestSelling() {
           </p>
         </div>
 
-        {/* Price Filter Chips */}
         <div className="mb-8 flex justify-center sm:mb-10">
           <div className="no-scrollbar flex w-full max-w-full items-center justify-start gap-2 overflow-x-auto px-1 pb-2 scrollbar-hide sm:justify-center sm:gap-3 sm:px-4 sm:pb-0">
             {PRICE_RANGES.map((range) => (
               <button
-                key={range.label}
-                onClick={() => setActiveRange(range)}
+                key={range.id}
+                onClick={() => setActiveId(range.id)}
                 className={`shrink-0 whitespace-nowrap rounded-full px-3.5 py-2 text-[10px] font-black uppercase tracking-widest transition-all duration-300 sm:px-6 sm:py-2.5 sm:text-xs ${
-                  activeRange.label === range.label
+                  activeId === range.id
                     ? "btn-primary scale-105 text-white shadow-xl"
                     : "border border-gray-100 bg-white text-gray-400 shadow-sm hover:text-gray-900"
                 }`}
               >
-                {range.label}
+                {rangeLabel(range)}
               </button>
             ))}
           </div>

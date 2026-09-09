@@ -3,20 +3,21 @@
 import { useProducts } from "@/context/ProductsContext";
 import ProductCard from "./ProductCard";
 import Link from "next/link";
+import { useMemo } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import AutoScroll from "embla-carousel-auto-scroll";
+import type { Product } from "@/lib/data";
 
-export default function FeaturedProducts() {
-  const { products } = useProducts();
-  const featured = products.filter((p) => p.isFeatured);
-  const slides =
-    featured.length > 0 && featured.length < 4
-      ? [...featured, ...featured, ...featured]
-      : featured;
+function HighlightTrack({ featured }: { featured: Product[] }) {
+  // Enough copies so the strip overflows on wide desktops and AutoScroll can run.
+  const slides = useMemo(() => {
+    const copies = Math.max(4, Math.ceil(16 / featured.length));
+    return Array.from({ length: copies }, () => featured).flat();
+  }, [featured]);
 
   const [emblaRef] = useEmblaCarousel(
     {
-      loop: slides.length > 1,
+      loop: true,
       align: "start",
       dragFree: true,
       duration: 20,
@@ -24,14 +25,34 @@ export default function FeaturedProducts() {
     [
       AutoScroll({
         playOnInit: true,
-        speed: 0.85,
-        startDelay: 900,
+        speed: 0.9,
+        startDelay: 400,
         stopOnInteraction: false,
         stopOnMouseEnter: true,
         stopOnFocusIn: false,
       }),
     ]
   );
+
+  return (
+    <div className="overflow-hidden" ref={emblaRef}>
+      <div className="flex cursor-grab pl-4 active:cursor-grabbing sm:pl-6 [touch-action:pan-x]">
+        {slides.map((product, index) => (
+          <div
+            key={`${product.id}-${index}`}
+            className="min-w-0 shrink-0 grow-0 basis-[9.75rem] pr-3 sm:basis-[200px] sm:pr-4 md:basis-[240px] lg:basis-[260px]"
+          >
+            <ProductCard product={product} swipeFriendly />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function FeaturedProducts() {
+  const { products } = useProducts();
+  const featured = products.filter((p) => p.isFeatured);
 
   if (featured.length === 0) return null;
 
@@ -53,18 +74,7 @@ export default function FeaturedProducts() {
         </Link>
       </div>
 
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex cursor-grab pl-4 active:cursor-grabbing sm:pl-6 [touch-action:pan-x]">
-          {slides.map((product, index) => (
-            <div
-              key={`${product.id}-${index}`}
-              className="min-w-0 shrink-0 grow-0 basis-[9.75rem] pr-3 sm:basis-[200px] sm:pr-4 md:basis-[240px] lg:basis-[260px]"
-            >
-              <ProductCard product={product} swipeFriendly />
-            </div>
-          ))}
-        </div>
-      </div>
+      <HighlightTrack featured={featured} />
     </section>
   );
 }

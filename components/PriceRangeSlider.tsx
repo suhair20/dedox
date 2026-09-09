@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocation } from "@/context/LocationContext";
+
 export const PRICE_SLIDER_MIN = 0;
 export const PRICE_SLIDER_MAX = 2000;
 export const PRICE_SLIDER_STEP = 50;
@@ -20,14 +22,15 @@ export default function PriceRangeSlider({
   onChange: (value: number) => void;
   label?: string;
 }) {
+  const { formatPrice } = useLocation();
   const progress =
     ((value - PRICE_SLIDER_MIN) / (PRICE_SLIDER_MAX - PRICE_SLIDER_MIN)) * 100;
 
   return (
     <div>
       <div className="mb-3 flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 sm:text-xs">
-        <span>AED {PRICE_SLIDER_MIN}</span>
-        <span>AED {PRICE_SLIDER_MAX.toLocaleString()}+</span>
+        <span>{formatPrice(PRICE_SLIDER_MIN)}</span>
+        <span>{formatPrice(PRICE_SLIDER_MAX)}+</span>
       </div>
 
       <div className="relative px-1 py-4">

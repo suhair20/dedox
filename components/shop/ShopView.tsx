@@ -12,8 +12,8 @@ import { FilterCheckboxGroup, FilterRadioGroup } from "@/components/shop/ShopFil
 import PriceRangeSlider, {
   PRICE_SLIDER_MAX,
   PRICE_SLIDER_MIN,
-  formatAed,
 } from "@/components/PriceRangeSlider";
+import { useLocation } from "@/context/LocationContext";
 import type { CatalogSnapshot } from "@/lib/catalogTypes";
 import {
   clearPendingReward,
@@ -60,15 +60,16 @@ function toggleValue(list: string[], value: string) {
   return list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
 }
 
-function priceLabel(filters: ShopFilters) {
-  if (filters.priceMode === "all") return "All prices";
-  if (filters.priceMode === "from") return `${formatAed(PRICE_SLIDER_MAX)}+`;
-  return formatAed(filters.priceValue);
-}
-
 function ShopPageContent() {
   const { products } = useProducts();
   const { cart } = useCart();
+  const { formatPrice } = useLocation();
+
+  const priceLabel = (filters: ShopFilters) => {
+    if (filters.priceMode === "all") return "All prices";
+    if (filters.priceMode === "from") return `${formatPrice(PRICE_SLIDER_MAX)}+`;
+    return formatPrice(filters.priceValue);
+  };
   const [catalog, setCatalog] = useState<CatalogSnapshot>(emptyCatalog);
   const [filters, setFilters] = useState<ShopFilters>(emptyFilters);
   const [sortBy, setSortBy] = useState<"featured" | "price-low" | "price-high" | "name">("featured");

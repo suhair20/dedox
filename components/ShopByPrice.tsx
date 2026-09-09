@@ -3,22 +3,21 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowRight } from "lucide-react";
-import PriceRangeSlider, {
-  PRICE_SLIDER_MAX,
-  formatAed,
-} from "@/components/PriceRangeSlider";
+import PriceRangeSlider, { PRICE_SLIDER_MAX } from "@/components/PriceRangeSlider";
+import { useLocation } from "@/context/LocationContext";
 
 const DEFAULT_PRICE = 300;
 
 export default function ShopByPrice() {
   const [price, setPrice] = useState(DEFAULT_PRICE);
+  const { formatPrice } = useLocation();
 
   const atMax = price >= PRICE_SLIDER_MAX;
 
   const displayValue = useMemo(() => {
-    if (atMax) return `${formatAed(PRICE_SLIDER_MAX)}+`;
-    return formatAed(price);
-  }, [atMax, price]);
+    if (atMax) return `${formatPrice(PRICE_SLIDER_MAX)}+`;
+    return formatPrice(price);
+  }, [atMax, price, formatPrice]);
 
   const exploreHref = atMax
     ? `/shop?minPrice=${PRICE_SLIDER_MAX}`
@@ -33,8 +32,9 @@ export default function ShopByPrice() {
           </h2>
           <p className="home-section-subtitle">
             Set the most you wish to spend and we will show bottles that fit —
-            from an everyday signature to a rare niche piece. All prices are in
-            AED. Slide to your range, then explore the collection that matches it.
+            from an everyday signature to a rare niche piece. Slide to your
+            range, then explore the collection that matches it. Prices follow
+            your selected country currency.
           </p>
         </div>
 
@@ -54,7 +54,7 @@ export default function ShopByPrice() {
               {atMax ? "Fragrances from" : "Fragrances under"}
             </p>
             <p className="relative mt-1 font-serif-luxury text-2xl font-bold text-[#7a0c0c] sm:text-3xl">
-              {atMax ? `${formatAed(PRICE_SLIDER_MAX)}+` : formatAed(price)}
+              {atMax ? `${formatPrice(PRICE_SLIDER_MAX)}+` : formatPrice(price)}
             </p>
             <span className="relative mt-6 inline-flex items-center gap-2 rounded-full bg-[#7a0c0c] px-5 py-2.5 text-xs font-black uppercase tracking-[0.2em] text-white shadow-[0_8px_24px_rgba(122,12,12,0.35)] transition-transform group-hover:scale-105">
               Explore
