@@ -45,7 +45,7 @@ export default function Navbar() {
         setCategories(
           items.map((item: { name: string; slug: string }) => ({
             name: item.name,
-            href: `/category/${item.slug}`,
+            href: `/shop?category=${encodeURIComponent(item.slug)}`,
           }))
         );
       })

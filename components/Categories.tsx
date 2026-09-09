@@ -54,7 +54,7 @@ export default function Categories() {
                 className="flex w-[min(72vw,18rem)] shrink-0 snap-center flex-col items-center text-center sm:w-[60vw] md:w-auto"
               >
                 <Link
-                  href={`/category/${cat.slug}`}
+                  href={`/shop?category=${encodeURIComponent(cat.slug)}`}
                   className="group relative mb-4 block aspect-[3/4] w-full overflow-hidden rounded-[1.35rem] shadow-[0_12px_40px_rgba(15,23,42,0.12)] sm:mb-6 sm:rounded-[1.75rem]"
                 >
                   <Image
@@ -70,7 +70,7 @@ export default function Categories() {
                   {cat.name}
                 </h3>
                 <Link
-                  href={`/category/${cat.slug}`}
+                  href={`/shop?category=${encodeURIComponent(cat.slug)}`}
                   className="btn-primary max-w-full rounded-full px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] shadow-lg transition-all sm:px-10 sm:py-3.5 sm:text-[11px] sm:tracking-[0.2em]"
                 >
                   Shop {cat.name}

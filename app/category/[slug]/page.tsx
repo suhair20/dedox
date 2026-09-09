@@ -1,29 +1,10 @@
-import type { Metadata } from "next";
-import CategoryView from "@/components/category/CategoryView";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { redirect } from "next/navigation";
 
 type PageProps = {
   params: { slug: string };
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const name = params.slug.replace(/-/g, " ");
-  const title = `${name} perfume collection`;
-  const description = `Shop ${name} luxury fragrances at ${SITE_NAME}. Original bottles with fast UAE delivery.`;
-  const url = `${SITE_URL}/category/${params.slug}`;
-
-  return {
-    title,
-    description,
-    alternates: { canonical: url },
-    openGraph: {
-      title: `${title} | ${SITE_NAME}`,
-      description,
-      url,
-    },
-  };
-}
-
+/** Old category URLs redirect to the shop collection with the category filter applied. */
 export default function CategoryPage({ params }: PageProps) {
-  return <CategoryView params={params} />;
+  redirect(`/shop?category=${encodeURIComponent(params.slug)}`);
 }

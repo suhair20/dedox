@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useProducts } from "@/context/ProductsContext";
 import { useCart } from "@/context/CartContext";
 import ProductCard from "@/components/ProductCard";
@@ -64,6 +65,7 @@ function ShopPageContent() {
   const { products } = useProducts();
   const { cart } = useCart();
   const { formatPrice } = useLocation();
+  const searchParams = useSearchParams();
 
   const priceLabel = (filters: ShopFilters) => {
     if (filters.priceMode === "all") return "All prices";
@@ -86,21 +88,20 @@ function ShopPageContent() {
   }, []);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setSearchQuery(params.get("q") || "");
+    setSearchQuery(searchParams.get("q") || "");
 
     const fromUrl: ShopFilters = {
       ...emptyFilters,
-      brands: params.get("brand") ? [params.get("brand")!] : [],
-      categories: params.get("category") ? [params.get("category")!] : [],
-      notes: params.get("note") ? [params.get("note")!] : [],
-      accords: params.get("accord") ? [params.get("accord")!] : [],
-      occasions: params.get("occasion") ? [params.get("occasion")!] : [],
-      concentration: params.get("concentration") || "",
+      brands: searchParams.get("brand") ? [searchParams.get("brand")!] : [],
+      categories: searchParams.get("category") ? [searchParams.get("category")!] : [],
+      notes: searchParams.get("note") ? [searchParams.get("note")!] : [],
+      accords: searchParams.get("accord") ? [searchParams.get("accord")!] : [],
+      occasions: searchParams.get("occasion") ? [searchParams.get("occasion")!] : [],
+      concentration: searchParams.get("concentration") || "",
     };
 
-    const maxPriceParam = params.get("maxPrice");
-    const minPriceParam = params.get("minPrice");
+    const maxPriceParam = searchParams.get("maxPrice");
+    const minPriceParam = searchParams.get("minPrice");
     if (maxPriceParam) {
       const max = Number(maxPriceParam);
       if (!Number.isNaN(max)) {
@@ -117,8 +118,8 @@ function ShopPageContent() {
 
     const pending = readPendingReward();
     setPendingReward(pending);
-    setShowClaimBanner(params.get("claim") === "1" && Boolean(pending));
-  }, []);
+    setShowClaimBanner(searchParams.get("claim") === "1" && Boolean(pending));
+  }, [searchParams]);
 
   const filteredProducts = useMemo(() => {
     const base = filterProducts(products, {
@@ -440,5 +441,9 @@ function ShopPageContent() {
 }
 
 export default function ShopView() {
-  return <ShopPageContent />;
+  return (
+    <Suspense fallback={<div className="min-h-[50vh] bg-white" />}>
+      <ShopPageContent />
+    </Suspense>
+  );
 }

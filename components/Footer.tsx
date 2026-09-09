@@ -38,9 +38,9 @@ export default function Footer() {
             <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-white sm:mb-4 sm:text-sm">Shop</h4>
             <ul className="space-y-2.5 sm:space-y-3">
               <li><Link href="/shop" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Shop all</Link></li>
-              <li><Link href="/category/men" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Men&apos;s Fragrances</Link></li>
-              <li><Link href="/category/women" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Women&apos;s Fragrances</Link></li>
-              <li><Link href="/category/unisex" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Unisex Collection</Link></li>
+              <li><Link href="/shop?category=men" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Men&apos;s Fragrances</Link></li>
+              <li><Link href="/shop?category=women" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Women&apos;s Fragrances</Link></li>
+              <li><Link href="/shop?category=unisex" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Unisex Collection</Link></li>
             </ul>
           </div>
           <div className="min-w-0">
