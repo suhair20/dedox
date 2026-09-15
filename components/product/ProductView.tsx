@@ -26,6 +26,7 @@ export default function ProductView({ params }: { params: { id: string } }) {
   const { products, loading } = useProducts();
   const product = products.find((p) => p.id === id);
   const [quantity, setQuantity] = useState(1);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const { addToCart } = useCart();
   const { formatPrice } = useLocation();
   
@@ -38,6 +39,7 @@ export default function ProductView({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     setSelectedImageIndex(0);
+    setDescriptionExpanded(false);
   }, [product?.id]);
 
   if (loading) {
@@ -151,11 +153,11 @@ export default function ProductView({ params }: { params: { id: string } }) {
               <div className="mb-6 rounded-2xl border border-[#7a0c0c]/25 bg-white p-5 shadow-[0_12px_40px_rgba(122,12,12,0.1)] sm:mb-8 sm:p-6">
                 <div className="mb-2">
                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#7a0c0c]/80">
-                    DE DOX CERTIFIED PRODUCT
+                    DEDOX CERTIFIED PRODUCT
                   </span>
                 </div>
                 <div className="mb-4">
-                  <h1 className="mb-2 font-serif-luxury text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl">
+                  <h1 className="mb-2 text-xl font-medium tracking-tight text-gray-900 sm:text-2xl md:text-3xl">
                     {product.name}
                   </h1>
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-500">
@@ -164,9 +166,9 @@ export default function ProductView({ params }: { params: { id: string } }) {
                 </div>
                 <div>
                   <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                    <span className="text-3xl font-bold text-[#7a0c0c] sm:text-5xl">{formatPrice(product.price)}</span>
+                    <span className="text-xl font-semibold text-[#7a0c0c] sm:text-2xl">{formatPrice(product.price)}</span>
                     {product.oldPrice && (
-                      <span className="text-xl font-medium leading-none text-gray-400 line-through">{formatPrice(product.oldPrice)}</span>
+                      <span className="text-sm font-medium leading-none text-gray-400 line-through sm:text-base">{formatPrice(product.oldPrice)}</span>
                     )}
                   </div>
                   <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">Inclusive of all taxes</p>
@@ -198,10 +200,38 @@ export default function ProductView({ params }: { params: { id: string } }) {
                 )}
               </div>
 
-              {/* Subtitle */}
-              <p className="mb-8 text-sm font-medium italic leading-relaxed text-gray-500">
-                {product.subtitle || "Authentically sourced, premium luxury fragrance."}
-              </p>
+              {/* Subtitle & description */}
+              <div className="mb-8 space-y-3">
+                {product.subtitle ? (
+                  <p className="text-sm font-medium leading-relaxed text-gray-600">
+                    {product.subtitle}
+                  </p>
+                ) : null}
+                {product.description ? (
+                  <div>
+                    <p
+                      className={`text-sm leading-relaxed text-gray-500 sm:text-[15px] ${
+                        descriptionExpanded ? "" : "line-clamp-3"
+                      }`}
+                    >
+                      {product.description}
+                    </p>
+                    {product.description.length > 120 ? (
+                      <button
+                        type="button"
+                        onClick={() => setDescriptionExpanded((open) => !open)}
+                        className="mt-1.5 text-xs font-bold uppercase tracking-widest text-[#7a0c0c] hover:underline"
+                      >
+                        {descriptionExpanded ? "Show less" : "Read more"}
+                      </button>
+                    ) : null}
+                  </div>
+                ) : !product.subtitle ? (
+                  <p className="text-sm font-medium leading-relaxed text-gray-500">
+                    Authentically sourced, premium luxury fragrance.
+                  </p>
+                ) : null}
+              </div>
 
               {/* Info Boxes */}
               <div className="grid grid-cols-2 gap-4 mb-8">
