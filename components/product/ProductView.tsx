@@ -40,23 +40,6 @@ export default function ProductView({ params }: { params: { id: string } }) {
     setSelectedImageIndex(0);
   }, [product?.id]);
 
-  const [isLgUp, setIsLgUp] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const update = () => setIsLgUp(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  const reviewsSection = product ? (
-    <ProductReviews
-      productId={product.id}
-      rating={product.rating}
-      reviewCount={product.reviewCount}
-    />
-  ) : null;
-
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-32 flex justify-center">
@@ -154,9 +137,6 @@ export default function ProductView({ params }: { params: { id: string } }) {
               </div>
             )}
             </div>
-
-            {/* Desktop: reviews directly under image — no empty gap */}
-            {isLgUp ? <div className="mt-6">{reviewsSection}</div> : null}
           </div>
 
           {/* Right Column: Information */}
@@ -238,14 +218,14 @@ export default function ProductView({ params }: { params: { id: string } }) {
               </div>
 
               {/* Fragrance profile */}
-              <div className="mb-12 space-y-6 rounded-3xl border border-gray-50 bg-white p-8 shadow-sm">
+              <div className="mb-12 space-y-4 rounded-2xl border border-gray-50 bg-white p-4 shadow-sm sm:space-y-6 sm:rounded-3xl sm:p-8">
                 <div className="flex items-center space-x-3">
                   <div className="h-6 w-1.5 rounded-full bg-[#7a0c0c]" />
                   <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">
                     Fragrance Profile
                   </h3>
                 </div>
-                <div className="grid gap-6 md:grid-cols-2">
+                <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:gap-6">
                   <AttributeChipList
                     title="Brand"
                     items={
@@ -352,8 +332,14 @@ export default function ProductView({ params }: { params: { id: string } }) {
 
         </div>
 
-        {/* Mobile: reviews last, after product details */}
-        {!isLgUp ? <div className="mt-8">{reviewsSection}</div> : null}
+        {/* Full-width below gallery + details so sticky image never covers reviews */}
+        <div className="relative z-10 mt-10 sm:mt-14">
+          <ProductReviews
+            productId={product.id}
+            rating={product.rating}
+            reviewCount={product.reviewCount}
+          />
+        </div>
       </div>
     </div>
   );

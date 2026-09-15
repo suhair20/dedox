@@ -9,7 +9,7 @@ import ProductCard from "@/components/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { Filter, Gift, X, LayoutGrid, List } from "lucide-react";
 import { filterProducts } from "@/lib/productFilters";
-import { FilterCheckboxGroup, FilterRadioGroup } from "@/components/shop/ShopFilterGroups";
+import { FilterCheckboxGroup } from "@/components/shop/ShopFilterGroups";
 import PriceRangeSlider, {
   PRICE_SLIDER_MAX,
   PRICE_SLIDER_MIN,
@@ -61,6 +61,8 @@ function toggleValue(list: string[], value: string) {
   return list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
 }
 
+const PRODUCTS_PER_PAGE = 10;
+
 function ShopPageContent() {
   const { products } = useProducts();
   const { cart } = useCart();
@@ -76,6 +78,7 @@ function ShopPageContent() {
   const [filters, setFilters] = useState<ShopFilters>(emptyFilters);
   const [sortBy, setSortBy] = useState<"featured" | "price-low" | "price-high" | "name">("featured");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [pendingReward, setPendingReward] = useState<PendingReward | null>(null);
   const [showClaimBanner, setShowClaimBanner] = useState(false);
@@ -169,8 +172,36 @@ function ShopPageContent() {
     });
   }, [products, searchQuery, filters, sortBy]);
 
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE));
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, sortBy, searchQuery]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+    return filteredProducts.slice(start, start + PRODUCTS_PER_PAGE);
+  }, [filteredProducts, currentPage]);
+
+  const showingFrom =
+    filteredProducts.length === 0 ? 0 : (currentPage - 1) * PRODUCTS_PER_PAGE + 1;
+  const showingTo = Math.min(currentPage * PRODUCTS_PER_PAGE, filteredProducts.length);
+
+  const goToPage = (page: number) => {
+    const next = Math.min(totalPages, Math.max(1, page));
+    setCurrentPage(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const clearFilters = () => {
     setFilters(emptyFilters);
+    setCurrentPage(1);
   };
 
   const renderFilters = () => (
@@ -231,36 +262,6 @@ function ShopPageContent() {
         onToggle={(slug) =>
           setFilters((prev) => ({ ...prev, categories: toggleValue(prev.categories, slug) }))
         }
-      />
-      <FilterCheckboxGroup
-        title="Notes"
-        options={catalog.notes.map((item) => ({ slug: item.slug, name: item.name }))}
-        selected={filters.notes}
-        onToggle={(slug) =>
-          setFilters((prev) => ({ ...prev, notes: toggleValue(prev.notes, slug) }))
-        }
-      />
-      <FilterCheckboxGroup
-        title="Accords"
-        options={catalog.accords.map((item) => ({ slug: item.slug, name: item.name }))}
-        selected={filters.accords}
-        onToggle={(slug) =>
-          setFilters((prev) => ({ ...prev, accords: toggleValue(prev.accords, slug) }))
-        }
-      />
-      <FilterCheckboxGroup
-        title="Occasions"
-        options={catalog.occasions.map((item) => ({ slug: item.slug, name: item.name }))}
-        selected={filters.occasions}
-        onToggle={(slug) =>
-          setFilters((prev) => ({ ...prev, occasions: toggleValue(prev.occasions, slug) }))
-        }
-      />
-      <FilterRadioGroup
-        title="Concentration"
-        options={catalog.concentrations.map((item) => ({ slug: item.slug, name: item.name }))}
-        selected={filters.concentration}
-        onSelect={(slug) => setFilters((prev) => ({ ...prev, concentration: slug }))}
       />
     </>
   );
@@ -325,8 +326,18 @@ function ShopPageContent() {
 
           <main className="flex-grow">
             <div className="mb-10 flex flex-col items-center justify-between gap-6 border-b border-gray-100 pb-8 sm:flex-row">
-              <div className="text-sm font-medium text-gray-500">
-                Showing <span className="font-bold text-black">{filteredProducts.length}</span> items
+              <div className="hidden text-sm font-medium text-gray-500 sm:block">
+                {filteredProducts.length === 0 ? (
+                  <>Showing <span className="font-bold text-black">0</span> items</>
+                ) : (
+                  <>
+                    Showing{" "}
+                    <span className="font-bold text-black">
+                      {showingFrom}–{showingTo}
+                    </span>{" "}
+                    of <span className="font-bold text-black">{filteredProducts.length}</span>
+                  </>
+                )}
               </div>
               <div className="flex w-full items-center space-x-8 sm:w-auto">
                 <div className="hidden items-center space-x-2 border-r border-gray-200 pr-8 md:flex">
@@ -368,9 +379,9 @@ function ShopPageContent() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   layout
-                  className="grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-4 sm:gap-y-10 md:grid-cols-4"
+                  className="grid grid-cols-2 gap-x-2 gap-y-5 sm:gap-x-3 sm:gap-y-8 md:grid-cols-3 lg:grid-cols-5"
                 >
-                  {filteredProducts.map((product) => (
+                  {paginatedProducts.map((product) => (
                     <motion.div
                       key={product.id}
                       layout
@@ -399,6 +410,45 @@ function ShopPageContent() {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {filteredProducts.length > PRODUCTS_PER_PAGE ? (
+              <nav
+                className="mt-10 flex flex-wrap items-center justify-center gap-2 border-t border-gray-100 pt-8"
+                aria-label="Collection pages"
+              >
+                <button
+                  type="button"
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage <= 1}
+                  className="rounded-full border border-gray-200 px-3 py-2 text-xs font-bold uppercase tracking-widest text-gray-600 transition hover:border-[#7a0c0c]/30 hover:text-[#7a0c0c] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Prev
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => goToPage(page)}
+                    aria-current={page === currentPage ? "page" : undefined}
+                    className={`min-w-10 rounded-full px-3 py-2 text-sm font-bold transition ${
+                      page === currentPage
+                        ? "bg-[#7a0c0c] text-white shadow-md"
+                        : "border border-gray-200 text-gray-600 hover:border-[#7a0c0c]/30 hover:text-[#7a0c0c]"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage >= totalPages}
+                  className="rounded-full border border-gray-200 px-3 py-2 text-xs font-bold uppercase tracking-widest text-gray-600 transition hover:border-[#7a0c0c]/30 hover:text-[#7a0c0c] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Next
+                </button>
+              </nav>
+            ) : null}
           </main>
         </div>
       </div>

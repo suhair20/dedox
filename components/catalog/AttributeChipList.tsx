@@ -16,26 +16,26 @@ export default function AttributeChipList({
 }: AttributeChipListProps) {
   if (!items?.length) {
     return (
-      <div>
-        <h4 className="mb-2 text-[11px] font-black uppercase tracking-widest text-gray-900">
+      <div className="min-w-0">
+        <h4 className="mb-2 text-[10px] font-black uppercase tracking-widest text-gray-900 sm:text-[11px]">
           {title}
         </h4>
-        <p className="text-sm text-gray-400">{emptyLabel}</p>
+        <p className="text-xs text-gray-400 sm:text-sm">{emptyLabel}</p>
       </div>
     );
   }
 
   return (
-    <div>
-      <h4 className="mb-3 text-[11px] font-black uppercase tracking-widest text-gray-900">
+    <div className="min-w-0">
+      <h4 className="mb-2 text-[10px] font-black uppercase tracking-widest text-gray-900 sm:mb-3 sm:text-[11px]">
         {title}
       </h4>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2">
         {items.map((item) => (
           <Link
             key={item.id}
             href={`/shop?${shopParam}=${encodeURIComponent(item.slug)}`}
-            className="rounded-full border border-[#7a0c0c]/15 bg-[#7a0c0c]/5 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#7a0c0c] transition hover:bg-[#7a0c0c] hover:text-white"
+            className="max-w-full truncate rounded-full border border-[#7a0c0c]/15 bg-[#7a0c0c]/5 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#7a0c0c] transition hover:bg-[#7a0c0c] hover:text-white sm:px-4 sm:py-2 sm:text-xs"
           >
             {item.name}
           </Link>
