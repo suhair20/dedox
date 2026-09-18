@@ -29,9 +29,9 @@ export async function validateCartItems(
     throw new Error("Cart is empty.");
   }
 
-  const productIds = [
-    ...new Set(items.map((item) => item.productId || item.id.split("__")[0])),
-  ];
+  const productIds = Array.from(
+    new Set(items.map((item) => item.productId || item.id.split("__")[0]))
+  );
 
   const products = await client.fetch<SanityCartProduct[]>(
     `*[_type == "product" && _id in $ids]{
