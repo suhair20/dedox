@@ -1,20 +1,34 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 export interface CartItem {
+  /** Unique line id — productId, or productId__sizeKey when a size is chosen */
   id: string;
+  productId: string;
   name: string;
   price: number;
   image: string;
   quantity: number;
+  sizeKey?: string;
+  sizeLabel?: string;
 }
 
 interface CartContextType {
   cart: CartItem[];
   /** False until localStorage cart has been read (avoids empty-cart flash redirects). */
   cartReady: boolean;
-  addToCart: (product: any, quantity: number) => void;
+  addToCart: (
+    product: {
+      id: string;
+      name: string;
+      price: number;
+      image: string;
+      sizeKey?: string;
+      sizeLabel?: string;
+    },
+    quantity: number
+  ) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -24,16 +38,25 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+function lineId(productId: string, sizeKey?: string) {
+  return sizeKey ? `${productId}__${sizeKey}` : productId;
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartReady, setCartReady] = useState(false);
 
-  // Load cart from localStorage on mount
   useEffect(() => {
-    const savedCart = localStorage.getItem('dedox_cart');
+    const savedCart = localStorage.getItem("dedox_cart");
     if (savedCart) {
       try {
-        setCart(JSON.parse(savedCart));
+        const parsed = JSON.parse(savedCart) as CartItem[];
+        setCart(
+          parsed.map((item) => ({
+            ...item,
+            productId: item.productId || item.id.split("__")[0],
+          }))
+        );
       } catch (e) {
         console.error("Failed to parse cart", e);
       }
@@ -41,42 +64,58 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setCartReady(true);
   }, []);
 
-  // Save cart to localStorage on change (after hydration)
   useEffect(() => {
     if (!cartReady) return;
-    localStorage.setItem('dedox_cart', JSON.stringify(cart));
+    localStorage.setItem("dedox_cart", JSON.stringify(cart));
   }, [cart, cartReady]);
 
-  const addToCart = (product: any, quantity: number) => {
-    setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id);
+  const addToCart = (
+    product: {
+      id: string;
+      name: string;
+      price: number;
+      image: string;
+      sizeKey?: string;
+      sizeLabel?: string;
+    },
+    quantity: number
+  ) => {
+    const id = lineId(product.id, product.sizeKey);
+    const displayName = product.sizeLabel
+      ? `${product.name} (${product.sizeLabel})`
+      : product.name;
+
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === id);
       if (existingItem) {
-        return prevCart.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
+        return prevCart.map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity + quantity } : item
         );
       }
-      return [...prevCart, { 
-        id: product.id, 
-        name: product.name, 
-        price: product.price, 
-        image: product.image, 
-        quantity 
-      }];
+      return [
+        ...prevCart,
+        {
+          id,
+          productId: product.id,
+          name: displayName,
+          price: product.price,
+          image: product.image,
+          quantity,
+          sizeKey: product.sizeKey,
+          sizeLabel: product.sizeLabel,
+        },
+      ];
     });
   };
 
   const removeFromCart = (id: string) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== id));
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
   const updateQuantity = (id: string, quantity: number) => {
     if (quantity < 1) return;
-    setCart(prevCart =>
-      prevCart.map(item =>
-        item.id === id ? { ...item, quantity } : item
-      )
+    setCart((prevCart) =>
+      prevCart.map((item) => (item.id === id ? { ...item, quantity } : item))
     );
   };
 
@@ -91,16 +130,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <CartContext.Provider value={{ 
-      cart,
-      cartReady,
-      addToCart, 
-      removeFromCart, 
-      updateQuantity, 
-      clearCart, 
-      getCartTotal,
-      getCartCount
-    }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        cartReady,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        getCartTotal,
+        getCartCount,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
@@ -109,7 +150,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 export function useCart() {
   const context = useContext(CartContext);
   if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error("useCart must be used within a CartProvider");
   }
   return context;
 }

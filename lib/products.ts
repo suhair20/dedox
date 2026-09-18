@@ -1,6 +1,5 @@
 import { client } from "@/lib/sanity";
 import type { Product } from "@/lib/data";
-import { products as fallbackProducts } from "@/lib/data";
 import {
   PRODUCTS_QUERY,
   PRODUCT_BY_ID_QUERY,
@@ -53,6 +52,15 @@ type SanityProduct = {
     description?: string;
   } | null;
   volumeMl?: number;
+  sizes?: Array<{
+    _key?: string;
+    label?: string;
+    volumeMl?: number;
+    price?: number;
+    oldPrice?: number;
+    inStock?: boolean;
+    sku?: string;
+  }>;
   isGiftSet?: boolean;
   imageUrl?: string;
   imageUrls?: string[];
@@ -93,6 +101,17 @@ export function mapSanityProduct(doc: SanityProduct): Product {
     occasions: normalizeAttributes(doc.occasions),
     concentration: normalizeAttribute(doc.concentration || undefined),
     volumeMl: doc.volumeMl,
+    sizes: (doc.sizes || [])
+      .filter((size) => size.label && typeof size.price === "number")
+      .map((size, index) => ({
+        key: size._key || `${size.label}-${index}`,
+        label: size.label!,
+        volumeMl: size.volumeMl,
+        price: size.price!,
+        oldPrice: size.oldPrice,
+        inStock: size.inStock !== false,
+        sku: size.sku,
+      })),
     isGiftSet: doc.isGiftSet,
     sku: doc.sku,
   };
@@ -138,7 +157,7 @@ export async function fetchProductsFromSanity(
 
   const docs = await client.fetch<SanityProduct[]>(PRODUCTS_QUERY);
   if (!Array.isArray(docs) || docs.length === 0) {
-    return fallbackProducts;
+    return [];
   }
   return docs.map(mapSanityProduct);
 }
@@ -146,7 +165,7 @@ export async function fetchProductsFromSanity(
 export async function fetchProductById(id: string): Promise<Product | null> {
   const doc = await client.fetch<SanityProduct | null>(PRODUCT_BY_ID_QUERY, { id });
   if (!doc) {
-    return fallbackProducts.find((p) => p.id === id) ?? null;
+    return null;
   }
   return mapSanityProduct(doc);
 }

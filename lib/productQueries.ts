@@ -39,6 +39,15 @@ export const PRODUCT_PROJECTION = `{
   "occasions": occasions[]->${CATALOG_ATTRIBUTE_PROJECTION},
   "concentration": concentration->${CATALOG_ATTRIBUTE_PROJECTION},
   volumeMl,
+  sizes[]{
+    _key,
+    label,
+    volumeMl,
+    price,
+    oldPrice,
+    inStock,
+    sku
+  },
   isGiftSet,
   images,
   "imageUrl": images[0].asset->url,

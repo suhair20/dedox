@@ -40,7 +40,7 @@ export default function CartPage() {
                       <div className="flex-grow">
                         <div className="flex justify-between items-start mb-2">
                           <h3 className="text-xl font-bold text-gray-900 hover:text-[#7a0c0c] transition-colors font-serif-luxury">
-                            <Link href={`/product/${item.id}`}>{item.name}</Link>
+                            <Link href={`/product/${item.productId || item.id.split("__")[0]}`}>{item.name}</Link>
                           </h3>
                           <button 
                             onClick={() => removeFromCart(item.id)}

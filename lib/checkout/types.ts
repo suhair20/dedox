@@ -1,6 +1,9 @@
 export type CheckoutItemInput = {
   id: string;
   quantity: number;
+  productId?: string;
+  sizeKey?: string;
+  sizeLabel?: string;
 };
 
 export type ValidatedCheckoutItem = {
@@ -11,6 +14,8 @@ export type ValidatedCheckoutItem = {
   image: string;
   brand?: string;
   category?: string;
+  sizeKey?: string;
+  sizeLabel?: string;
 };
 
 export type ShippingAddressInput = {

@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Product } from "@/lib/data";
-import { products as fallbackProducts } from "@/lib/data";
 
 type ProductsContextValue = {
   products: Product[];
@@ -14,7 +13,7 @@ type ProductsContextValue = {
 const ProductsContext = createContext<ProductsContextValue | null>(null);
 
 export function ProductsProvider({ children }: { children: React.ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(fallbackProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,13 +26,11 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
         throw new Error("Failed to load products");
       }
       const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) {
-        setProducts(data);
-      }
+      setProducts(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Failed to fetch products from admin", err);
       setError("Could not load latest products");
-      setProducts(fallbackProducts);
+      setProducts([]);
     } finally {
       setLoading(false);
     }

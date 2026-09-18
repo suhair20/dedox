@@ -204,7 +204,13 @@ export default function CheckoutClient() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         code: appliedCoupon.code,
-        items: cart.map((item) => ({ id: item.id, quantity: item.quantity })),
+        items: cart.map((item) => ({
+          id: item.productId || item.id.split("__")[0],
+          quantity: item.quantity,
+          productId: item.productId || item.id.split("__")[0],
+          sizeKey: item.sizeKey,
+          sizeLabel: item.sizeLabel,
+        })),
         shippingMethod,
       }),
     })
@@ -238,7 +244,13 @@ export default function CheckoutClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           code: couponInput,
-          items: cart.map((item) => ({ id: item.id, quantity: item.quantity })),
+          items: cart.map((item) => ({
+            id: item.productId || item.id.split("__")[0],
+            quantity: item.quantity,
+            productId: item.productId || item.id.split("__")[0],
+            sizeKey: item.sizeKey,
+            sizeLabel: item.sizeLabel,
+          })),
           shippingMethod,
         }),
       });
@@ -262,8 +274,11 @@ export default function CheckoutClient() {
   const buildOrderPayload = useCallback(
     (stripePaymentIntentId?: string) => ({
       items: cart.map((item) => ({
-        id: item.id,
+        id: item.productId || item.id.split("__")[0],
         quantity: item.quantity,
+        productId: item.productId || item.id.split("__")[0],
+        sizeKey: item.sizeKey,
+        sizeLabel: item.sizeLabel,
       })),
       shippingMethod,
       paymentMethod,
@@ -345,7 +360,13 @@ export default function CheckoutClient() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            items: cart.map((item) => ({ id: item.id, quantity: item.quantity })),
+            items: cart.map((item) => ({
+              id: item.productId || item.id.split("__")[0],
+              quantity: item.quantity,
+              productId: item.productId || item.id.split("__")[0],
+              sizeKey: item.sizeKey,
+              sizeLabel: item.sizeLabel,
+            })),
             shippingMethod,
             paymentMethod,
             shippingAddress,

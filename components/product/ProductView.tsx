@@ -27,6 +27,7 @@ export default function ProductView({ params }: { params: { id: string } }) {
   const product = products.find((p) => p.id === id);
   const [quantity, setQuantity] = useState(1);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  const [selectedSizeKey, setSelectedSizeKey] = useState<string>("");
   const { addToCart } = useCart();
   const { formatPrice } = useLocation();
   
@@ -37,9 +38,21 @@ export default function ProductView({ params }: { params: { id: string } }) {
     : [product?.image || ""];
   const mainImage = thumbnails[selectedImageIndex] || product?.image || "";
 
+  const sizeOptions = product?.sizes?.length ? product.sizes : [];
+  const selectedSize =
+    sizeOptions.find((size) => size.key === selectedSizeKey) ||
+    sizeOptions.find((size) => size.inStock !== false) ||
+    sizeOptions[0];
+  const displayPrice = selectedSize?.price ?? product?.price ?? 0;
+  const displayOldPrice = selectedSize?.oldPrice ?? product?.oldPrice;
+  const sizeInStock = selectedSize ? selectedSize.inStock !== false : product?.inStock;
+
   useEffect(() => {
     setSelectedImageIndex(0);
     setDescriptionExpanded(false);
+    const firstAvailable =
+      product?.sizes?.find((size) => size.inStock !== false) || product?.sizes?.[0];
+    setSelectedSizeKey(firstAvailable?.key || "");
   }, [product?.id]);
 
   if (loading) {
@@ -166,9 +179,9 @@ export default function ProductView({ params }: { params: { id: string } }) {
                 </div>
                 <div>
                   <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                    <span className="text-xl font-semibold text-[#7a0c0c] sm:text-2xl">{formatPrice(product.price)}</span>
-                    {product.oldPrice && (
-                      <span className="text-sm font-medium leading-none text-gray-400 line-through sm:text-base">{formatPrice(product.oldPrice)}</span>
+                    <span className="text-xl font-semibold text-[#7a0c0c] sm:text-2xl">{formatPrice(displayPrice)}</span>
+                    {displayOldPrice && displayOldPrice > displayPrice && (
+                      <span className="text-sm font-medium leading-none text-gray-400 line-through sm:text-base">{formatPrice(displayOldPrice)}</span>
                     )}
                   </div>
                   <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">Inclusive of all taxes</p>
@@ -287,6 +300,35 @@ export default function ProductView({ params }: { params: { id: string } }) {
 
               {/* Call to Action */}
               <div className="space-y-4 mb-12">
+                {sizeOptions.length > 0 ? (
+                  <div className="px-2">
+                    <span className="mb-3 block text-[11px] font-black uppercase tracking-widest text-gray-900">
+                      Size
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {sizeOptions.map((size) => {
+                        const active = selectedSize?.key === size.key;
+                        const disabled = size.inStock === false;
+                        return (
+                          <button
+                            key={size.key}
+                            type="button"
+                            disabled={disabled}
+                            onClick={() => setSelectedSizeKey(size.key)}
+                            className={`rounded-full border px-4 py-2 text-xs font-bold uppercase tracking-widest transition ${
+                              active
+                                ? "border-[#7a0c0c] bg-[#7a0c0c] text-white"
+                                : "border-gray-200 bg-white text-gray-700 hover:border-[#7a0c0c]/40"
+                            } ${disabled ? "cursor-not-allowed opacity-40" : ""}`}
+                          >
+                            {size.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : null}
+
                 <div className="flex items-center justify-between px-2">
                   <span className="text-[11px] font-black uppercase tracking-widest text-gray-900">Quantity</span>
                   <div className="flex items-center bg-gray-100 rounded-full h-10 px-2">
@@ -307,17 +349,29 @@ export default function ProductView({ params }: { params: { id: string } }) {
                 </div>
 
                 <button 
-                  onClick={() => addToCart(product, quantity)}
-                  disabled={!product.inStock}
+                  onClick={() =>
+                    addToCart(
+                      {
+                        id: product.id,
+                        name: product.name,
+                        price: displayPrice,
+                        image: product.image,
+                        sizeKey: selectedSize?.key,
+                        sizeLabel: selectedSize?.label,
+                      },
+                      quantity
+                    )
+                  }
+                  disabled={!sizeInStock}
                   className={`w-full btn-primary h-16 rounded-2xl flex items-center justify-center gap-4 transition-all duration-300 shadow-[0_20px_40px_rgba(122,12,12,0.15)] ${
-                    !product.inStock 
+                    !sizeInStock 
                     ? 'opacity-50 cursor-not-allowed grayscale' 
                     : 'hover:scale-[1.02] active:scale-[0.98]'
                   }`}
                 >
                   <ShoppingCart className="h-5 w-5" />
                   <span className="font-bold uppercase tracking-widest text-sm">
-                    {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                    {sizeInStock ? 'Add to Cart' : 'Out of Stock'}
                   </span>
                 </button>
               </div>

@@ -26,6 +26,15 @@ export interface Product {
   occasions?: import("@/lib/catalogTypes").CatalogAttribute[];
   concentration?: import("@/lib/catalogTypes").CatalogAttribute;
   volumeMl?: number;
+  sizes?: Array<{
+    key: string;
+    label: string;
+    volumeMl?: number;
+    price: number;
+    oldPrice?: number;
+    inStock?: boolean;
+    sku?: string;
+  }>;
   isGiftSet?: boolean;
   sku?: string;
 }

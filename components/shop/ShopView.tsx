@@ -64,7 +64,7 @@ function toggleValue(list: string[], value: string) {
 const PRODUCTS_PER_PAGE = 10;
 
 function ShopPageContent() {
-  const { products } = useProducts();
+  const { products, loading } = useProducts();
   const { cart } = useCart();
   const { formatPrice } = useLocation();
   const searchParams = useSearchParams();
@@ -374,7 +374,11 @@ function ShopPageContent() {
             </div>
 
             <AnimatePresence mode="popLayout">
-              {filteredProducts.length > 0 ? (
+              {loading ? (
+                <div className="flex justify-center py-24">
+                  <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#7a0c0c]/20 border-t-[#7a0c0c]" />
+                </div>
+              ) : filteredProducts.length > 0 ? (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -400,7 +404,11 @@ function ShopPageContent() {
                   animate={{ opacity: 1 }}
                   className="rounded-sm border border-dashed border-gray-200 bg-gray-50 py-32 text-center"
                 >
-                  <p className="mb-6 text-lg italic text-gray-400">No products match your current filters.</p>
+                  <p className="mb-6 text-lg italic text-gray-400">
+                    {searchQuery
+                      ? `No products found for “${searchQuery}”.`
+                      : "No products match your current filters."}
+                  </p>
                   <button
                     onClick={clearFilters}
                     className="font-bold text-[#7a0c0c] underline underline-offset-4 hover:no-underline"

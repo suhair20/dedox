@@ -45,16 +45,20 @@ function matchesSearch(product: Product, query: string) {
     product.description,
     product.subtitle || "",
     product.sku || "",
+    product.slug || "",
     ...(product.tags || []),
     ...(product.notes || []).map((item) => item.name),
     ...(product.accords || []).map((item) => item.name),
     ...(product.occasions || []).map((item) => item.name),
     product.concentration?.name || "",
+    ...(product.sizes || []).map((size) => size.label),
   ]
     .join(" ")
     .toLowerCase();
 
-  return haystack.includes(q);
+  // Every word must appear somewhere (so "oud men" still matches).
+  const words = q.split(/\s+/).filter(Boolean);
+  return words.every((word) => haystack.includes(word));
 }
 
 function matchesBrand(product: Product, brand: string) {

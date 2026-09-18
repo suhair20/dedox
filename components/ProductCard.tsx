@@ -19,6 +19,13 @@ interface ProductCardProps {
     inStock: boolean;
     subtitle?: string;
     description?: string;
+    sizes?: Array<{
+      key: string;
+      label: string;
+      price: number;
+      oldPrice?: number;
+      inStock?: boolean;
+    }>;
   };
   swipeFriendly?: boolean;
 }
@@ -38,13 +45,27 @@ export default function ProductCard({ product, swipeFriendly = false }: ProductC
   const [showCart, setShowCart] = useState(false);
   const { addToCart } = useCart();
   const { formatPrice } = useLocation();
-  const off = discountPercent(product.price, product.oldPrice);
+  const defaultSize =
+    product.sizes?.find((size) => size.inStock !== false) || product.sizes?.[0];
+  const cardPrice = defaultSize?.price ?? product.price;
+  const cardOldPrice = defaultSize?.oldPrice ?? product.oldPrice;
+  const off = discountPercent(cardPrice, cardOldPrice);
   const brief = briefText(product);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product, 1);
+    addToCart(
+      {
+        id: product.id,
+        name: product.name,
+        price: cardPrice,
+        image: product.image,
+        sizeKey: defaultSize?.key,
+        sizeLabel: defaultSize?.label,
+      },
+      1
+    );
   };
 
   return (
@@ -77,23 +98,23 @@ export default function ProductCard({ product, swipeFriendly = false }: ProductC
           <button
             type="button"
             onClick={handleAddToCart}
-            disabled={!product.inStock}
+            disabled={!product.inStock && !defaultSize}
             aria-hidden={!showCart}
             className={`absolute bottom-2 left-2 right-2 z-10 mx-auto flex h-7 max-w-[calc(100%-0.5rem)] items-center justify-center gap-1 rounded-full px-2 transition-all duration-300 sm:bottom-2.5 sm:left-2.5 sm:right-2.5 sm:h-10 sm:max-w-none sm:gap-2 sm:px-3 ${
               showCart
                 ? "translate-y-0 opacity-100"
                 : "pointer-events-none translate-y-2 opacity-0"
             } ${
-              !product.inStock
+              !product.inStock && !defaultSize
                 ? "cursor-not-allowed grayscale"
                 : "btn-primary active:scale-95 shadow-md"
             }`}
           >
             <ShoppingCart className="h-3 w-3 shrink-0 sm:h-4 sm:w-4" />
             <span className="truncate text-[8px] font-black uppercase tracking-[0.12em] sm:text-[10px] sm:tracking-[0.2em]">
-              <span className="sm:hidden">{product.inStock ? "Add" : "Sold"}</span>
+              <span className="sm:hidden">{product.inStock || defaultSize ? "Add" : "Sold"}</span>
               <span className="hidden sm:inline">
-                {product.inStock ? "Add to cart" : "Sold Out"}
+                {product.inStock || defaultSize ? "Add to cart" : "Sold Out"}
               </span>
             </span>
           </button>
@@ -121,12 +142,12 @@ export default function ProductCard({ product, swipeFriendly = false }: ProductC
 
           <div className="mt-auto flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5 sm:gap-x-2">
             <span className="text-[13px] font-bold text-[#7a0c0c] sm:text-sm">
-              {formatPrice(product.price)}
+              {formatPrice(cardPrice)}
             </span>
-            {product.oldPrice && product.oldPrice > product.price && (
+            {cardOldPrice && cardOldPrice > cardPrice && (
               <>
                 <span className="text-[10px] font-medium text-gray-400 line-through sm:text-[11px]">
-                  {formatPrice(product.oldPrice)}
+                  {formatPrice(cardOldPrice)}
                 </span>
                 {off !== null && (
                   <span className="text-[10px] font-semibold text-[#7a0c0c] sm:text-[11px]">
