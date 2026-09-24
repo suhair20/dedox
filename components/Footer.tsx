@@ -38,6 +38,7 @@ export default function Footer() {
             <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-white sm:mb-4 sm:text-sm">Shop</h4>
             <ul className="space-y-2.5 sm:space-y-3">
               <li><Link href="/shop" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Shop all</Link></li>
+              <li><Link href="/brands" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">All Brands</Link></li>
               <li><Link href="/shop?category=men" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Men&apos;s Fragrances</Link></li>
               <li><Link href="/shop?category=women" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Women&apos;s Fragrances</Link></li>
               <li><Link href="/shop?category=unisex" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Unisex Collection</Link></li>
@@ -46,7 +47,7 @@ export default function Footer() {
           <div className="min-w-0">
             <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-white sm:mb-4 sm:text-sm">Company</h4>
             <ul className="space-y-2.5 sm:space-y-3">
-              <li><Link href="/about" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Signature</Link></li>
+              <li><Link href="/wholesale" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Wholesale</Link></li>
               <li><Link href="/reviews" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Reviews</Link></li>
               <li><Link href="/account/rewards" className="text-sm text-gray-300 transition-colors hover:text-[#fca5a5]">Rewards</Link></li>
             </ul>

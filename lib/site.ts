@@ -11,3 +11,8 @@ export const INSTAGRAM_URL = `https://www.instagram.com/${INSTAGRAM_HANDLE}/`;
 export const WHATSAPP_NUMBER = "971555510645";
 export const WHATSAPP_DISPLAY = "+971 5555 10645";
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
+export const WHATSAPP_WHOLESALE_MESSAGE =
+  "Hi Dedox, I'm interested in wholesale pricing.";
+export const WHATSAPP_WHOLESALE_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  WHATSAPP_WHOLESALE_MESSAGE
+)}`;

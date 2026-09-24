@@ -3,7 +3,7 @@
 import { useProducts } from "@/context/ProductsContext";
 import ProductCard from "./ProductCard";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import AutoScroll from "embla-carousel-auto-scroll";
 import type { Product } from "@/lib/data";
@@ -15,7 +15,7 @@ function HighlightTrack({ featured }: { featured: Product[] }) {
     return Array.from({ length: copies }, () => featured).flat();
   }, [featured]);
 
-  const [emblaRef] = useEmblaCarousel(
+  const [emblaRef, emblaApi] = useEmblaCarousel(
     {
       loop: true,
       align: "start",
@@ -28,11 +28,25 @@ function HighlightTrack({ featured }: { featured: Product[] }) {
         speed: 0.9,
         startDelay: 400,
         stopOnInteraction: false,
-        stopOnMouseEnter: true,
+        stopOnMouseEnter: false,
         stopOnFocusIn: false,
       }),
     ]
   );
+
+  // Resume after drags and after slides change (products load async).
+  useEffect(() => {
+    if (!emblaApi) return;
+    const resume = () => {
+      const autoScroll = emblaApi.plugins().autoScroll;
+      if (autoScroll && !autoScroll.isPlaying()) autoScroll.play();
+    };
+    resume();
+    emblaApi.on("reInit", resume).on("settle", resume).on("pointerUp", resume);
+    return () => {
+      emblaApi.off("reInit", resume).off("settle", resume).off("pointerUp", resume);
+    };
+  }, [emblaApi]);
 
   return (
     <div className="overflow-hidden" ref={emblaRef}>

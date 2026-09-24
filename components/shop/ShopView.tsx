@@ -199,6 +199,21 @@ function ShopPageContent() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  /** Sliding window of page buttons (e.g. 1–2–3, then 2–3–4). */
+  const visiblePages = useMemo(() => {
+    const windowSize = 3;
+    if (totalPages <= windowSize) {
+      return Array.from({ length: totalPages }, (_, index) => index + 1);
+    }
+    let start = Math.max(1, currentPage - Math.floor(windowSize / 2));
+    let end = start + windowSize - 1;
+    if (end > totalPages) {
+      end = totalPages;
+      start = Math.max(1, end - windowSize + 1);
+    }
+    return Array.from({ length: end - start + 1 }, (_, index) => start + index);
+  }, [currentPage, totalPages]);
+
   const clearFilters = () => {
     setFilters(emptyFilters);
     setCurrentPage(1);
@@ -432,7 +447,23 @@ function ShopPageContent() {
                 >
                   Prev
                 </button>
-                {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                {visiblePages[0] > 1 ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => goToPage(1)}
+                      className="min-w-10 rounded-full border border-gray-200 px-3 py-2 text-sm font-bold text-gray-600 transition hover:border-[#7a0c0c]/30 hover:text-[#7a0c0c]"
+                    >
+                      1
+                    </button>
+                    {visiblePages[0] > 2 ? (
+                      <span className="px-1 text-sm font-bold text-gray-400" aria-hidden>
+                        …
+                      </span>
+                    ) : null}
+                  </>
+                ) : null}
+                {visiblePages.map((page) => (
                   <button
                     key={page}
                     type="button"
@@ -447,6 +478,22 @@ function ShopPageContent() {
                     {page}
                   </button>
                 ))}
+                {visiblePages[visiblePages.length - 1] < totalPages ? (
+                  <>
+                    {visiblePages[visiblePages.length - 1] < totalPages - 1 ? (
+                      <span className="px-1 text-sm font-bold text-gray-400" aria-hidden>
+                        …
+                      </span>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() => goToPage(totalPages)}
+                      className="min-w-10 rounded-full border border-gray-200 px-3 py-2 text-sm font-bold text-gray-600 transition hover:border-[#7a0c0c]/30 hover:text-[#7a0c0c]"
+                    >
+                      {totalPages}
+                    </button>
+                  </>
+                ) : null}
                 <button
                   type="button"
                   onClick={() => goToPage(currentPage + 1)}

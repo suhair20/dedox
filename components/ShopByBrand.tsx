@@ -69,13 +69,13 @@ export default function ShopByBrand() {
 
           <div className="flex flex-col items-center px-2">
             <Link
-              href="/shop"
+              href="/brands"
               className="btn-primary max-w-full rounded-full px-6 py-3 text-center text-[10px] font-bold uppercase tracking-[0.2em] shadow-lg transition-all sm:px-12 sm:py-4 sm:text-[11px]"
             >
               Explore All Brands
             </Link>
             <p className="mt-3 max-w-[16rem] text-center text-[11px] leading-relaxed text-gray-400 sm:mt-4">
-              The full archive — every house, every bottle, in one shop.
+              See every house we carry — then open that brand in the collection.
             </p>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import { useLocation } from "@/context/LocationContext";
 
-export const PRICE_SLIDER_MIN = 0;
+export const PRICE_SLIDER_MIN = 300;
 export const PRICE_SLIDER_MAX = 2000;
 export const PRICE_SLIDER_STEP = 50;
 

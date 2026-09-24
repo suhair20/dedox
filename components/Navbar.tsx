@@ -126,8 +126,8 @@ export default function Navbar() {
                 </AnimatePresence>
               </div>
 
-              <Link href="/about" className={navLinkClass}>
-                Signature
+              <Link href="/wholesale" className={navLinkClass}>
+                Wholesale
                 <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#7a0c0c] transition-all duration-300 group-hover:w-full" />
               </Link>
 
@@ -263,8 +263,8 @@ export default function Navbar() {
                   </div>
                 </div>
 
-                <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="font-medium">
-                  Signature
+                <Link href="/wholesale" onClick={() => setIsMobileMenuOpen(false)} className="font-medium">
+                  Wholesale
                 </Link>
 
                 <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="font-medium">
