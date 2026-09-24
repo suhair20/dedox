@@ -4,7 +4,7 @@ import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Wholesale",
-  description: `Wholesale and reseller perfume supply from ${SITE_NAME}. Contact us on WhatsApp for partner pricing in the UAE.`,
+  description: `Wholesale and reseller perfume supply from ${SITE_NAME}. Contact us on WhatsApp for partner pricing.`,
   alternates: {
     canonical: `${SITE_URL}/wholesale`,
   },

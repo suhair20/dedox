@@ -8,6 +8,7 @@ import ShopByBrand from "@/components/ShopByBrand";
 import ShopByPrice from "@/components/ShopByPrice";
 import LoyaltyTeaser from "@/components/LoyaltyTeaser";
 import ReviewsTeaser from "@/components/reviews/ReviewsTeaser";
+import WholesaleTeaser from "@/components/WholesaleTeaser";
 import Features from "@/components/Features";
 import FloatingButtons from "@/components/FloatingButtons";
 import { SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from "@/lib/site";
@@ -30,6 +31,7 @@ export default function Home() {
       <ShopByBrand />
       <BestSelling />
       <Categories />
+      <WholesaleTeaser />
       <Features />
       <FloatingButtons />
     </div>

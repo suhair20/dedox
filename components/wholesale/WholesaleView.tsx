@@ -23,7 +23,7 @@ const STEPS = [
   {
     step: "03",
     title: "Get a quote",
-    body: "We reply with partner pricing and next steps for UAE supply.",
+    body: "We reply with partner pricing and next steps for supply.",
   },
 ];
 
@@ -74,7 +74,7 @@ export default function WholesaleView() {
               transition={{ duration: 0.6, delay: 0.14 }}
               className="mt-7 max-w-md text-base leading-relaxed text-white/70 sm:text-lg"
             >
-              Bulk and reseller supply across the UAE. One WhatsApp message —
+              Bulk and reseller supply, wherever you are. One WhatsApp message —
               we handle partner pricing from there.
             </motion.p>
 

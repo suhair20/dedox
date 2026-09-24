@@ -1,10 +1,73 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { Mail, MapPin, Clock } from "lucide-react";
+import { FormEvent, useState, type ReactNode } from "react";
+import { Mail, MessageCircle, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import {
+  CONTACT_EMAIL,
+  INSTAGRAM_HANDLE,
+  INSTAGRAM_URL,
+  WHATSAPP_DISPLAY,
+  WHATSAPP_URL,
+} from "@/lib/site";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+    </svg>
+  );
+}
+
+function ContactTile({
+  href,
+  icon,
+  label,
+  value,
+  hint,
+}: {
+  href: string;
+  icon: ReactNode;
+  label: string;
+  value: string;
+  hint: string;
+}) {
+  const external = href.startsWith("http");
+  return (
+    <a
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      className="group flex items-center gap-4 rounded-[1.5rem] border border-[#7a0c0c]/10 bg-[#fffaf8] p-5 transition hover:border-[#7a0c0c]/30 hover:bg-white hover:shadow-[0_14px_40px_rgba(122,12,12,0.08)]"
+    >
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#7a0c0c] text-white shadow-sm">
+        {icon}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
+          {label}
+        </span>
+        <span className="mt-0.5 block truncate text-base font-semibold text-gray-900 group-hover:text-[#7a0c0c]">
+          {value}
+        </span>
+        <span className="mt-0.5 block text-xs text-gray-500">{hint}</span>
+      </span>
+    </a>
+  );
+}
 
 export default function ContactView() {
   const [name, setName] = useState("");
@@ -77,8 +140,8 @@ export default function ContactView() {
               Contact
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-gray-500">
-              A question about a bottle, an order, or Rewards — write to us.
-              We read every message.
+              Follow us, message us, or write to us — a question about a
+              bottle, an order, or Rewards. We read every message.
             </p>
           </motion.div>
 
@@ -89,60 +152,41 @@ export default function ContactView() {
               transition={{ delay: 0.1 }}
               className="space-y-4"
             >
-              <div className="rounded-[1.5rem] border border-[#7a0c0c]/10 bg-[#fffaf8] p-5">
-                <div className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-[#7a0c0c] shadow-sm">
-                    <Mail className="h-4 w-4" />
-                  </span>
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
-                      Email
-                    </p>
-                    <a
-                      href="mailto:hello@dedoxperfume.com"
-                      className="mt-1 block text-sm font-semibold text-gray-900 hover:text-[#7a0c0c]"
-                    >
-                      hello@dedoxperfume.com
-                    </a>
-                  </div>
+              <div className="rounded-[1.5rem] border border-[#7a0c0c]/10 bg-gradient-to-br from-[#4a0808] via-[#7a0c0c] to-[#4a0808] p-6 text-white">
+                <div className="mb-3 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-[#fca5a5]" />
+                  <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#fca5a5]">
+                    About Dedox
+                  </p>
                 </div>
+                <p className="text-sm leading-relaxed text-white/85">
+                  Dedox is a house of original luxury fragrance. We curate
+                  bottles for presence and longevity — every order arrives
+                  authentic, sealed, and ready to wear.
+                </p>
               </div>
-              <div className="rounded-[1.5rem] border border-[#7a0c0c]/10 bg-[#fffaf8] p-5">
-                <div className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-[#7a0c0c] shadow-sm">
-                    <MapPin className="h-4 w-4" />
-                  </span>
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
-                      Based in
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-gray-900">
-                      United Arab Emirates
-                    </p>
-                    <p className="mt-1 text-sm text-gray-500">
-                      We ship originals from the UAE to your door.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="rounded-[1.5rem] border border-[#7a0c0c]/10 bg-[#fffaf8] p-5">
-                <div className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-[#7a0c0c] shadow-sm">
-                    <Clock className="h-4 w-4" />
-                  </span>
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
-                      Replies
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-gray-900">
-                      Sunday – Thursday
-                    </p>
-                    <p className="mt-1 text-sm text-gray-500">
-                      We aim to answer within one working day.
-                    </p>
-                  </div>
-                </div>
-              </div>
+
+              <ContactTile
+                href={INSTAGRAM_URL}
+                icon={<InstagramIcon className="h-5 w-5" />}
+                label="Instagram"
+                value={`@${INSTAGRAM_HANDLE}`}
+                hint="New arrivals and private edits"
+              />
+              <ContactTile
+                href={WHATSAPP_URL}
+                icon={<MessageCircle className="h-5 w-5" />}
+                label="WhatsApp"
+                value={WHATSAPP_DISPLAY}
+                hint="Fastest way to reach us"
+              />
+              <ContactTile
+                href={`mailto:${CONTACT_EMAIL}`}
+                icon={<Mail className="h-5 w-5" />}
+                label="Email"
+                value={CONTACT_EMAIL}
+                hint="We reply within one working day"
+              />
             </motion.aside>
 
             <motion.form
