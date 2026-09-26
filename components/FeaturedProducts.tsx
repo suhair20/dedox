@@ -82,9 +82,11 @@ export default function FeaturedProducts() {
           rare, current, and chosen for presence. Drag either way to browse;
           tap a card to read the story and add it to your cart.
         </p>
-        <Link href="/shop" className="group relative inline-block overflow-hidden pb-1 text-[10px] font-black uppercase tracking-widest text-[#7a0c0c]">
-          <span>View all collection</span>
-          <div className="absolute bottom-0 left-0 h-0.5 w-full -translate-x-full bg-[#7a0c0c] transition-transform duration-500 group-hover:translate-x-0" />
+        <Link
+          href="/shop"
+          className="inline-flex items-center gap-2 rounded-full bg-[#7a0c0c] px-5 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-[0_8px_24px_rgba(122,12,12,0.35)] transition hover:bg-[#981212] hover:shadow-[0_10px_28px_rgba(122,12,12,0.45)]"
+        >
+          View all collection
         </Link>
       </div>
 
