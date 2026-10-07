@@ -1,7 +1,5 @@
 import type { PaymentMethod } from "@/lib/checkout/types";
 
-import { isDubaiDelivery } from "@/lib/checkout/deliveryCopy";
-
 
 
 export function isStripePaymentMethod(

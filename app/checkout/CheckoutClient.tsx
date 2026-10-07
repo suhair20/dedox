@@ -10,7 +10,6 @@ import {
   ShieldCheck,  
   CreditCard,  
   Smartphone, 
-  Banknote, 
   Check, 
   Lock,
   ArrowRight
@@ -394,31 +393,6 @@ export default function CheckoutClient() {
     };
   }, [currentStep, paymentMethod, cart, shippingMethod, shippingAddress, appliedCoupon]);
 
-  const handleCompleteOrder = async () => {
-    if (cart.length === 0) {
-      setCheckoutError('Your cart is empty.');
-      return;
-    }
-
-
-    if (isStripePaymentMethod(paymentMethod)) {
-      setCheckoutError('Please complete payment using the secure form below.');
-      return;
-    }
-
-    setIsLoading(true);
-    setCheckoutError('');
-
-    try {
-      await finalizeOrder();
-    } catch (error) {
-      setCheckoutError(
-        error instanceof Error ? error.message : 'Failed to place order.'
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleStripePaymentSuccess = async (paymentIntentId: string) => {
     try {

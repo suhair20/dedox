@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useProducts } from "@/context/ProductsContext";
 import Image from "next/image";
@@ -53,7 +53,7 @@ export default function ProductView({ params }: { params: { id: string } }) {
     const firstAvailable =
       product?.sizes?.find((size) => size.inStock !== false) || product?.sizes?.[0];
     setSelectedSizeKey(firstAvailable?.key || "");
-  }, [product?.id]);
+  }, [product?.id, product?.sizes]);
 
   if (loading) {
     return (
