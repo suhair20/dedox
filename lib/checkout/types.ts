@@ -31,7 +31,7 @@ export type ShippingAddressInput = {
 
 export type ShippingMethod = "standard" | "express";
 
-export type PaymentMethod = "card" | "upi" | "paypal" | "cod";
+export type PaymentMethod = "card" | "upi" | "paypal";
 
 export type CheckoutTotals = {
   subtotal: number;

@@ -2,7 +2,11 @@ import bcrypt from "bcryptjs";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 const SALT_ROUNDS = 10;
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is missing");
+}
 export const AUTH_COOKIE_NAME = "auth_token";
 export const AUTH_SESSION_MAX_AGE = 7 * 24 * 60 * 60;
 

@@ -5,7 +5,6 @@ import { calculateCheckoutTotals } from "@/lib/checkout/calculateTotals";
 import { validateCartItems } from "@/lib/checkout/validateCart";
 import { verifyStripePayment } from "@/lib/checkout/verifyStripePayment";
 import {
-  canUseCashOnDelivery,
   isStripePaymentMethod,
 } from "@/lib/checkout/paymentMethods";
 import { pointsFor } from "@/lib/loyalty/points";
@@ -133,21 +132,21 @@ export async function createOrderFromCheckout(
 ): Promise<CreateOrderResult> {
   const { items, totals, coupon } = await prepareCheckout(payload);
 
-  if (payload.paymentMethod === "cod") {
-    if (
-      !canUseCashOnDelivery(
-        payload.shippingAddress.country,
-        payload.shippingAddress.city
-      )
-    ) {
-      throw new Error("Cash on Delivery is available only for Dubai addresses.");
-    }
-  }
-
   if (isStripePaymentMethod(payload.paymentMethod)) {
     if (!payload.stripePaymentIntentId) {
       throw new Error("Payment confirmation is required for online payments.");
     }
+    
+    const writeClient = getSanityWriteClient();
+    const existingOrder = await writeClient.fetch(
+      `*[_type == "order" && stripePaymentIntentId == $id][0]`,
+      { id: payload.stripePaymentIntentId }
+    );
+    
+    if (existingOrder) {
+      throw new Error("This payment has already been used for an order.");
+    }
+
     await verifyStripePayment(payload.stripePaymentIntentId, totals.total);
   }
 
@@ -209,12 +208,12 @@ export async function createOrderFromCheckout(
     pointsEarned,
     ...(reward
       ? {
-          redeemedReward: {
-            productId: reward._id,
-            name: reward.name,
-            pointsSpent: reward.pointsCost,
-          },
-        }
+        redeemedReward: {
+          productId: reward._id,
+          name: reward.name,
+          pointsSpent: reward.pointsCost,
+        },
+      }
       : {}),
     ...(payload.stripePaymentIntentId
       ? { stripePaymentIntentId: payload.stripePaymentIntentId }

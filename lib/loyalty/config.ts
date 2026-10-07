@@ -4,7 +4,7 @@
 export const POINTS_PER_UNIT = 10;
 
 /** Minimum order total required to earn any points. */
-export const MIN_ORDER_TOTAL = 1000;
+export const MIN_ORDER_TOTAL = 500;
 
 /** Rolling window for earned and redeemed points. */
 export const EXPIRY_DAYS = 365;

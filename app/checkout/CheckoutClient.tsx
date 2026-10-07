@@ -20,7 +20,7 @@ import Logo from '@/components/Logo';
 import StripePaymentSection from '@/components/checkout/StripePaymentSection';
 import CheckoutRewardsSection from '@/components/checkout/CheckoutRewardsSection';
 import CheckoutPointsTeaser from '@/components/checkout/CheckoutPointsTeaser';
-import { canUseCashOnDelivery, isStripePaymentMethod } from '@/lib/checkout/paymentMethods';
+import { isStripePaymentMethod } from '@/lib/checkout/paymentMethods';
 import { useAuth } from '@/context/AuthContext';
 import ShippingAddressSection from '@/components/checkout/ShippingAddressSection';
 import type { ShippingAddressInput } from '@/lib/checkout/types';
@@ -60,7 +60,7 @@ export default function CheckoutClient() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const shippingMethod = 'standard' as const;
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'paypal' | 'cod'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'upi' | 'paypal'>('card');
   const [shippingAddress, setShippingAddress] = useState<ShippingAddressInput>(emptyAddress);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -166,24 +166,14 @@ export default function CheckoutClient() {
     }
   }, [redeemRewardProductId, rewardProducts, pointsBalance, rewardsLoaded]);
 
-  useEffect(() => {
-    if (
-      paymentMethod === "cod" &&
-      !canUseCashOnDelivery(shippingAddress.country, shippingAddress.city)
-    ) {
-      setPaymentMethod("card");
-    }
-  }, [paymentMethod, shippingAddress.country, shippingAddress.city]);
+
 
   const selectedReward = rewardProducts.find(
     (r) => r._id === redeemRewardProductId
   ) ?? null;
 
   const deliveryCopy = checkoutDeliveryCopy(shippingAddress.country);
-  const codAvailable = canUseCashOnDelivery(
-    shippingAddress.country,
-    shippingAddress.city
-  );
+
 
   // Derived calculations
   const subtotal = getCartTotal();
@@ -410,10 +400,6 @@ export default function CheckoutClient() {
       return;
     }
 
-    if (paymentMethod === 'cod' && !codAvailable) {
-      setCheckoutError('Cash on Delivery is available only for Dubai addresses.');
-      return;
-    }
 
     if (isStripePaymentMethod(paymentMethod)) {
       setCheckoutError('Please complete payment using the secure form below.');
@@ -719,29 +705,7 @@ export default function CheckoutClient() {
                         <span className="text-[10px] font-black uppercase tracking-widest text-gray-900">PayPal Express Checkout</span>
                       </button>
 
-                      {codAvailable ? (
-                        <button
-                          type="button"
-                          onClick={() => setPaymentMethod('cod')}
-                          className={`flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-5 transition-all sm:gap-4 sm:rounded-3xl sm:p-8 ${
-                            paymentMethod === 'cod'
-                            ? 'border-[#7a0c0c] bg-white shadow-xl'
-                            : 'border-gray-50 bg-white/50 hover:border-gray-200 opacity-60'
-                          }`}
-                        >
-                          <Banknote className={`h-8 w-8 ${paymentMethod === 'cod' ? 'text-[#7a0c0c]' : 'text-gray-400'}`} />
-                          <span className="text-[10px] font-black uppercase tracking-widest text-gray-900">Cash on Delivery</span>
-                        </button>
-                      ) : (
-                        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-5 text-center sm:rounded-3xl sm:p-8 md:col-span-2">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">
-                            Cash on Delivery
-                          </p>
-                          <p className="mt-2 text-xs text-gray-500">
-                            Available only for Dubai addresses. Please pay by card, UPI, or PayPal.
-                          </p>
-                        </div>
-                      )}
+
                     </div>
 
                     <AnimatePresence>
@@ -785,22 +749,7 @@ export default function CheckoutClient() {
                     </p>
                   )}
 
-                  {paymentMethod === 'cod' && (
-                  <button 
-                    onClick={handleCompleteOrder}
-                    disabled={isLoading}
-                  className="form-btn w-full btn-primary shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] md:w-auto"
-                  >
-                    {isLoading ? (
-                      <div className="h-5 w-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <span>Place Order (COD)</span>
-                        <Check className="h-4 w-4" />
-                      </>
-                    )}
-                  </button>
-                  )}
+
                 </motion.div>
               )}
             </AnimatePresence>
