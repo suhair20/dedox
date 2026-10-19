@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Gift, Sparkles, Star } from "lucide-react";
@@ -29,6 +30,14 @@ export default function LoyaltyTeaser() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="relative overflow-hidden rounded-[1.5rem] bg-[#1a0505] px-4 py-7 text-center shadow-[0_30px_80px_rgba(122,12,12,0.22)] sm:rounded-[2.5rem] sm:px-10 sm:py-14 sm:text-left lg:px-14"
         >
+          <Image
+            src="/images/bg-images/image 3.jpg.jpeg"
+            alt=""
+            fill
+            unoptimized
+            sizes="(max-width: 1024px) 100vw, 80vw"
+            className="object-cover object-center"
+          />
           <div className="pointer-events-none absolute inset-0">
             <motion.div
               className="absolute -left-16 -top-20 h-64 w-64 rounded-full bg-[#7a0c0c]/50 blur-3xl"

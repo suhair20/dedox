@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className="flex w-full min-w-0 flex-col overflow-x-clip bg-[#ffffff]">
+    <div className="flex w-full min-w-0 flex-col overflow-x-clip">
       <Hero />
       <NotesCarousel />
       <ShopByPrice />

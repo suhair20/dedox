@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Outfit, Cinzel_Decorative, Inter, Montserrat } from "next/font/google";
+import { Manrope, Cormorant_Garamond, Montserrat } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
 import {
@@ -10,18 +10,20 @@ import {
   SITE_URL,
 } from "@/lib/site";
 
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+});
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-cormorant",
+});
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "700", "800"],
   variable: "--font-montserrat",
 });
-const cinzel = Cinzel_Decorative({
-  weight: ["400", "700", "900"],
-  subsets: ["latin"],
-  variable: "--font-playfair",
-});
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -109,7 +111,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-white overflow-x-clip">
+    <html lang="en" className="overflow-x-clip bg-[#faf6f5]">
       <head>
         <script
           type="application/ld+json"
@@ -117,7 +119,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${outfit.className} ${outfit.variable} ${montserrat.variable} ${cinzel.variable} ${inter.variable} flex min-h-[100dvh] flex-col overflow-x-clip bg-[#ffffff] antialiased text-gray-900`}
+        className={`${manrope.className} ${manrope.variable} ${cormorant.variable} ${montserrat.variable} flex min-h-[100dvh] flex-col overflow-x-clip bg-[#faf6f5] antialiased text-gray-900`}
       >
         <AppShell>{children}</AppShell>
       </body>

@@ -77,24 +77,26 @@ export default function NotesCarousel() {
   return (
     <section className="home-section w-full overflow-hidden">
       <div className="home-section-inner">
-        <div className="home-section-header mx-auto flex w-full max-w-3xl flex-col items-center justify-center">
-          <h2 className="home-section-title">Explore Our Fragrances</h2>
-          <p className="home-section-subtitle mb-6 sm:mb-8">
+        <div className="mb-5 text-center sm:mb-6">
+          <h2 className="text-red-highlight mb-2 font-serif-luxury text-[1.35rem] leading-tight sm:mb-4 sm:text-4xl lg:text-5xl">
+            Explore Our Fragrances
+          </h2>
+          <p className="home-section-subtitle mb-5">
             Begin with what you love to smell. Browse by note, accord, occasion,
             or concentration — oud or rose, woody or fresh, office or evening,
             parfum or eau de parfum — then open the shop already filtered to
             that world.
           </p>
 
-          <div className="flex w-full max-w-full snap-x overflow-x-auto rounded-full bg-gray-100 p-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:w-auto sm:max-w-full sm:p-1.5 [&::-webkit-scrollbar]:hidden">
+          <div className="mx-auto flex w-fit max-w-full snap-x overflow-x-auto rounded-full bg-[#7a0c0c]/8 p-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:p-1.5 [&::-webkit-scrollbar]:hidden">
             {TAB_CONFIG.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`flex shrink-0 snap-center items-center whitespace-nowrap rounded-full px-3 py-2 font-inter text-[11px] font-medium transition-all duration-300 sm:px-6 sm:py-3 sm:text-sm md:text-base ${
+                className={`flex shrink-0 snap-center items-center whitespace-nowrap rounded-full px-3 py-2 text-[11px] font-medium transition-all duration-300 sm:px-6 sm:py-3 sm:text-sm md:text-base ${
                   activeTab === tab.key
                     ? "btn-primary scale-105 text-white shadow-xl"
-                    : "text-gray-500 hover:text-gray-900"
+                    : "text-[#7a0c0c]/70 hover:text-[#7a0c0c]"
                 }`}
               >
                 {tab.icon}

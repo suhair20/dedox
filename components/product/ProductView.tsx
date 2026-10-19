@@ -11,10 +11,11 @@ import {
   ShieldCheck, 
   Truck, 
   CheckCircle2,
-
+  Zap,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useLocation } from "@/context/LocationContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -30,6 +31,8 @@ export default function ProductView({ params }: { params: { id: string } }) {
   const [selectedSizeKey, setSelectedSizeKey] = useState<string>("");
   const { addToCart } = useCart();
   const { formatPrice } = useLocation();
+  const router = useRouter();
+  const [added, setAdded] = useState(false);
   
   // Gallery state
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -72,8 +75,30 @@ export default function ProductView({ params }: { params: { id: string } }) {
     );
   }
 
+  const cartItem = {
+    id: product.id,
+    name: product.name,
+    price: displayPrice,
+    image: product.image,
+    sizeKey: selectedSize?.key,
+    sizeLabel: selectedSize?.label,
+  };
+
+  const handleAddToCart = () => {
+    if (!sizeInStock) return;
+    addToCart(cartItem, quantity);
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 1600);
+  };
+
+  const handleBuyNow = () => {
+    if (!sizeInStock) return;
+    addToCart(cartItem, quantity);
+    router.push("/checkout");
+  };
+
   return (
-    <div className="bg-[#fafafa] min-h-screen pt-8 pb-32">
+    <div className="min-h-screen bg-[#faf6f5] pb-44 pt-8 md:pb-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Navigation Breadcrumb */}
@@ -348,32 +373,32 @@ export default function ProductView({ params }: { params: { id: string } }) {
                   </div>
                 </div>
 
-                <button 
-                  onClick={() =>
-                    addToCart(
-                      {
-                        id: product.id,
-                        name: product.name,
-                        price: displayPrice,
-                        image: product.image,
-                        sizeKey: selectedSize?.key,
-                        sizeLabel: selectedSize?.label,
-                      },
-                      quantity
-                    )
-                  }
-                  disabled={!sizeInStock}
-                  className={`w-full btn-primary h-16 rounded-2xl flex items-center justify-center gap-4 transition-all duration-300 shadow-[0_20px_40px_rgba(122,12,12,0.15)] ${
-                    !sizeInStock 
-                    ? 'opacity-50 cursor-not-allowed grayscale' 
-                    : 'hover:scale-[1.02] active:scale-[0.98]'
-                  }`}
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  <span className="font-bold uppercase tracking-widest text-sm">
-                    {sizeInStock ? 'Add to Cart' : 'Out of Stock'}
-                  </span>
-                </button>
+                <div className="hidden gap-3 md:grid md:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={handleAddToCart}
+                    disabled={!sizeInStock}
+                    className={`flex h-14 items-center justify-center gap-2 rounded-2xl border-2 border-[#7a0c0c] bg-white text-[#7a0c0c] transition ${
+                      !sizeInStock ? "cursor-not-allowed opacity-50" : "hover:bg-[#7a0c0c]/5"
+                    }`}
+                  >
+                    <ShoppingCart className="h-4 w-4" />
+                    <span className="text-xs font-black uppercase tracking-widest">
+                      {added ? "Added" : sizeInStock ? "Add to Cart" : "Out of Stock"}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleBuyNow}
+                    disabled={!sizeInStock}
+                    className={`btn-primary flex h-14 items-center justify-center gap-2 rounded-2xl shadow-[0_16px_32px_rgba(122,12,12,0.18)] ${
+                      !sizeInStock ? "cursor-not-allowed opacity-50 grayscale" : "hover:scale-[1.01]"
+                    }`}
+                  >
+                    <Zap className="h-4 w-4" />
+                    <span className="text-xs font-black uppercase tracking-widest">Buy Now</span>
+                  </button>
+                </div>
               </div>
 
               {/* Dedox Assurance Checklist */}
@@ -423,6 +448,45 @@ export default function ProductView({ params }: { params: { id: string } }) {
             rating={product.rating}
             reviewCount={product.reviewCount}
           />
+        </div>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-[4.85rem] z-[85] border-t border-[#7a0c0c]/10 bg-[#faf6f5]/95 px-3 py-2.5 shadow-[0_-10px_30px_rgba(122,12,12,0.12)] backdrop-blur-md md:bottom-0 md:px-6 md:py-3">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 sm:gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-[#7a0c0c]/70">
+              {product.name}
+            </p>
+            <p className="font-serif-luxury text-lg leading-tight text-[#7a0c0c] sm:text-xl">
+              {formatPrice(displayPrice)}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={!sizeInStock}
+            className={`inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full border-2 border-[#7a0c0c] bg-white px-3.5 text-[#7a0c0c] sm:h-12 sm:px-5 ${
+              !sizeInStock ? "cursor-not-allowed opacity-50" : ""
+            }`}
+          >
+            <ShoppingCart className="h-4 w-4" />
+            <span className="text-[10px] font-black uppercase tracking-widest sm:text-[11px]">
+              {added ? "Added" : "Add"}
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={handleBuyNow}
+            disabled={!sizeInStock}
+            className={`btn-primary inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-4 sm:h-12 sm:px-6 ${
+              !sizeInStock ? "cursor-not-allowed opacity-50 grayscale" : ""
+            }`}
+          >
+            <Zap className="h-4 w-4" />
+            <span className="text-[10px] font-black uppercase tracking-widest sm:text-[11px]">
+              Buy Now
+            </span>
+          </button>
         </div>
       </div>
     </div>

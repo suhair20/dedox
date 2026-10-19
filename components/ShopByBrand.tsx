@@ -12,10 +12,10 @@ export default function ShopByBrand() {
     fetch("/api/catalog")
       .then((res) => res.json())
       .then((data) => {
-        const featured = Array.isArray(data?.brands)
-          ? data.brands.filter((brand: CatalogBrand) => brand.isFeatured)
-          : [];
-        setBrands(featured.slice(0, 4));
+        const items = Array.isArray(data?.brands) ? data.brands : [];
+        const featured = items.filter((brand: CatalogBrand) => brand.isFeatured);
+        const rest = items.filter((brand: CatalogBrand) => !brand.isFeatured);
+        setBrands([...featured, ...rest].slice(0, 5));
       })
       .catch(() => setBrands([]));
   }, []);
@@ -35,8 +35,8 @@ export default function ShopByBrand() {
           </p>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-8 sm:gap-10 lg:flex-row lg:gap-12">
-          <div className="grid grid-cols-2 place-items-center gap-4 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 md:gap-6">
+        <div className="flex flex-col items-center justify-center gap-8 sm:gap-10">
+          <div className="grid w-full grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 lg:grid-cols-5 lg:gap-6">
             {brands.length === 0 ? (
               <div className="col-span-full rounded-2xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-400 sm:p-8">
                 Mark brands as Featured in Admin to show them here.
@@ -46,22 +46,27 @@ export default function ShopByBrand() {
                 <Link
                   key={brand.id}
                   href={`/shop?brand=${encodeURIComponent(brand.slug)}`}
-                  className="group flex h-28 w-28 items-center justify-center overflow-hidden rounded-2xl border border-gray-100 bg-white text-center shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-[#7a0c0c] hover:bg-[#7a0c0c] hover:shadow-xl active:scale-[0.98] sm:h-24 sm:w-24 md:h-24 md:w-36"
+                  className="group flex min-h-[7.5rem] flex-col items-center justify-center gap-3 rounded-2xl border border-gray-100 bg-white p-4 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#7a0c0c]/40 hover:shadow-[0_16px_40px_rgba(122,12,12,0.12)] sm:min-h-[9rem] sm:p-6"
                 >
                   {brand.imageUrl ? (
                     <Image
                       src={brand.imageUrl}
                       alt={brand.name}
-                      width={120}
-                      height={48}
+                      width={140}
+                      height={56}
                       unoptimized
-                      className="max-h-12 max-w-[85%] object-contain transition group-hover:brightness-0"
+                      className="max-h-12 max-w-full object-contain sm:max-h-14"
                     />
                   ) : (
-                    <span className="px-1 text-[12px] font-bold uppercase tracking-[0.18em] text-gray-900 transition-colors duration-300 group-hover:font-black group-hover:text-black sm:text-[13px] sm:tracking-[0.2em] md:text-[14px]">
+                    <span className="text-sm font-bold uppercase tracking-[0.18em] text-gray-900 transition-colors group-hover:text-[#7a0c0c] sm:text-base">
                       {brand.name}
                     </span>
                   )}
+                  {brand.imageUrl ? (
+                    <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-gray-500 transition-colors group-hover:text-[#7a0c0c] sm:text-[11px]">
+                      {brand.name}
+                    </span>
+                  ) : null}
                 </Link>
               ))
             )}

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { CatalogCategory } from "@/lib/catalogTypes";
 
@@ -43,41 +44,53 @@ export default function Categories() {
             Add categories in Admin and mark them Featured to show here.
           </div>
         ) : (
-          <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 scrollbar-hide sm:gap-8 md:mx-0 md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:px-0 md:pb-0">
-            {categories.map((cat, idx) => (
-              <motion.div
-                key={cat.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1, duration: 0.6 }}
-                className="flex w-[min(72vw,18rem)] shrink-0 snap-center flex-col items-center text-center sm:w-[60vw] md:w-auto"
+          <>
+            <div className="grid grid-cols-3 gap-2 sm:gap-5 md:gap-8">
+              {categories.map((cat, idx) => (
+                <motion.div
+                  key={cat.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.08, duration: 0.5 }}
+                >
+                  <Link
+                    href={`/shop?category=${encodeURIComponent(cat.slug)}`}
+                    className="group relative block aspect-[3/4] overflow-hidden rounded-2xl shadow-[0_8px_24px_rgba(15,23,42,0.12)] sm:rounded-[1.5rem] md:rounded-[1.75rem]"
+                  >
+                    <Image
+                      src={cat.imageUrl || FALLBACK_IMAGE}
+                      alt={cat.name}
+                      fill
+                      unoptimized
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      sizes="(max-width: 640px) 32vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 p-2 sm:p-4 md:p-5">
+                      <h3 className="font-serif-luxury text-[13px] leading-tight text-white sm:text-2xl md:text-3xl">
+                        {cat.name}
+                      </h3>
+                      <span className="mt-1 hidden items-center gap-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 sm:mt-2 sm:inline-flex sm:text-[11px]">
+                        Shop
+                        <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                      </span>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="mt-6 text-center sm:mt-8">
+              <Link
+                href="/shop"
+                className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] text-[#7a0c0c] sm:text-[11px]"
               >
-                <Link
-                  href={`/shop?category=${encodeURIComponent(cat.slug)}`}
-                  className="group relative mb-4 block aspect-[3/4] w-full overflow-hidden rounded-[1.35rem] shadow-[0_12px_40px_rgba(15,23,42,0.12)] sm:mb-6 sm:rounded-[1.75rem]"
-                >
-                  <Image
-                    src={cat.imageUrl || FALLBACK_IMAGE}
-                    alt={cat.name}
-                    fill
-                    unoptimized
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    sizes="(max-width: 768px) 72vw, 33vw"
-                  />
-                </Link>
-                <h3 className="mb-2 max-w-full truncate px-1 font-serif-luxury text-xl text-gray-900 sm:mb-3 sm:text-3xl">
-                  {cat.name}
-                </h3>
-                <Link
-                  href={`/shop?category=${encodeURIComponent(cat.slug)}`}
-                  className="btn-primary max-w-full rounded-full px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] shadow-lg transition-all sm:px-10 sm:py-3.5 sm:text-[11px] sm:tracking-[0.2em]"
-                >
-                  Shop {cat.name}
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+                View all collections
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </>
         )}
       </div>
     </section>

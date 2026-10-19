@@ -17,10 +17,14 @@ export default function PriceRangeSlider({
   value,
   onChange,
   label = "Shop by price",
+  light = false,
+  red = false,
 }: {
   value: number;
   onChange: (value: number) => void;
   label?: string;
+  light?: boolean;
+  red?: boolean;
 }) {
   const { formatPrice } = useLocation();
   const progress =
@@ -28,15 +32,27 @@ export default function PriceRangeSlider({
 
   return (
     <div>
-      <div className="mb-3 flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500 sm:text-xs">
+      <div
+        className={`mb-3 flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.18em] sm:text-xs ${
+          red
+            ? "text-[#7a0c0c]"
+            : light
+              ? "text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.45)]"
+              : "text-gray-500"
+        }`}
+      >
         <span>{formatPrice(PRICE_SLIDER_MIN)}</span>
         <span>{formatPrice(PRICE_SLIDER_MAX)}+</span>
       </div>
 
       <div className="relative px-1 py-4">
-        <div className="pointer-events-none absolute left-1 right-1 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-gray-200">
+        <div
+          className={`pointer-events-none absolute left-1 right-1 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full ${
+            light ? "bg-white/35" : "bg-gray-200"
+          }`}
+        >
           <div
-            className="h-full rounded-full bg-[#7a0c0c]"
+            className={`h-full rounded-full ${light ? "bg-white" : "bg-[#7a0c0c]"}`}
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -48,7 +64,9 @@ export default function PriceRangeSlider({
           value={value}
           onChange={(event) => onChange(Number(event.target.value))}
           aria-label={label}
-          className="price-slider relative z-10 w-full cursor-pointer appearance-none bg-transparent"
+          className={`price-slider relative z-10 w-full cursor-pointer appearance-none bg-transparent ${
+            light ? "price-slider-light" : ""
+          }`}
         />
       </div>
     </div>

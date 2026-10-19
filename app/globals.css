@@ -1,11 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter:wght@300;400;500;600&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  --background: #faf6f5;
   --foreground: #1a1a1a;
   --iridescent-silver: #F0F2F4;
   --dedox-brand: #7a0c0c;
@@ -18,15 +16,21 @@
 }
 
 html {
-  background-color: #ffffff;
+  background-color: var(--background);
   overflow-x: clip;
+  font-size: 15px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
 }
 
 body {
   color: var(--foreground);
-  background-color: #ffffff;
-  background: #ffffff;
-  font-family: 'Inter', sans-serif;
+  background-color: var(--background);
+  font-family: var(--font-manrope), sans-serif;
   overflow-x: clip;
   min-width: 0;
   overscroll-behavior-y: auto;
@@ -47,7 +51,7 @@ svg {
 
 @layer utilities {
   .font-serif-luxury {
-    font-family: 'Bodoni Moda', serif;
+    font-family: var(--font-cormorant), serif;
   }
 
   .font-brand {
@@ -56,23 +60,47 @@ svg {
   }
 
   .home-section {
-    @apply bg-[#ffffff] py-8 sm:py-16 lg:py-20;
+    @apply bg-transparent py-4 sm:py-7 lg:py-10;
   }
 
   .home-section-inner {
-    @apply mx-auto w-full max-w-7xl px-[clamp(1.15rem,5.2vw,2rem)] sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
   .home-section-header {
-    @apply mx-auto mb-7 w-full max-w-3xl text-center sm:mb-10;
+    @apply mx-auto mb-4 w-full max-w-3xl text-center sm:mb-6;
   }
 
   .home-section-title {
-    @apply mb-3 font-serif-luxury text-[clamp(1.4rem,6.4vw,1.85rem)] leading-tight text-gray-900 sm:mb-4 sm:text-4xl lg:text-5xl;
+    @apply mb-2 font-serif-luxury text-[1.35rem] leading-tight sm:mb-4 sm:text-4xl lg:text-5xl;
+    background-image: linear-gradient(115deg, #5a0808 0%, #7a0c0c 28%, #d43b3b 52%, #7a0c0c 76%, #4a0606 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 1px 0 rgba(122, 12, 12, 0.18));
   }
 
   .home-section-subtitle {
-    @apply mx-auto max-w-[min(36rem,100%)] px-0.5 text-[clamp(0.8rem,3.5vw,1rem)] leading-relaxed text-gray-500 sm:text-base;
+    @apply mx-auto max-w-[min(36rem,100%)] px-0.5 text-[0.8125rem] leading-relaxed sm:text-base;
+    background-image: linear-gradient(90deg, #8a1818 0%, #c43c3c 50%, #8a1818 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-red-highlight {
+    background-image: linear-gradient(115deg, #5a0808 0%, #7a0c0c 28%, #d43b3b 52%, #7a0c0c 76%, #4a0606 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 1px 0 rgba(122, 12, 12, 0.18));
+  }
+
+  .text-red-gradient {
+    background-image: linear-gradient(90deg, #f8b4b4 0%, #fff1f1 50%, #f87171 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   
   .glass-card {
@@ -192,4 +220,14 @@ svg {
   border: 3px solid #ffffff;
   box-shadow: 0 2px 10px rgba(122, 12, 12, 0.35);
   cursor: pointer;
+}
+
+.price-slider-light::-webkit-slider-thumb {
+  background: #ffffff;
+  border: 3px solid #7a0c0c;
+}
+
+.price-slider-light::-moz-range-thumb {
+  background: #ffffff;
+  border: 3px solid #7a0c0c;
 }

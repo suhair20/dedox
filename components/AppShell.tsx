@@ -12,6 +12,9 @@ import { AuthProvider } from "@/context/AuthContext";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const isHome = pathname === "/";
+  const isBrands = pathname === "/brands";
+  const flushHero = isHome || isBrands;
   const isCheckout = pathname === "/checkout";
   const isLogin = pathname === "/login";
   const hideFooter = isCheckout || isLogin;
@@ -22,8 +25,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <ProductsProvider>
         <AuthProvider>
           <CartProvider>
-            {!hideNavbar && <Navbar />}
-            <main className={`min-w-0 flex-grow overflow-x-clip bg-white ${hideNavbar ? "" : "pt-16 pb-24 sm:pt-[4.5rem] md:pb-0 xl:pt-20"}`}>{children}</main>
+            {!hideNavbar && <Navbar transparentOnTop={flushHero} />}
+            <main
+              className={`min-w-0 flex-grow overflow-x-clip bg-[#faf6f5] ${
+                hideNavbar ? "" : flushHero ? "pb-24 md:pb-0" : "pt-16 pb-24 sm:pt-[4.5rem] md:pb-0 xl:pt-20"
+              }`}
+            >
+              {children}
+            </main>
             {!hideFooter && <Footer />}
             {!hideNavbar && <RewardsScrollModal />}
             {!hideNavbar && <MobileDock />}

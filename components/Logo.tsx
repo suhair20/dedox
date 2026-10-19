@@ -7,9 +7,10 @@ import { SITE_LOGO, SITE_NAME } from "@/lib/site";
 interface LogoProps {
   className?: string;
   compact?: boolean;
+  light?: boolean;
 }
 
-export default function Logo({ className = "", compact = false }: LogoProps) {
+export default function Logo({ className = "", compact = false, light = false }: LogoProps) {
   const sizeClass = compact
     ? "w-32 h-14 sm:w-36 sm:h-16 md:w-40 md:h-[4.25rem] xl:w-48 xl:h-20"
     : "w-32 h-16 md:w-40 md:h-16 lg:w-48 lg:h-20";
@@ -24,7 +25,9 @@ export default function Logo({ className = "", compact = false }: LogoProps) {
           src={SITE_LOGO}
           alt={SITE_NAME}
           fill
-          className="object-contain object-left transition-all duration-700 group-hover:scale-105"
+          className={`object-contain object-left transition-all duration-700 group-hover:scale-105 ${
+            light ? "brightness-0 invert" : ""
+          }`}
           priority
         />
       </div>

@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import Logo from "./Logo";
 import CurrencySwitcher from "./CurrencySwitcher";
 
-export default function Navbar() {
+export default function Navbar({ transparentOnTop = false }: { transparentOnTop?: boolean }) {
   const { getCartCount } = useCart();
   const { isAuthenticated, loading, logout } = useAuth();
   const router = useRouter();
@@ -26,6 +26,20 @@ export default function Navbar() {
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!transparentOnTop) return;
+    const onScroll = () => setIsScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [transparentOnTop]);
+
+  const isTransparent = transparentOnTop && !isScrolled;
+  const iconClass = isTransparent
+    ? "text-white hover:text-white/80"
+    : "text-gray-700 hover:text-[#7a0c0c]";
 
   const submitSearch = (event?: React.FormEvent) => {
     event?.preventDefault();
@@ -61,19 +75,26 @@ export default function Navbar() {
     router.refresh();
   };
 
-  const navLinkClass =
-    "font-serif-luxury text-[11px] xl:text-[12px] uppercase tracking-[0.14em] xl:tracking-[0.18em] 2xl:tracking-[0.22em] font-medium text-gray-900 hover:text-[#7a0c0c] transition-colors relative group whitespace-nowrap";
+  const navLinkClass = `font-serif-luxury text-[11px] xl:text-[12px] uppercase tracking-[0.14em] xl:tracking-[0.18em] 2xl:tracking-[0.22em] font-semibold transition-colors relative group whitespace-nowrap ${
+    isTransparent ? "text-white hover:text-white/80" : "text-black hover:text-[#7a0c0c]"
+  }`;
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-[100] w-full border-b border-white/20 bg-white/90 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur-md">
+      <header
+        className={`fixed inset-x-0 top-0 z-[100] w-full border-b transition-all duration-300 ${
+          isTransparent
+            ? "border-transparent bg-transparent"
+            : "border-[#7a0c0c]/10 bg-[#faf6f5]/90 shadow-[0_8px_30px_rgba(122,12,12,0.06)] backdrop-blur-md"
+        }`}
+      >
         <div className="container mx-auto grid h-16 min-h-[4rem] grid-cols-[auto_1fr_auto] items-center gap-2 px-3 sm:h-[4.5rem] sm:gap-3 sm:px-4 md:px-6 xl:h-20 xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] xl:gap-6">
           {/* Left */}
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="shrink-0 rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#7a0c0c] xl:hidden"
+              className={`shrink-0 rounded-lg p-1.5 transition-colors xl:hidden ${iconClass}`}
               aria-label="Open menu"
             >
               <Menu className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -82,7 +103,7 @@ export default function Navbar() {
             <nav className="hidden min-w-0 items-center gap-4 xl:flex xl:gap-5 2xl:gap-7">
               <Link href="/" className={navLinkClass}>
                 Discover
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#7a0c0c] transition-all duration-300 group-hover:w-full" />
+                <span className={`absolute -bottom-1 left-0 h-px w-0 transition-all duration-300 group-hover:w-full ${isTransparent ? "bg-white" : "bg-[#7a0c0c]"}`} />
               </Link>
 
               <div
@@ -95,7 +116,7 @@ export default function Navbar() {
                   <ChevronDown
                     className={`h-3 w-3 transition ${isShopOpen ? "rotate-180" : ""}`}
                   />
-                  <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#7a0c0c] transition-all duration-300 group-hover:w-full" />
+                  <span className={`absolute -bottom-1 left-0 h-px w-0 transition-all duration-300 group-hover:w-full ${isTransparent ? "bg-white" : "bg-[#7a0c0c]"}`} />
                 </Link>
 
                 <AnimatePresence>
@@ -128,19 +149,19 @@ export default function Navbar() {
 
               <Link href="/wholesale" className={navLinkClass}>
                 Wholesale
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#7a0c0c] transition-all duration-300 group-hover:w-full" />
+                <span className={`absolute -bottom-1 left-0 h-px w-0 transition-all duration-300 group-hover:w-full ${isTransparent ? "bg-white" : "bg-[#7a0c0c]"}`} />
               </Link>
 
               <Link href="/contact" className={navLinkClass}>
                 Contact
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-[#7a0c0c] transition-all duration-300 group-hover:w-full" />
+                <span className={`absolute -bottom-1 left-0 h-px w-0 transition-all duration-300 group-hover:w-full ${isTransparent ? "bg-white" : "bg-[#7a0c0c]"}`} />
               </Link>
             </nav>
           </div>
 
           {/* Center logo — grid column, not absolute */}
           <div className="flex min-w-0 justify-center px-1 sm:px-2">
-            <Logo compact />
+            <Logo compact light={isTransparent} />
           </div>
 
           {/* Right */}
@@ -151,14 +172,18 @@ export default function Navbar() {
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
                 placeholder="Search"
-                className="w-24 rounded-full border border-gray-200 px-3 py-1.5 text-xs outline-none transition focus:border-[#7a0c0c] xl:w-28 2xl:w-40"
+                className={`w-24 rounded-full border px-3 py-1.5 text-xs outline-none transition xl:w-28 2xl:w-40 ${
+                  isTransparent
+                    ? "border-white/40 bg-transparent text-white placeholder:text-white/70 focus:border-white"
+                    : "border-gray-200 focus:border-[#7a0c0c]"
+                }`}
               />
             </form>
 
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="shrink-0 rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#7a0c0c] xl:hidden"
+              className={`shrink-0 rounded-lg p-1.5 transition-colors xl:hidden ${iconClass}`}
               aria-label="Search"
             >
               <Search className="h-5 w-5" />
@@ -167,7 +192,7 @@ export default function Navbar() {
             <Link
               href={accountHref}
               aria-label={loading ? "Account" : isAuthenticated ? "Account" : "Login"}
-              className="hidden shrink-0 rounded-lg p-1.5 text-gray-700 transition-colors hover:text-[#7a0c0c] lg:block"
+              className={`hidden shrink-0 rounded-lg p-1.5 transition-colors lg:block ${iconClass}`}
             >
               <User className="h-5 w-5" />
             </Link>
@@ -180,7 +205,9 @@ export default function Navbar() {
               <Link
                 href="/cart"
                 aria-label="Cart"
-                className="block rounded-lg p-1.5 text-[#7a0c0c] transition-colors hover:text-[#981212]"
+                className={`block rounded-lg p-1.5 transition-colors ${
+                  isTransparent ? "text-white hover:text-white/80" : "text-[#7a0c0c] hover:text-[#981212]"
+                }`}
               >
                 <ShoppingBag className="h-5 w-5" />
               </Link>
@@ -236,12 +263,12 @@ export default function Navbar() {
               </form>
 
               <div className="flex flex-col space-y-6 p-5 sm:space-y-7 sm:p-6">
-                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="font-medium">
+                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="font-semibold text-black">
                   Discover
                 </Link>
 
                 <div>
-                  <p className="mb-4 font-medium">Collections</p>
+                  <p className="mb-4 font-semibold text-black">Collections</p>
                   <div className="space-y-4 border-l pl-4">
                     {categories.map((cat) => (
                       <Link
@@ -263,11 +290,11 @@ export default function Navbar() {
                   </div>
                 </div>
 
-                <Link href="/wholesale" onClick={() => setIsMobileMenuOpen(false)} className="font-medium">
+                <Link href="/wholesale" onClick={() => setIsMobileMenuOpen(false)} className="font-semibold text-black">
                   Wholesale
                 </Link>
 
-                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="font-medium">
+                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="font-semibold text-black">
                   Contact
                 </Link>
 
