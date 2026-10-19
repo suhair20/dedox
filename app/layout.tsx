@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Cormorant_Garamond, Montserrat } from "next/font/google";
+import { Manrope, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
 import {
@@ -12,17 +12,14 @@ import {
 
 const manrope = Manrope({
   subsets: ["latin"],
+  display: "swap",
   variable: "--font-manrope",
 });
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
   variable: "--font-cormorant",
-});
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "800"],
-  variable: "--font-montserrat",
 });
 
 export const metadata: Metadata = {
@@ -119,7 +116,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${manrope.className} ${manrope.variable} ${cormorant.variable} ${montserrat.variable} flex min-h-[100dvh] flex-col overflow-x-clip bg-[#faf6f5] antialiased text-gray-900`}
+        className={`${manrope.className} ${manrope.variable} ${cormorant.variable} flex min-h-[100dvh] flex-col overflow-x-clip bg-[#faf6f5] antialiased text-gray-900`}
       >
         <AppShell>{children}</AppShell>
       </body>
