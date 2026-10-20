@@ -23,7 +23,9 @@ export default function BestSelling() {
   const activeRange = PRICE_RANGES.find((range) => range.id === activeId) ?? PRICE_RANGES[0];
 
   const filteredItems = useMemo(() => {
-    return products
+    const curated = products.filter((p) => p.isBestSelling);
+    const pool = curated.length > 0 ? curated : products;
+    return pool
       .filter((p) => p.price >= activeRange.min && p.price <= activeRange.max)
       .slice(0, 10);
   }, [activeRange, products]);

@@ -451,13 +451,13 @@ export default function ProductView({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-[4.85rem] z-[85] border-t border-[#7a0c0c]/10 bg-[#faf6f5]/95 px-3 py-2.5 shadow-[0_-10px_30px_rgba(122,12,12,0.12)] backdrop-blur-md md:bottom-0 md:px-6 md:py-3">
+      <div className="fixed inset-x-0 bottom-0 z-[90] border-t border-white/10 bg-[#1a0505] px-3 py-2.5 pb-[max(0.7rem,env(safe-area-inset-bottom))] shadow-[0_-16px_40px_rgba(0,0,0,0.35)] md:px-6 md:py-3">
         <div className="mx-auto flex max-w-7xl items-center gap-2 sm:gap-3">
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-[#7a0c0c]/70">
+            <p className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-amber-200/80">
               {product.name}
             </p>
-            <p className="font-serif-luxury text-lg leading-tight text-[#7a0c0c] sm:text-xl">
+            <p className="font-serif-luxury text-lg leading-tight text-amber-100 sm:text-xl">
               {formatPrice(displayPrice)}
             </p>
           </div>
@@ -465,7 +465,7 @@ export default function ProductView({ params }: { params: { id: string } }) {
             type="button"
             onClick={handleAddToCart}
             disabled={!sizeInStock}
-            className={`inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full border-2 border-[#7a0c0c] bg-white px-3.5 text-[#7a0c0c] sm:h-12 sm:px-5 ${
+            className={`inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full border border-amber-200/50 bg-transparent px-3.5 text-amber-100 sm:h-12 sm:px-5 ${
               !sizeInStock ? "cursor-not-allowed opacity-50" : ""
             }`}
           >
@@ -478,7 +478,7 @@ export default function ProductView({ params }: { params: { id: string } }) {
             type="button"
             onClick={handleBuyNow}
             disabled={!sizeInStock}
-            className={`btn-primary inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-4 sm:h-12 sm:px-6 ${
+            className={`inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-amber-100 via-white to-amber-50 px-4 text-[#7a0c0c] sm:h-12 sm:px-6 ${
               !sizeInStock ? "cursor-not-allowed opacity-50 grayscale" : ""
             }`}
           >

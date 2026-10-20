@@ -33,6 +33,7 @@ type SanityProduct = {
   categorySlug?: string;
   categoryId?: string;
   isFeatured?: boolean;
+  isBestSelling?: boolean;
   inStock?: boolean;
   rating?: number;
   reviewCount?: number;
@@ -84,6 +85,7 @@ export function mapSanityProduct(doc: SanityProduct): Product {
     categorySlug: doc.categorySlug,
     categoryId: doc.categoryId,
     isFeatured: doc.isFeatured ?? false,
+    isBestSelling: doc.isBestSelling ?? false,
     description: doc.description || "",
     brand: doc.brand || "Dedox",
     brandSlug: doc.brandSlug,

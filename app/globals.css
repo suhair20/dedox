@@ -72,7 +72,7 @@ svg {
   }
 
   .home-section-title {
-    @apply mb-2 font-serif-luxury text-[1.35rem] leading-tight sm:mb-4 sm:text-4xl lg:text-5xl;
+    @apply mb-2 font-serif-luxury text-[1.8rem] leading-tight sm:mb-4 sm:text-4xl lg:text-5xl;
     background-image: linear-gradient(115deg, #5a0808 0%, #7a0c0c 28%, #d43b3b 52%, #7a0c0c 76%, #4a0606 100%);
     -webkit-background-clip: text;
     background-clip: text;

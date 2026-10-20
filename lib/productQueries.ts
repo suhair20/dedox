@@ -27,6 +27,7 @@ export const PRODUCT_PROJECTION = `{
   "categorySlug": category->slug.current,
   "categoryId": category._ref,
   isFeatured,
+  isBestSelling,
   inStock,
   rating,
   reviewCount,

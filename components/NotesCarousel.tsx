@@ -78,7 +78,7 @@ export default function NotesCarousel() {
     <section className="home-section w-full overflow-hidden">
       <div className="home-section-inner">
         <div className="mb-5 text-center sm:mb-6">
-          <h2 className="text-red-highlight mb-2 font-serif-luxury text-[1.35rem] leading-tight sm:mb-4 sm:text-4xl lg:text-5xl">
+          <h2 className="text-red-highlight mb-2 font-serif-luxury text-[1.8rem] leading-tight sm:mb-4 sm:text-4xl lg:text-5xl">
             Explore Our Fragrances
           </h2>
           <p className="home-section-subtitle mb-5">

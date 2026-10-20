@@ -9,6 +9,7 @@ export interface Product {
   categorySlug?: string;
   categoryId?: string;
   isFeatured: boolean;
+  isBestSelling?: boolean;
   description: string;
   brand: string;
   brandSlug?: string;

@@ -30,7 +30,7 @@ export default function ShopByPrice() {
   return (
     <section className="home-section" id="shop-by-price">
       <div className="home-section-inner">
-        <h2 className="text-red-highlight mb-4 text-left font-serif-luxury text-[1.35rem] uppercase leading-tight tracking-wide sm:mb-5 sm:text-4xl lg:text-5xl">
+        <h2 className="text-red-highlight mb-4 text-left font-serif-luxury text-[1.8rem] uppercase leading-tight tracking-wide sm:mb-5 sm:text-4xl lg:text-5xl">
           Shop by Price
         </h2>
 

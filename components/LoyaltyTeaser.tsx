@@ -38,6 +38,7 @@ export default function LoyaltyTeaser() {
             sizes="(max-width: 1024px) 100vw, 80vw"
             className="object-cover object-center"
           />
+          <div className="pointer-events-none absolute inset-0 bg-black/25" />
           <div className="pointer-events-none absolute inset-0">
             <motion.div
               className="absolute -left-16 -top-20 h-64 w-64 rounded-full bg-[#7a0c0c]/50 blur-3xl"
@@ -77,7 +78,7 @@ export default function LoyaltyTeaser() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.15 }}
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-amber-200 sm:px-3 sm:py-1.5 sm:text-[10px] sm:tracking-[0.22em]"
+                className="inline-flex items-center gap-2 rounded-full border border-amber-200/40 bg-white/10 px-3 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-amber-200 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] sm:px-3 sm:py-1.5 sm:text-[10px] sm:tracking-[0.22em]"
               >
                 <Star className="h-3 w-3 fill-amber-200 text-amber-200" />
                 Dedox Rewards
@@ -88,10 +89,10 @@ export default function LoyaltyTeaser() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.25, duration: 0.6 }}
-                className="mt-3 max-w-[18rem] font-serif-luxury text-[1.55rem] leading-tight text-white sm:mt-5 sm:max-w-xl sm:text-5xl"
+                className="mt-3 max-w-[18rem] font-serif-luxury text-[1.55rem] leading-tight text-amber-100 [text-shadow:0_2px_14px_rgba(0,0,0,0.6)] sm:mt-5 sm:max-w-xl sm:text-5xl"
               >
                 Spend AED {POINTS_PER_UNIT}.
-                <span className="block italic text-amber-100/90">Earn a bottle.</span>
+                <span className="block italic text-amber-200">Earn a bottle.</span>
               </motion.h2>
 
               <motion.p
@@ -99,7 +100,7 @@ export default function LoyaltyTeaser() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 }}
-                className="mt-3 max-w-[19rem] text-[13px] leading-relaxed text-white/70 sm:mt-4 sm:max-w-lg sm:text-left sm:text-base"
+                className="mt-3 max-w-[19rem] text-[13px] leading-relaxed text-amber-100 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] sm:mt-4 sm:max-w-lg sm:text-left sm:text-base"
               >
                 <span className="sm:hidden">
                   AED {POINTS_PER_UNIT} spent → 1 point. Orders of AED{" "}
@@ -159,13 +160,13 @@ export default function LoyaltyTeaser() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.55 + idx * 0.12, duration: 0.6 }}
                   />
-                  <p className="text-[8px] font-black tracking-[0.18em] text-amber-200/80 sm:text-[10px] sm:tracking-[0.22em]">
+                  <p className="text-[8px] font-black tracking-[0.18em] text-amber-200 [text-shadow:0_1px_8px_rgba(0,0,0,0.55)] sm:text-[10px] sm:tracking-[0.22em]">
                     {step.n}
                   </p>
-                  <p className="mt-1 font-serif-luxury text-sm text-white sm:mt-2 sm:text-2xl">
+                  <p className="mt-1 font-serif-luxury text-sm text-amber-100 [text-shadow:0_1px_10px_rgba(0,0,0,0.55)] sm:mt-2 sm:text-2xl">
                     {step.title}
                   </p>
-                  <p className="mt-1 text-[9px] leading-snug text-white/55 sm:text-xs">
+                  <p className="mt-1 text-[9px] leading-snug text-amber-100 [text-shadow:0_1px_8px_rgba(0,0,0,0.55)] sm:text-xs">
                     <span className="sm:hidden">{step.text}</span>
                     <span className="hidden sm:inline">{step.long}</span>
                   </p>

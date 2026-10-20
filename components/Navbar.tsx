@@ -88,7 +88,7 @@ export default function Navbar({ transparentOnTop = false }: { transparentOnTop?
             : "border-[#7a0c0c]/10 bg-[#faf6f5]/90 shadow-[0_8px_30px_rgba(122,12,12,0.06)] backdrop-blur-md"
         }`}
       >
-        <div className="container mx-auto grid h-16 min-h-[4rem] grid-cols-[auto_1fr_auto] items-center gap-2 px-3 sm:h-[4.5rem] sm:gap-3 sm:px-4 md:px-6 xl:h-20 xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] xl:gap-6">
+        <div className="container mx-auto grid h-20 min-h-[5rem] grid-cols-[auto_1fr_auto] items-center gap-2 px-3 sm:h-20 sm:gap-3 sm:px-4 md:px-6 xl:h-20 xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] xl:gap-6">
           {/* Left */}
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <button

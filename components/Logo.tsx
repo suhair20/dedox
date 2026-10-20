@@ -12,7 +12,7 @@ interface LogoProps {
 
 export default function Logo({ className = "", compact = false, light = false }: LogoProps) {
   const sizeClass = compact
-    ? "w-32 h-14 sm:w-36 sm:h-16 md:w-40 md:h-[4.25rem] xl:w-48 xl:h-20"
+    ? "w-48 h-[4.75rem] sm:w-48 sm:h-[4.75rem] md:w-48 md:h-20 xl:w-52 xl:h-20"
     : "w-32 h-16 md:w-40 md:h-16 lg:w-48 lg:h-20";
 
   return (
