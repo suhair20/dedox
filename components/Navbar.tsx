@@ -88,9 +88,9 @@ export default function Navbar({ transparentOnTop = false }: { transparentOnTop?
             : "border-[#7a0c0c]/10 bg-[#faf6f5]/90 shadow-[0_8px_30px_rgba(122,12,12,0.06)] backdrop-blur-md"
         }`}
       >
-        <div className="container mx-auto grid h-20 min-h-[5rem] grid-cols-[auto_1fr_auto] items-center gap-2 px-3 sm:h-20 sm:gap-3 sm:px-4 md:px-6 xl:h-20 xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] xl:gap-6">
+        <div className="container mx-auto grid h-20 min-h-[5rem] grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 sm:h-20 sm:gap-3 sm:px-4 md:px-6 xl:h-20 xl:gap-6">
           {/* Left */}
-          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <div className="flex min-w-0 items-center justify-start gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
@@ -159,12 +159,10 @@ export default function Navbar({ transparentOnTop = false }: { transparentOnTop?
             </nav>
           </div>
 
-          {/* Center logo — grid column, not absolute */}
-          <div className="flex min-w-0 justify-center px-1 sm:px-2">
+          <div className="flex justify-center">
             <Logo compact light={isTransparent} />
           </div>
 
-          {/* Right */}
           <div className="flex min-w-0 items-center justify-end gap-1.5 sm:gap-2 md:gap-3">
             <form onSubmit={submitSearch} className="hidden min-w-0 xl:block">
               <input
@@ -179,15 +177,6 @@ export default function Navbar({ transparentOnTop = false }: { transparentOnTop?
                 }`}
               />
             </form>
-
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(true)}
-              className={`shrink-0 rounded-lg p-1.5 transition-colors xl:hidden ${iconClass}`}
-              aria-label="Search"
-            >
-              <Search className="h-5 w-5" />
-            </button>
 
             <Link
               href={accountHref}
